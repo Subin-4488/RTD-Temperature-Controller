@@ -1,0 +1,39 @@
+*{
+    font-size: 20px;
+}
+
+.navbar{
+    background-color: #3F88C5;
+    width: 100%;
+    height: 11vh;
+    display: flex;
+    justify-content: space-around;
+}
+
+.navbar-inner-div{
+    display: flex;
+    width: 50%;
+    justify-content: space-between;
+}
+
+.nav-title{
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.nav-item{
+    text-decoration: none;
+    color: black;
+}
+
+.nav-item:hover{
+    color: white;
+    font-weight: bold;
+}
+
+.nav-item-disconnect{
+    color: #db0000;
+    text-decoration: none;
+}
