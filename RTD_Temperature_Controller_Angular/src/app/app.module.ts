@@ -7,10 +7,12 @@ import { BannerComponent } from './banner/banner.component';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ContentComponent } from './content/content.component';
+import { ConnectionComponent } from './connection/connection.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    ConnectionComponent,
     BannerComponent,
     HomeComponent,
     DashboardComponent,
