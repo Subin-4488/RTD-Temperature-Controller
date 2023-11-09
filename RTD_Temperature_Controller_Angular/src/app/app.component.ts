@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'RTD_Temperature_Controller_Angularhdf';
+  title = 'RTD_Temperature_Controller_Angular';
 }
