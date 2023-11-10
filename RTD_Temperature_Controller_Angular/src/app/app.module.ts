@@ -9,9 +9,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ConnectionComponent } from './connection/connection.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { HttpClientModule } from '@angular/common/http';
 import { SettingsComponent } from './settings/settings.component';
 import { ManualmodeComponent } from './manualmode/manualmode.component';
+
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { ManualmodeComponent } from './manualmode/manualmode.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
+    CanvasJSAngularChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
