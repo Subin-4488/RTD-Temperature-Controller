@@ -7,26 +7,30 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="justify-content: right;">
       <div class="navbar-nav" style="display: flex; justify-content: space-around; width: 60%;">
         <div>
-          <a 
+          <a  type="button"
             class="nav-link active" 
             aria-current="page" 
-            href="#" 
             onMouseover="this.style.color='white'" 
             onMouseleave="this.style.color='black'"
+          [routerLink]="['/dashboard', {outlets: {navRoute: ['home']}}]"
+
             >Home</a>
         </div>
         <div>
-          <a class="nav-link" href="#" onMouseover="this.style.color='white'" 
-        onMouseleave="this.style.color='black'">Settings</a>
+          <a type="button" class="nav-link"  onMouseover="this.style.color='white'" 
+        onMouseleave="this.style.color='black'"
+        [routerLink]="['/dashboard', {outlets: {navRoute: ['settings']}}]"
+        >Settings</a>
         </div>
 
         <div>
-          <a class="nav-link" href="#" onMouseover="this.style.color='white'" 
-        onMouseleave="this.style.color='black'">Manual Mode</a>
+          <a type="button" class="nav-link" onMouseover="this.style.color='white'" 
+        onMouseleave="this.style.color='black'"
+        [routerLink]="['/dashboard', {outlets: {navRoute: ['manualmode']}}]">Manual Mode</a>
         </div>
         
         <div>
-          <a class="nav-link" href="#" style="color: rgb(185, 0, 0);">Disconnect</a>
+          <a type="button" class="nav-link" style="color: rgb(185, 0, 0);">Disconnect</a>
         </div>
         
         
