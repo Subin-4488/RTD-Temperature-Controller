@@ -23,6 +23,6 @@ export class ConnectionComponent {
 
   onSubmit(value:string){
     console.log(value)
-    this.router.navigate(['dashboard'])
+    this.router.navigateByUrl('dashboard/(navRoute:home)')
   }
 }
