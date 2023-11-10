@@ -1,7 +1,31 @@
 #con-form{
     align-items: center;
-    width: 450px;
+    width: 50%;
+    background-color: antiquewhite;
 }
 #main-div{
     height: 100%;
+    width: 100%;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+}
+.btn{
+    width: 100px;
+    
+}
+
+@media (max-width: 500px){
+    #con-form{
+        width: 80%;
+    }
+}
+
+@media (max-width: 200px) {
+    .button-container {
+        flex-direction: column;
+        align-items: flex-end;
+    }
 }
