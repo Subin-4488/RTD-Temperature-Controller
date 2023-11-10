@@ -7,5 +7,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./banner.component.scss']
 })
 export class BannerComponent {
+
+  constructor(private router_service: Router){
+  }
+
+  disconnect(){
+    //write the disconnecting code
+    this.router_service.navigate(["/"]);
+  }
 }
   
