@@ -6,8 +6,8 @@ import { AppComponent } from './app.component';
 import { BannerComponent } from './banner/banner.component';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { ContentComponent } from './content/content.component';
 import { ConnectionComponent } from './connection/connection.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,12 +15,12 @@ import { ConnectionComponent } from './connection/connection.component';
     ConnectionComponent,
     BannerComponent,
     HomeComponent,
-    DashboardComponent,
-    ContentComponent
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

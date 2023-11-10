@@ -1,9 +1,8 @@
 <div id="main-div" class="row justify-content-center align-items-center">
-  <form id="con-form">
+  <form id="con-form" [formGroup]="connectionForm" (ngSubmit)="onSubmit(connectionForm.value)">
     <div class="mb-3">
       <label for="bps" class="form-label">Bits per second</label>
-      <select class="form-select" aria-label="Default select example" id="bps">
-        <option selected>Open this select menu</option>
+      <select class="form-select" aria-label="Default select example" id="bps" formControlName="bps">
         <option value="1200">1200</option>
         <option value="2400">2400</option>
         <option value="4800">4800</option>
@@ -14,8 +13,7 @@
     </div>
     <div class="mb-3">
       <label for="databits" class="form-label">Data bits</label>
-      <select class="form-select" id="databits">
-        <option selected>Open this select menu</option>
+      <select class="form-select" id="databits" formControlName="databits">
         <option value="5">5</option>
         <option value="6">6</option>
         <option value="7">7</option>
@@ -24,8 +22,7 @@
     </div>
     <div class="mb-3">
       <label for="parity" class="form-label">Parity</label>
-      <select class="form-select" id="parity">
-        <option selected>Open this select menu</option>
+      <select class="form-select" id="parity" formControlName="parity">
         <option value="Even">Even</option>
         <option value="Mark">Mark</option>
         <option value="None">None</option>
@@ -35,8 +32,7 @@
     </div>
     <div class="mb-3">
       <label for="stopbits" class="form-label">Stop bits</label>
-      <select class="form-select" id="stopbits">
-        <option selected>Open this select menu</option>
+      <select class="form-select" id="stopbits" formControlName="stopbits">
         <option value="1">1</option>
         <option value="1.5">1.5</option>
         <option value="2">2</option>
