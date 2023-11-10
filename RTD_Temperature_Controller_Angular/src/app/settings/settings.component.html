@@ -1,1 +1,94 @@
-<p>settings works!</p>
+<div id="main-div" class="row justify-content-center align-items-center">
+  <form id="settings-form" [formGroup]="settingsForm"
+  (ngSubmit)="onSubmit(settingsForm.value)">
+    <div class="field">
+      <label for="threshold" class="form-label">Threshold</label>
+      <input
+        class="form-control mb-2"
+        type="text"
+        id="threshold"
+        formControlName="threshold"
+      />
+    </div>
+    <div class="field">
+      <label for="dar" class="form-label">Data acquisition rate</label>
+      <input
+        class="form-control mb-2"
+        type="text"
+        id="dar"
+        formControlName="dar"
+      />
+    </div>
+    <div class="row justify-content-center mt-3 mb-2">
+      Current Control
+    </div>
+    <div class="row controls">
+      <div class="field col">
+        <label for="current4" class="form-label">4 mA</label>
+        <input
+          class="form-control mb-2"
+          type="text"
+          id="current4"
+          formControlName="current4"
+        />
+      </div>
+      <div class="field col">
+        <label for="current20" class="form-label">20 mA</label>
+        <input
+          class="form-control mb-2"
+          type="text"
+          id="current20"
+          formControlName="current20"
+        />
+      </div>
+    </div>
+    <div class="row justify-content-center mt-3 mb-2">
+      Color Control
+    </div>
+    <div class="row controls">
+      <div class="col">
+        <label for="c1" class="form-label">0-15 &deg;C</label>
+        <select
+          class="form-select  mb-2"
+          aria-label="Default select example"
+          id="c1"
+          formControlName="c1"
+        >
+          <option value="red">Red</option>
+          <option value="green">Green</option>
+          <option value="blue">Blue</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="c2" class="form-label">15-30 &deg;C</label>
+        <select
+          class="form-select mb-2"
+          aria-label="Default select example"
+          id="c2"
+          formControlName="c2"
+        >
+          <option value="red">Red</option>
+          <option value="green">Green</option>
+          <option value="blue">Blue</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="c3" class="form-label">30-45 &deg;C</label>
+        <select
+          class="form-select mb-2"
+          aria-label="Default select example"
+          id="c3"
+          formControlName="c3"
+        >
+          <option value="red">Red</option>
+          <option value="green">Green</option>
+          <option value="blue">Blue</option>
+        </select>
+      </div>
+    </div>
+    <div class="button-container">
+      <button class="btn btn-primary m-1">Reset</button>
+      <button type="submit" class="btn btn-secondary m-1">Submit</button>
+    </div>
+  </form>
+</div>
