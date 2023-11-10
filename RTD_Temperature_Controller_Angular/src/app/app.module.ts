@@ -7,8 +7,12 @@ import { BannerComponent } from './banner/banner.component';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ConnectionComponent } from './connection/connection.component';
+
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { SettingsComponent } from './settings/settings.component';
 import { ManualmodeComponent } from './manualmode/manualmode.component';
+
 
 @NgModule({
   declarations: [
@@ -22,7 +26,8 @@ import { ManualmodeComponent } from './manualmode/manualmode.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
