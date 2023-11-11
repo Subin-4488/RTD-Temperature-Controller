@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Subin AM\\source\\repos\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj": {}
+    "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Subin AM\\source\\repos\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj": {
+    "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Subin AM\\source\\repos\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
         "projectName": "RTD_Temperature_Controller_DotnetAPI",
-        "projectPath": "C:\\Users\\Subin AM\\source\\repos\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
+        "projectPath": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
         "packagesPath": "C:\\Users\\Subin AM\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Subin AM\\source\\repos\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\obj\\",
+        "outputPath": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Subin AM\\AppData\\Roaming\\NuGet\\NuGet.Config",

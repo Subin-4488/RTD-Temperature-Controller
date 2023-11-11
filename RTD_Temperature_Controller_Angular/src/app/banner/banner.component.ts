@@ -16,4 +16,3 @@ export class BannerComponent {
     this.router_service.navigate(["/"]);
   }
 }
-  
