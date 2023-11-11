@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj": {}
+    "C:\\Users\\Alby Joseph\\Desktop\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj": {
+    "C:\\Users\\Alby Joseph\\Desktop\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Alby Joseph\\Desktop\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
         "projectName": "RTD_Temperature_Controller_DotnetAPI",
-        "projectPath": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
-        "packagesPath": "C:\\Users\\Subin AM\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\obj\\",
+        "projectPath": "C:\\Users\\Alby Joseph\\Desktop\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
+        "packagesPath": "C:\\Users\\Alby Joseph\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Alby Joseph\\Desktop\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Subin AM\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Alby Joseph\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -55,6 +60,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "System.IO.Ports": {
+              "target": "Package",
+              "version": "[7.0.0, )"
             }
           },
           "imports": [
