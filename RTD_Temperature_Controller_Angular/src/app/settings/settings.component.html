@@ -1,6 +1,9 @@
 <div id="main-div" class="row justify-content-center align-items-center">
-  <form id="settings-form" [formGroup]="settingsForm"
-  (ngSubmit)="onSubmit(settingsForm.value)">
+  <form
+    id="settings-form"
+    [formGroup]="settingsForm"
+    (ngSubmit)="onSubmit(settingsForm.value)"
+  >
     <div class="field">
       <label for="threshold" class="form-label">Threshold</label>
       <input
@@ -19,9 +22,7 @@
         formControlName="dar"
       />
     </div>
-    <div class="row justify-content-center mt-3 mb-2">
-      Current Control
-    </div>
+    <div class="row justify-content-center mt-3 mb-2">Current Control</div>
     <div class="row controls">
       <div class="field col">
         <label for="current4" class="form-label">4 mA</label>
@@ -42,14 +43,12 @@
         />
       </div>
     </div>
-    <div class="row justify-content-center mt-3 mb-2">
-      Color Control
-    </div>
+    <div class="row justify-content-center mt-3 mb-2">Color Control</div>
     <div class="row controls">
       <div class="col">
         <label for="c1" class="form-label">0-15 &deg;C</label>
         <select
-          class="form-select  mb-2"
+          class="form-select mb-2"
           aria-label="Default select example"
           id="c1"
           formControlName="c1"
