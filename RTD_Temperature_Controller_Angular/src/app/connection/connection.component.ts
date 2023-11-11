@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup  } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ConnectionService } from '../services/connection.service';
+import { Connection } from '../models/Connection';
 
 @Component({
   selector: 'app-connection',
@@ -12,7 +14,7 @@ export class ConnectionComponent {
   connectionForm:FormGroup
 
 
-  constructor(fb:FormBuilder,private router:Router){
+  constructor(fb:FormBuilder,private router:Router,private connectionService:ConnectionService){
     this.connectionForm=fb.group({
       bps:[9600],
       databits:[8],
@@ -23,6 +25,8 @@ export class ConnectionComponent {
 
   onSubmit(value:string){
     console.log(value)
-    this.router.navigateByUrl('dashboard/(navRoute:home)')
+    let newConnection = new Connection(this.connectionForm.value.bps,this.connectionForm.value.databits,this.connectionForm.value.parity,this.connectionForm.value.stopbits)
+    this.connectionService.createConnection(newConnection).subscribe(data=>{})
+    //this.router.navigateByUrl('dashboard/(navRoute:home)')
   }
 }
