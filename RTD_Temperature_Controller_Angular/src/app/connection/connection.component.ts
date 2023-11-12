@@ -25,8 +25,8 @@ export class ConnectionComponent {
 
   onSubmit(value:string){
     console.log(value)
-    let newConnection = new Connection(this.connectionForm.value.bps,this.connectionForm.value.databits,this.connectionForm.value.parity,this.connectionForm.value.stopbits)
-    this.connectionService.createConnection(newConnection).subscribe(data=>{})
-    //this.router.navigateByUrl('dashboard/(navRoute:home)')
+    // let newConnection = new Connection(this.connectionForm.value.bps,this.connectionForm.value.databits,this.connectionForm.value.parity,this.connectionForm.value.stopbits)
+    // this.connectionService.createConnection(newConnection).subscribe(data=>{})
+    this.router.navigateByUrl('dashboard/(navRoute:home)')
   }
 }
