@@ -1,37 +1,31 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary " style=" padding-top: 0px !important; min-height: 13vh;background-color: #3F88C5 !important; ">
   <div class="container-fluid" style="background-color: #3F88C5 !important; ">
-    <div style="font-weight: bold; font-style: italic;">RTD Temperature Controller</div>
+    <div class="nav-title">RTD Temperature Controller</div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="justify-content: right;">
       <div class="navbar-nav" style="display: flex; justify-content: space-around; ">
-        <div>
+        <div class="nav-item">
           <a  type="button"
-            class="nav-link active" 
-            aria-current="page" 
-            onMouseover="this.style.color='white'" 
-            onMouseleave="this.style.color='black'"
-            style="color: black;"
+            class="nav-link" 
           [routerLink]="['/dashboard', {outlets: {navRoute: ['home']}}]"
 
             >Home</a>
         </div>
-        <div>
-          <a type="button" class="nav-link"  onMouseover="this.style.color='white'" style="color: black;"
-        onMouseleave="this.style.color='black'"
+        <div class="nav-item">
+          <a type="button" class="nav-link"
         [routerLink]="['/dashboard', {outlets: {navRoute: ['settings']}}]"
         >Settings</a>
         </div>
 
-        <div>
-          <a type="button" class="nav-link" onMouseover="this.style.color='white'" style="color: black;"
-        onMouseleave="this.style.color='black'"
+        <div class="nav-item">
+          <a type="button" class="nav-link" 
         [routerLink]="['/dashboard', {outlets: {navRoute: ['manualmode']}}]" >Manual Mode</a>
         </div>
         
-        <div>
-          <a (click)="disconnect()" type="button" class="nav-link" style="color: rgb(185, 0, 0);">Disconnect</a>
+        <div class="disconnectbtn">
+          <a (click)="disconnect()" type="button" class="nav-link">Disconnect</a>
         </div>
       </div>
     </div>

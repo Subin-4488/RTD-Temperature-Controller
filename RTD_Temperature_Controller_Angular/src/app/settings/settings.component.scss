@@ -19,9 +19,15 @@
     margin-top: 15px;
 }
 .btn{
-    width: 100px;
+    width: 100px; 
+    transition: all .1s;
+}
+
+.btn:hover{
+    transform: translateY(-5px);
     
 }
+
 @media (max-width:400px){
     .controls{
         flex-direction: column;
