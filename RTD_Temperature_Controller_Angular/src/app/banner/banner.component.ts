@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { ConnectionService } from '../services/connection.service';
 
 @Component({
   selector: 'app-banner',
@@ -8,11 +9,19 @@ import { Router } from '@angular/router';
 })
 export class BannerComponent {
 
-  constructor(private router_service: Router){
+  constructor(private router_service: Router,private connectionService:ConnectionService){
   }
 
   disconnect(){
     //write the disconnecting code
-    this.router_service.navigate(["/"]);
+    let ifDisconnected
+    this.connectionService.disconnectConnection().subscribe(data=>{
+      
+      ifDisconnected = data
+      console.log(ifDisconnected)
+      if(ifDisconnected==true)
+        this.router_service.navigate(["/"]);
+    })
+    
   }
 }

@@ -51,7 +51,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             catch(Exception e)
             {
                 Console.WriteLine(e);
-                this._serialPort.PortName = Program.SerialPort.PortName;
+                return false;
             }
             //Program.SerialPort.PortName = "COM5";
             //Program.SerialPort.PortName = Convert.ToString(value["PortName"]);
@@ -109,7 +109,24 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
         }
 
-        // PUT api/<ConnectionController>/5
+        [HttpPost("disconnect")]
+        public bool Post()
+        {
+            try
+            {
+                _serialPort.DataReceived -= ReadDataFromHardware;
+                _serialPort.Close();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
+
+            // PUT api/<ConnectionController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
