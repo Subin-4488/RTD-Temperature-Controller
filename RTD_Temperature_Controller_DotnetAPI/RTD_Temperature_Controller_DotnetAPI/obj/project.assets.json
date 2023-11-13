@@ -1150,6 +1150,33 @@
             "rid": "win"
           }
         }
+      },
+      "Contracts/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "System.IO.Ports": "7.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Contracts.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Contracts.dll": {}
+        }
+      },
+      "Services/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Contracts": "1.0.0",
+          "System.IO.Ports": "7.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Services.dll": {}
+        }
       }
     }
   },
@@ -3279,6 +3306,16 @@
         "system.windows.extensions.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "Contracts/1.0.0": {
+      "type": "project",
+      "path": "../Contracts/Contracts.csproj",
+      "msbuildProject": "../Contracts/Contracts.csproj"
+    },
+    "Services/1.0.0": {
+      "type": "project",
+      "path": "../Services/Services.csproj",
+      "msbuildProject": "../Services/Services.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -3286,29 +3323,25 @@
       "Microsoft.AspNetCore.OpenApi >= 7.0.11",
       "Microsoft.EntityFrameworkCore >= 7.0.13",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.13",
+      "Services >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.5.0",
       "System.IO.Ports >= 7.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Alby Joseph\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Subin AM\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Alby Joseph\\Desktop\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
+      "projectUniqueName": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
       "projectName": "RTD_Temperature_Controller_DotnetAPI",
-      "projectPath": "C:\\Users\\Alby Joseph\\Desktop\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
-      "packagesPath": "C:\\Users\\Alby Joseph\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Alby Joseph\\Desktop\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\obj\\",
+      "projectPath": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
+      "packagesPath": "C:\\Users\\Subin AM\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Alby Joseph\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Subin AM\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3316,13 +3349,16 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\Services\\Services.csproj": {
+              "projectPath": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\Services\\Services.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
