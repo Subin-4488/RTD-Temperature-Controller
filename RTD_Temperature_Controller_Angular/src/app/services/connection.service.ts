@@ -41,6 +41,11 @@ export class ConnectionService {
     );
   }
 
-
+  getportNames():Observable<string[]>{
+    return this.httpClient.get<string[]>(this.baseurl+'/connection/ports/')
+    .pipe(
+      catchError(this.httpError)
+    );
+  }
 
 }

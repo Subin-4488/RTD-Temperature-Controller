@@ -5,6 +5,17 @@
     (ngSubmit)="onSubmit(connectionForm.value)"
   >
     <div class="mb-3">
+      <label for="portname" class="form-label">Port name</label>
+      <select
+        class="form-select"
+        aria-label="Default select example"
+        id="portname"
+        formControlName="portname"
+      >
+        <option *ngFor="let p of portNames" value="{{p}}">{{p}}</option>
+      </select>
+    </div>
+    <div class="mb-3">
       <label for="bps" class="form-label">Bits per second</label>
       <select
         class="form-select"
@@ -53,7 +64,7 @@
     </div> -->
     <div class="button-container">
       <button class="btn btn-primary m-1">Reset</button>
-      <button type="submit" class="btn btn-secondary m-1 ">Submit</button>
+      <button type="submit" class="btn btn-secondary m-1">Submit</button>
     </div>
   </form>
 </div>

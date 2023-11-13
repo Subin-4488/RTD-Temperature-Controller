@@ -12,7 +12,7 @@ import { Connection } from '../models/Connection';
 
 export class ConnectionComponent {
   connectionForm:FormGroup
-
+  portNames:string[] = []
 
   constructor(fb:FormBuilder,private router:Router,private connectionService:ConnectionService){
     this.connectionForm=fb.group({
@@ -20,13 +20,17 @@ export class ConnectionComponent {
       databits:[8],
       parity:['None'],
       stopbits:[1],
+      portname:[]
+    })
+    connectionService.getportNames().subscribe(data=>{
+      this.portNames = data
     })
   }
 
   onSubmit(value:string){
     console.log(value)
-    // let newConnection = new Connection(this.connectionForm.value.bps,this.connectionForm.value.databits,this.connectionForm.value.parity,this.connectionForm.value.stopbits)
-    // this.connectionService.createConnection(newConnection).subscribe(data=>{})
-    this.router.navigateByUrl('dashboard/(navRoute:home)')
+    let newConnection = new Connection(this.connectionForm.value.portname,this.connectionForm.value.bps,this.connectionForm.value.databits,this.connectionForm.value.parity,this.connectionForm.value.stopbits)
+    this.connectionService.createConnection(newConnection).subscribe(data=>{})
+    //this.router.navigateByUrl('dashboard/(navRoute:home)')
   }
 }

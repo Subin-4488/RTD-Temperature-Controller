@@ -52,14 +52,15 @@ namespace RTD_Temperature_Controller_DotnetAPI
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
-
             app.UseCors(o =>
             {
                 o.AllowAnyOrigin();
                 o.AllowAnyHeader();
                 o.AllowAnyMethod();
             });
+
+            app.UseAuthorization();
+
             app.MapControllers();
 
             app.Run();
