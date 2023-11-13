@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Contracts;
+using Microsoft.AspNetCore.Mvc;
 using RTD_Temperature_Controller_DotnetAPI.Models;
+using System.IO.Ports;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -11,73 +13,96 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     [ApiController]
     public class ConnectionController : ControllerBase
     {
-        // GET: api/<ConnectionController>
-        [HttpGet]
+        private readonly SerialPort _serialPort;
+
+        public static void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e)
+        {
+            SerialPort spL = (SerialPort)sender;
+            //write handling code
+            Console.WriteLine(spL.ReadExisting());
+        }
+
+        public ConnectionController(ISerialPortService serialPortService)
+        {
+            this._serialPort = serialPortService.SerialPort;
+            
+            if (this._serialPort.IsOpen) this._serialPort.Close();
+
+        }
+
+        //GET: api/<ConnectionController>
+        [HttpGet("ports")]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<ConnectionController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
         }
 
         // POST api/<ConnectionController>
         [HttpPost]
         public void Post([FromBody] JsonObject value)
         {
-            object objtemp = value["BitsPerSecond"];
-            //Program.SerialPort.PortName = value["PortName"]!.ToString();
-            Program.SerialPort.PortName = "COM5";
-            Program.SerialPort.BaudRate = int.Parse(value["BitsPerSecond"]!.ToString());
+            //object objtemp = value["BitsPerSecond"];
+            try
+            {
+                //Program.SerialPort.PortName = value["PortName"]!.ToString();
+                this._serialPort.PortName = Convert.ToString(value["PortName"]);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            //Program.SerialPort.PortName = "COM5";
+            //Program.SerialPort.PortName = Convert.ToString(value["PortName"]);
+            this._serialPort.BaudRate = int.Parse(value["BitsPerSecond"]!.ToString());
             
             switch (value["Parity"]!.ToString())
             {
                 case "Even":
-                    Program.SerialPort.Parity = System.IO.Ports.Parity.Even;
+                    this._serialPort.Parity = System.IO.Ports.Parity.Even;
                     break;
                 case "Odd":
-                    Program.SerialPort.Parity = System.IO.Ports.Parity.Odd;
+                    this._serialPort.Parity = System.IO.Ports.Parity.Odd;
                     break;
                 case "Mark":
-                    Program.SerialPort.Parity = System.IO.Ports.Parity.Mark;
+                    this._serialPort.Parity = System.IO.Ports.Parity.Mark;
                     break;
                 case "Space":
-                    Program.SerialPort.Parity = System.IO.Ports.Parity.Space;
+                    this._serialPort.Parity = System.IO.Ports.Parity.Space;
                     break;
                 case "None":
-                    Program.SerialPort.Parity = System.IO.Ports.Parity.None;
+                    this._serialPort.Parity = System.IO.Ports.Parity.None;
                     break;
                 default:
                     throw new Exception("BAD Parity format");
             }
 
-            Program.SerialPort.DataBits = int.Parse(value["DataBits"]!.ToString());
+            this._serialPort.DataBits = int.Parse(value["DataBits"]!.ToString());
 
 
             switch (value["StopBits"]!.ToString())
             {
                 case "1":
-                    Program.SerialPort.StopBits = System.IO.Ports.StopBits.One;
+                    this._serialPort.StopBits = System.IO.Ports.StopBits.One;
                     break;
                 case "1.5":
-                    Program.SerialPort.StopBits = System.IO.Ports.StopBits.OnePointFive;
+                    this._serialPort.StopBits = System.IO.Ports.StopBits.OnePointFive;
                     break;
                 case "2":
-                    Program.SerialPort.StopBits = System.IO.Ports.StopBits.Two;
+                    this._serialPort.StopBits = System.IO.Ports.StopBits.Two;
                     break;
                 default:
                     throw new Exception("BAD Parity format");
             }
 
-            Console.WriteLine(value.ToString());
+            _serialPort.DataReceived += new SerialDataReceivedEventHandler(ReadDataFromHardware);
 
-            Program.SerialPort.Open();
-            
-            Program.ReadThread.Start();
+            try
+            {
+                _serialPort.Open();
+            }
+            catch(Exception ex) {
+                Console.WriteLine(ex);
+            }
         }
 
         // PUT api/<ConnectionController>/5

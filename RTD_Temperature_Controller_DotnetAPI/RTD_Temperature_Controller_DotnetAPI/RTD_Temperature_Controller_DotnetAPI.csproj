@@ -16,7 +16,10 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="DBContext\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
 </Project>
