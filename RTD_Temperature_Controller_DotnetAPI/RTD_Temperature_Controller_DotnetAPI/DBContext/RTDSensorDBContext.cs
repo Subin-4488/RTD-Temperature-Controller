@@ -11,5 +11,5 @@ namespace RTD_Temperature_Controller_DotnetAPI.DBContext
         {
             
         }
-    }
+    }   
 }

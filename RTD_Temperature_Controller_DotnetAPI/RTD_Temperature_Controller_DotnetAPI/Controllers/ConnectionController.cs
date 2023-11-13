@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RTD_Temperature_Controller_DotnetAPI.Models;
 using System.IO.Ports;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -19,7 +20,13 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         {
             SerialPort spL = (SerialPort)sender;
             //write handling code
-            Console.WriteLine(spL.ReadExisting());
+            //Console.WriteLine(spL.ReadExisting());
+            StringBuilder stringBuilder = new StringBuilder();
+            for (string i = spL.ReadExisting(); i.Length > 0; i = spL.ReadExisting())
+            {
+                stringBuilder.Append(i);
+            }
+            Console.WriteLine(stringBuilder.ToString());
         }
 
         public ConnectionController(ISerialPortService serialPortService)
