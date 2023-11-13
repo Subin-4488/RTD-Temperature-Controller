@@ -2,18 +2,34 @@
     align-items: center;
     width: 50%;
     background-color: antiquewhite;
+    margin: 0 auto;
+    display: block;
+    padding: 15px;
 }
 #main-div{
     height: 100%;
     width: 100%;
 }
 
+h3{
+    text-align: center;
+    display: block;
+    margin: 15vh auto 10px auto;
+    font-family: monospace;
+}
+
 .button-container {
     display: flex;
     justify-content: flex-end;
 }
+
 .btn{
-    width: 100px;
+    width: 100px; 
+    transition: all .1s;
+}
+
+.btn:hover{
+    transform: translateY(-5px);
     
 }
 
