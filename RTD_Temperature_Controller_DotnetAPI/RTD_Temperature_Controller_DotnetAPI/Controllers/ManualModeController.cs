@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Contracts;
+using Microsoft.AspNetCore.Mvc;
+using System.IO.Ports;
 using System.Text;
 using System.Text.Json.Nodes;
 
@@ -10,6 +12,11 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     [ApiController]
     public class ManualModeController : ControllerBase
     {
+        private readonly SerialPort _serialPort;
+        public ManualModeController(ISerialPortService serialPortService)
+        {
+            _serialPort = serialPortService.SerialPort;
+        }
         // GET: api/<ManualModeController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -36,7 +43,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             try
             {
 
-                Program.SerialPort.Write(bytes, 0, bytes.Length);
+                _serialPort.Write(bytes, 0, bytes.Length);
             }
             catch(Exception ex)
             {

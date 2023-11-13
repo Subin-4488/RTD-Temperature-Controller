@@ -41,6 +41,13 @@ export class ConnectionService {
     );
   }
 
+  disconnectConnection():Observable<boolean>{
+    return this.httpClient.post<boolean>(this.baseurl+'/connection/disconnect/','',this.httpHeader)
+    .pipe(
+      catchError(this.httpError)
+    );
+  }
+
   getportNames():Observable<string[]>{
     return this.httpClient.get<string[]>(this.baseurl+'/connection/ports/')
     .pipe(
