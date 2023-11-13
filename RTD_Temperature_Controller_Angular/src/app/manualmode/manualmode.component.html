@@ -1,90 +1,172 @@
 <div>
-    <div class="section-1" style="margin-top: 1%; display:flex; justify-content: center;">
-        <div class="card" style="background-color: aliceblue; padding: 2%; width: 75%;">
-            <div>
-                <h4 style="text-align: center; font-weight: bold;">LED Control</h4>
-            </div>
-            <div class="row" style="margin: 0;">
-                <div class="col-md col-sm-12"></div>
-                <div style="text-align: center;" class="col-md-2 col-sm-12">
-                    
-                        <button style="min-width: 50%; background-color: red;" class="btn btn-primary" type="submit">LED
+  <div
+    class="section-1"
+    style="margin-top: 1%; display: flex; justify-content: center"
+  >
+    <div
+      class="card"
+      style="background-color: aliceblue; padding: 2%; width: 75%"
+    >
+      <div>
+        <h4 style="text-align: center; font-weight: bold">LED Control</h4>
+      </div>
+      <div class="row" style="margin: 0">
+        <div class="col-md col-sm-12"></div>
+        <div style="text-align: center" class="col-md-2 col-sm-12">
+          <!-- <button style="min-width: 50%; background-color: red;" class="btn btn-primary" type="submit" (click)="setLed1()">LED
                             1
-                        </button>
-                    
-                </div>
-                <div style="text-align: center;" class="col-md-2 col-sm-12">
-                    
-                        <button style="min-width: 50%; background-color: green;"
-                        class="btn btn-primary" type="submit">LED
-                        2
-                    </button>
-                </div>
-                <div style="text-align: center;" class="col-md-2 col-sm-12">
-                   
-                        <button style="min-width: 50%; background-color: blue;"
-                        class="btn btn-primary" type="submit">LED
-                        3
-                    </button>
-                    
-                </div>
-                <div class="col-md col-sm-12"></div>
-            </div>
+                        </button> -->
+          <input
+            type="checkbox"
+            class="btn-check"
+            id="led1"
+            autocomplete="off"
+            (click)="setLed1()"
+          />
+          <label class="btn btn-outline-danger" for="led1">LED 1</label>
         </div>
+        <div style="text-align: center" class="col-md-2 col-sm-12">
+          <!-- <button style="min-width: 50%; background-color: green;"
+                        class="btn btn-primary" type="submit" (click)="setLed2()">LED
+                        2
+                    </button> -->
+          <input
+            type="checkbox"
+            class="btn-check"
+            id="led2"
+            autocomplete="off"
+            (click)="setLed2()"
+          />
+          <label class="btn btn-outline-success" for="led2">LED 2</label>
+        </div>
+        <div style="text-align: center" class="col-md-2 col-sm-12">
+          <!-- <button style="min-width: 50%; background-color: blue;"
+                        class="btn btn-primary" type="submit" (click)="setLed3()">LED
+                        3
+                    </button> -->
+          <input
+            type="checkbox"
+            class="btn-check"
+            id="led3"
+            autocomplete="off"
+            (click)="setLed3()"
+          />
+          <label class="btn btn-outline-primary" for="led3">LED 3</label>
+        </div>
+        <div class="col-md col-sm-12"></div>
+      </div>
     </div>
-    <div class="section-2" style="margin-top: 3%; display:flex; justify-content: center;">
-
-        <div class="card" style="background-color: aliceblue; padding: 2%; width: 75%;">
-            <form [formGroup]="pwmFormGroup" (ngSubmit)=setPWMDutyCycle()>
-                <div class="row" style="text-align: center; margin: 0;">
-                    <div class="col-md-4 col-sm-12"></div>
-                    <h5 class="col-md-2 col-sm-12" style="font-weight: bold;" for="input_pwm">PWM Duty Cycle</h5>
-                    <div class="col-md-2 col-sm-12">
-                        <input [ngStyle]="{
-                            'border': (submitted && getPWMFormControls['pwmCycleControl'].errors)?'1px solid red' : '1px solid black'
-                        }" formControlName="pwmCycleControl" class="form-control" id="input_pwm" placeholder="45%" />
-                        <div class="form-error" [ngStyle]="{
+  </div>
+  <div
+    class="section-2"
+    style="margin-top: 3%; display: flex; justify-content: center"
+  >
+    <div
+      class="card"
+      style="background-color: aliceblue; padding: 2%; width: 75%"
+    >
+      <form [formGroup]="pwmFormGroup" (ngSubmit)="setPWMDutyCycle()">
+        <div class="row" style="text-align: center; margin: 0">
+          <div class="col-md-4 col-sm-12"></div>
+          <h5
+            class="col-md-2 col-sm-12"
+            style="font-weight: bold"
+            for="input_pwm"
+          >
+            PWM Duty Cycle
+          </h5>
+          <div class="col-md-2 col-sm-12">
+            <input
+              [ngStyle]="{
+                border:
+                  submitted && getPWMFormControls['pwmCycleControl'].errors
+                    ? '1px solid red'
+                    : '1px solid black'
+              }"
+              formControlName="pwmCycleControl"
+              class="form-control"
+              id="input_pwm"
+              placeholder="45%"
+            />
+            <div
+              class="form-error"
+              [ngStyle]="{
                             'color': 'red', 
                             
-                        }" *ngIf="submitted && getPWMFormControls['pwmCycleControl'].errors">
-                            Enter valid value between 0 to 100
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12"></div>
-                </div>
-                <div style="text-align: center; padding: 1%;">
-                    <button type="submit" class="btn btn-primary" style="background-color: blue; min-width: 10%;">SET</button>
-                </div>
-            </form>
-        </div>
-
-    </div>
-
-    <div class="section-3" style="margin-top: 3%; display:flex; justify-content: center;">
-        <div class="card" style="background-color: aliceblue; padding: 2%; width: 75%;">
-            <div>
-                <h4 style="text-align: center; font-weight: bold;">Sensor Data Control</h4>
+                        }"
+              *ngIf="submitted && getPWMFormControls['pwmCycleControl'].errors"
+            >
+              Enter valid value between 0 to 100
             </div>
-            <div class="row" style="margin: 0;">
-                <div class="col-md col-sm-12"></div>
-                <div style="text-align: center;" class="col-md-3 col-sm-12"><button
-                        style="min-width: 50%; background-color: green;" class="btn btn-primary"
-                        type="submit">Temperature</button></div>
-                <div style="text-align: center;" class="col-md-3 col-sm-12"><button
-                        style="min-width: 50%; background-color: green;" class="btn btn-primary"
-                        type="submit">Resistance</button></div>
-                <div style="text-align: center;" class="col-md-3 col-sm-12"><button
-                        style="min-width: 50%; background-color: green;" class="btn btn-primary"
-                        type="submit">EPROM</button></div>
-                <div class="col-md col-sm-12"></div>
-            </div>
+          </div>
+          <div class="col-md-4 col-sm-12"></div>
         </div>
-    </div>
-
-    <div class="section 4" style="margin-top: 1%; display: flex; justify-content: center;">
-        <div style="text-align: center; width: 20%;">
-            <input class="form-control" disabled value="0" />
+        <div style="text-align: center; padding: 1%">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="background-color: blue; min-width: 10%"
+          >
+            SET
+          </button>
         </div>
+      </form>
     </div>
+  </div>
 
+  <div
+    class="section-3"
+    style="margin-top: 3%; display: flex; justify-content: center"
+  >
+    <div
+      class="card"
+      style="background-color: aliceblue; padding: 2%; width: 75%"
+    >
+      <div>
+        <h4 style="text-align: center; font-weight: bold">
+          Sensor Data Control
+        </h4>
+      </div>
+      <div class="row" style="margin: 0">
+        <div class="col-md col-sm-12"></div>
+        <div style="text-align: center" class="col-md-3 col-sm-12">
+          <button
+            style="min-width: 50%; background-color: green"
+            class="btn btn-primary"
+            type="submit"
+          >
+            Temperature
+          </button>
+        </div>
+        <div style="text-align: center" class="col-md-3 col-sm-12">
+          <button
+            style="min-width: 50%; background-color: green"
+            class="btn btn-primary"
+            type="submit"
+          >
+            Resistance
+          </button>
+        </div>
+        <div style="text-align: center" class="col-md-3 col-sm-12">
+          <button
+            style="min-width: 50%; background-color: green"
+            class="btn btn-primary"
+            type="submit"
+          >
+            EPROM
+          </button>
+        </div>
+        <div class="col-md col-sm-12"></div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="section 4"
+    style="margin-top: 1%; display: flex; justify-content: center"
+  >
+    <div style="text-align: center; width: 20%">
+      <input class="form-control" disabled value="0" />
+    </div>
+  </div>
 </div>

@@ -1,12 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Connection } from '../models/Connection';
 import { Observable, catchError, throwError } from 'rxjs';
+import { Command } from '../models/Command';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConnectionService {
+export class ManualmodeService {
 
   baseurl="https://localhost:3000";
 
@@ -33,16 +33,9 @@ export class ConnectionService {
 
   }
 
-  createConnection(c:Connection):Observable<boolean>{
-    console.log(JSON.stringify(c))
-    return this.httpClient.post<boolean>(this.baseurl+'/connection',JSON.stringify(c),this.httpHeader)
-    .pipe(
-      catchError(this.httpError)
-    );
-  }
-
-  getportNames():Observable<string[]>{
-    return this.httpClient.get<string[]>(this.baseurl+'/connection/ports/')
+  sendCommand(val:Command):Observable<boolean>{
+    console.log(val)
+    return this.httpClient.post<boolean>(this.baseurl+'/manualmode',JSON.stringify(val),this.httpHeader)
     .pipe(
       catchError(this.httpError)
     );

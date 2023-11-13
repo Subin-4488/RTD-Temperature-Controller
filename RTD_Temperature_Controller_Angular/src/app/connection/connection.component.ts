@@ -13,14 +13,15 @@ import { Connection } from '../models/Connection';
 export class ConnectionComponent {
   connectionForm:FormGroup
   portNames:string[] = []
+  connectionStatus:boolean=false
 
   constructor(fb:FormBuilder,private router:Router,private connectionService:ConnectionService){
     this.connectionForm=fb.group({
+      portname:[],
       bps:[9600],
       databits:[8],
       parity:['None'],
-      stopbits:[1],
-      portname:[]
+      stopbits:[1]
     })
     connectionService.getportNames().subscribe(data=>{
       this.portNames = data
@@ -30,7 +31,21 @@ export class ConnectionComponent {
   onSubmit(value:string){
     console.log(value)
     let newConnection = new Connection(this.connectionForm.value.portname,this.connectionForm.value.bps,this.connectionForm.value.databits,this.connectionForm.value.parity,this.connectionForm.value.stopbits)
-    this.connectionService.createConnection(newConnection).subscribe(data=>{})
-    //this.router.navigateByUrl('dashboard/(navRoute:home)')
+    this.connectionService.createConnection(newConnection).subscribe(data=>{this.connectionStatus=data})
+    console.log(this.connectionStatus)
+    if(this.connectionStatus == true)
+      this.router.navigateByUrl('dashboard/(navRoute:home)')
+    else{
+      alert("Connection error. Try changing the values.")
+    }
+  }
+
+  resetValues(){
+    this.connectionForm.patchValue({
+      bps:9600,
+      databits:8,
+      parity:'None',
+      stopbits:1
+    })
   }
 }

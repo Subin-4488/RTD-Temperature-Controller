@@ -30,9 +30,13 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 
         // POST api/<ConnectionController>
         [HttpPost]
-        public void Post([FromBody] JsonObject value)
+        public bool Post([FromBody] JsonObject value)
         {
             //object objtemp = value["BitsPerSecond"];
+            if (Program.SerialPort.IsOpen)
+            {
+                Program.SerialPort.Close();
+            }
             try
             {
                 //Program.SerialPort.PortName = value["PortName"]!.ToString();
@@ -90,10 +94,12 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             try
             {
                 Program.SerialPort.Open();
-                Program.ReadThread.Start();
+                //Program.ReadThread.Start();
+                return true;
             }
             catch(Exception ex) {
                 Console.WriteLine(ex);
+                return false;
             }
             //Program.SerialPort.Open();
         }
