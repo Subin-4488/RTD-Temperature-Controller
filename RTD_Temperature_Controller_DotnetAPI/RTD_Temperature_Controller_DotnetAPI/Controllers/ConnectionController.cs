@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RTD_Temperature_Controller_DotnetAPI.Models;
+using System.IO.Ports;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -11,13 +12,15 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     [ApiController]
     public class ConnectionController : ControllerBase
     {
-        // GET: api/<ConnectionController>
-        [HttpGet]
+        //GET: api/<ConnectionController>
+        [HttpGet("ports")]
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            //return new string[] { "COM1", "COM2" };
+            return SerialPort.GetPortNames();
         }
 
+        [HttpGet]
         // GET api/<ConnectionController>/5
         [HttpGet("{id}")]
         public string Get(int id)
@@ -29,9 +32,19 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         [HttpPost]
         public void Post([FromBody] JsonObject value)
         {
-            object objtemp = value["BitsPerSecond"];
-            //Program.SerialPort.PortName = value["PortName"]!.ToString();
-            Program.SerialPort.PortName = "COM5";
+            //object objtemp = value["BitsPerSecond"];
+            try
+            {
+                //Program.SerialPort.PortName = value["PortName"]!.ToString();
+                Program.SerialPort.PortName = Convert.ToString(value["PortName"]);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+                Program.SerialPort.PortName = Program.SerialPort.PortName;
+            }
+            //Program.SerialPort.PortName = "COM5";
+            //Program.SerialPort.PortName = Convert.ToString(value["PortName"]);
             Program.SerialPort.BaudRate = int.Parse(value["BitsPerSecond"]!.ToString());
             
             switch (value["Parity"]!.ToString())
@@ -74,10 +87,15 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
 
             Console.WriteLine(value.ToString());
-
-            Program.SerialPort.Open();
-            
-            Program.ReadThread.Start();
+            try
+            {
+                Program.SerialPort.Open();
+                Program.ReadThread.Start();
+            }
+            catch(Exception ex) {
+                Console.WriteLine(ex);
+            }
+            //Program.SerialPort.Open();
         }
 
         // PUT api/<ConnectionController>/5
