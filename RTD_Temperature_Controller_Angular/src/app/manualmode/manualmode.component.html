@@ -35,17 +35,27 @@
     <div class="section-2" style="margin-top: 3%; display:flex; justify-content: center;">
 
         <div class="card" style="background-color: aliceblue; padding: 2%; width: 75%;">
-            <div class="row" style="text-align: center; margin: 0;">
-                <div class="col-md-4 col-sm-12"></div>
-                <h5 class="col-md-2 col-sm-12" style="font-weight: bold;" for="input_pwm">PWM Duty Cycle</h5>
-                <div class="col-md-2 col-sm-12">
-                    <input class="form-control" id="input_pwm" placeholder="45%" />
+            <form [formGroup]="pwmFormGroup" (ngSubmit)=setPWMDutyCycle()>
+                <div class="row" style="text-align: center; margin: 0;">
+                    <div class="col-md-4 col-sm-12"></div>
+                    <h5 class="col-md-2 col-sm-12" style="font-weight: bold;" for="input_pwm">PWM Duty Cycle</h5>
+                    <div class="col-md-2 col-sm-12">
+                        <input [ngStyle]="{
+                            'border': (submitted && getPWMFormControls['pwmCycleControl'].errors)?'1px solid red' : '1px solid black'
+                        }" formControlName="pwmCycleControl" class="form-control" id="input_pwm" placeholder="45%" />
+                        <div class="form-error" [ngStyle]="{
+                            'color': 'red', 
+                            
+                        }" *ngIf="submitted && getPWMFormControls['pwmCycleControl'].errors">
+                            Enter valid value between 0 to 100
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12"></div>
                 </div>
-                <div class="col-md-4 col-sm-12"></div>
-            </div>
-            <div style="text-align: center; padding: 1%;">
-                <button class="btn btn-primary" style="background-color: blue; min-width: 10%;">SET</button>
-            </div>
+                <div style="text-align: center; padding: 1%;">
+                    <button type="submit" class="btn btn-primary" style="background-color: blue; min-width: 10%;">SET</button>
+                </div>
+            </form>
         </div>
 
     </div>
