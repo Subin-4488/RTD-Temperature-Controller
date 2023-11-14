@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary " style=" padding-top: 0px !important; min-height: 13vh;background-color: #3F88C5 !important; ">
   <div class="container-fluid" style="background-color: #3F88C5 !important; ">
-    <div class="nav-title">RTD Temperature Controller</div>
+    <a [routerLink]="['/dashboard', {outlets: {navRoute: ['home']}}]" class="nav-title">RTD Temperature Controller</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

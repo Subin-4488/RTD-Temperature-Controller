@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RTD_Temperature_Controller_DotnetAPI.Models;
 using System.IO.Ports;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
