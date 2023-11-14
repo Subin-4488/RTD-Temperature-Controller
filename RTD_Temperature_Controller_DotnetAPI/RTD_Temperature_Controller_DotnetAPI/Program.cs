@@ -24,7 +24,7 @@ namespace RTD_Temperature_Controller_DotnetAPI
             //database
             builder.Services.AddDbContext<RTDSensorDBContext>(
                 options => {
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("ConStr"));
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
                 });
 
             //dependency injection (IOC Service) for Serial port
@@ -51,6 +51,8 @@ namespace RTD_Temperature_Controller_DotnetAPI
             app.UseAuthorization();
 
             app.MapControllers();
+
+            //app.MapGet("/config", () => app.Configuration["ConnectionStrings:ConStr"] + " " + app.Configuration["Credentials:password"]);
 
             app.Run();
         }

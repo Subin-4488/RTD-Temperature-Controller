@@ -20,13 +20,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         {
             SerialPort spL = (SerialPort)sender;
             //write handling code
-            //Console.WriteLine(spL.ReadExisting());
-            StringBuilder stringBuilder = new StringBuilder();
-            for (string i = spL.ReadExisting(); i.Length > 0; i = spL.ReadExisting())
-            {
-                stringBuilder.Append(i);
-            }
-            Console.WriteLine(stringBuilder.ToString());
+            Console.WriteLine(spL.ReadExisting());
         }
 
         public ConnectionController(ISerialPortService serialPortService)

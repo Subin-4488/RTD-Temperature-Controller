@@ -1340,11 +1340,11 @@
           "lib/netstandard2.0/_._": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Design/7.0.12": {
+      "Microsoft.EntityFrameworkCore.Design/7.0.13": {
         "type": "package",
         "dependencies": {
           "Humanizer.Core": "2.14.1",
-          "Microsoft.EntityFrameworkCore.Relational": "7.0.12",
+          "Microsoft.EntityFrameworkCore.Relational": "7.0.13",
           "Microsoft.Extensions.DependencyModel": "7.0.0",
           "Mono.TextTemplating": "2.2.1"
         },
@@ -5789,10 +5789,10 @@
         "microsoft.entityframeworkcore.analyzers.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Design/7.0.12": {
-      "sha512": "5UoOLj+qJGkEoL379wi1cSq1bBCCZQZRO5w/wE89ZakQT6qx8juAlJLg4fFwfrg0tYWP12iUAholwcuDM38s7g==",
+    "Microsoft.EntityFrameworkCore.Design/7.0.13": {
+      "sha512": "3DlpSAxQhuxlhblySbM5ujxHALRi5m25ORPGnKKW4LCY1CPleCStdMSRnUB53vnhWDJUX12eIIvprajN++c2Ag==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.design/7.0.12",
+      "path": "microsoft.entityframeworkcore.design/7.0.13",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -5800,7 +5800,7 @@
         "build/net6.0/Microsoft.EntityFrameworkCore.Design.props",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Design.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Design.xml",
-        "microsoft.entityframeworkcore.design.7.0.12.nupkg.sha512",
+        "microsoft.entityframeworkcore.design.7.0.13.nupkg.sha512",
         "microsoft.entityframeworkcore.design.nuspec"
       ]
     },
@@ -11910,8 +11910,10 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
+      "Contracts >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 7.0.11",
       "Microsoft.EntityFrameworkCore >= 7.0.13",
+      "Microsoft.EntityFrameworkCore.Design >= 7.0.13",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.13",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.12",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 7.0.9",
@@ -11921,19 +11923,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Subin AM\\.nuget\\packages\\": {}
+    "C:\\Users\\subin\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
+      "projectUniqueName": "D:\\Tismo\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
       "projectName": "RTD_Temperature_Controller_DotnetAPI",
-      "projectPath": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
-      "packagesPath": "C:\\Users\\Subin AM\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\obj\\",
+      "projectPath": "D:\\Tismo\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI.csproj",
+      "packagesPath": "C:\\Users\\subin\\.nuget\\packages\\",
+      "outputPath": "D:\\Tismo\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\RTD_Temperature_Controller_DotnetAPI\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Subin AM\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\subin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -11941,14 +11948,18 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\Services\\Services.csproj": {
-              "projectPath": "C:\\Users\\Subin AM\\Desktop\\RTD Temperature Controller\\RTD_Temperature_Controller_DotnetAPI\\Services\\Services.csproj"
+            "D:\\Tismo\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\Contracts\\Contracts.csproj": {
+              "projectPath": "D:\\Tismo\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\Contracts\\Contracts.csproj"
+            },
+            "D:\\Tismo\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\Services\\Services.csproj": {
+              "projectPath": "D:\\Tismo\\RTD-Temperature-Controller\\RTD_Temperature_Controller_DotnetAPI\\Services\\Services.csproj"
             }
           }
         }
@@ -11968,6 +11979,12 @@
             "version": "[7.0.11, )"
           },
           "Microsoft.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[7.0.13, )"
+          },
+          "Microsoft.EntityFrameworkCore.Design": {
+            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+            "suppressParent": "All",
             "target": "Package",
             "version": "[7.0.13, )"
           },
@@ -12013,7 +12030,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
       }
     }
   }

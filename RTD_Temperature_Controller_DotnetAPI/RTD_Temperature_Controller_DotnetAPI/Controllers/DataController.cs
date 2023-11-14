@@ -29,7 +29,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
           {
               return NotFound();
           }
-            return await _context.TemperatureTable.ToListAsync();
+            return await _context.TemperatureTable.Select(d => d).ToListAsync();
         }
 
         // GET: api/Data/5
@@ -40,7 +40,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
           {
               return NotFound();
           }
-            var data = await _context.TemperatureTable.FindAsync(id);
+            var data = await _context.TemperatureTable.FirstOrDefaultAsync(d => d.Time == id);
 
             if (data == null)
             {
@@ -59,6 +59,9 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             {
                 return BadRequest();
             }
+
+            var matchData = await _context.TemperatureTable.FirstOrDefaultAsync(d => d.Time == id);
+            matchData.Temperature = data.Temperature; 
 
             _context.Entry(data).State = EntityState.Modified;
 

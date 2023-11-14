@@ -17,19 +17,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         {
             _serialPort = serialPortService.SerialPort;
         }
-        // GET: api/<ManualModeController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<ManualModeController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         // POST api/<ManualModeController>
         [HttpPost]
@@ -42,26 +29,13 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             Console.WriteLine(hexString);
             try
             {
-
                 _serialPort.Write(bytes, 0, bytes.Length);
             }
             catch(Exception ex)
             {
-
+                Console.WriteLine($"Exception: {ex.Message}");
             }
             return true;
-        }
-
-        // PUT api/<ManualModeController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ManualModeController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
