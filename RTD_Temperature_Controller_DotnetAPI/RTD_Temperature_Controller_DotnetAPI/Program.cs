@@ -14,21 +14,20 @@ namespace RTD_Temperature_Controller_DotnetAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             //database
             builder.Services.AddDbContext<RTDSensorDBContext>(
-                options => {
+                options =>
+                {
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
                 });
 
             //dependency injection (IOC Service) for Serial port
             builder.Services.AddSingleton<ISerialPortService, SerialPortService>();
+            builder.Services.AddScoped<IDataService, DataService>();
 
             var app = builder.Build();
 

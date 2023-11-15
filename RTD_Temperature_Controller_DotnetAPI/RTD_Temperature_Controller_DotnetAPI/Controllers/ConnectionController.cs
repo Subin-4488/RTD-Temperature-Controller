@@ -15,17 +15,12 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     public class ConnectionController : ControllerBase
     {
         private readonly SerialPort _serialPort;
+        private IDataService _dataService;
 
-        public static void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e)
-        {
-            SerialPort spL = (SerialPort)sender;
-            //write handling code
-            Console.WriteLine(spL.ReadExisting());
-        }
-
-        public ConnectionController(ISerialPortService serialPortService)
+        public ConnectionController(ISerialPortService serialPortService, IDataService dataService)
         {
             this._serialPort = serialPortService.SerialPort;
+            this._dataService = dataService;
             
             if (this._serialPort.IsOpen) this._serialPort.Close();
 
@@ -35,7 +30,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         [HttpGet("ports")]
         public IEnumerable<string> Get()
         {
-            //return new string[] { "COM1", "COM2" };
             return SerialPort.GetPortNames();
         }
 
@@ -43,10 +37,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         [HttpPost]
         public bool Post([FromBody] JsonObject value)
         {
-            //object objtemp = value["BitsPerSecond"];
             try
             {
-                //Program.SerialPort.PortName = value["PortName"]!.ToString();
                 this._serialPort.PortName = Convert.ToString(value["PortName"]);
             }
             catch(Exception e)
@@ -54,8 +46,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 Console.WriteLine(e);
                 return false;
             }
-            //Program.SerialPort.PortName = "COM5";
-            //Program.SerialPort.PortName = Convert.ToString(value["PortName"]);
             this._serialPort.BaudRate = int.Parse(value["BitsPerSecond"]!.ToString());
             
             switch (value["Parity"]!.ToString())
@@ -97,7 +87,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                     throw new Exception("BAD Parity format");
             }
 
-            _serialPort.DataReceived += new SerialDataReceivedEventHandler(ReadDataFromHardware);
+            _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
 
             try
             {
@@ -115,7 +105,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         {
             try
             {
-                _serialPort.DataReceived -= ReadDataFromHardware;
+                _serialPort.DataReceived -= _dataService.ReadDataFromHardware;
                 _serialPort.Close();
                 return true;
             }
@@ -124,19 +114,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 Console.WriteLine(ex);
                 return false;
             }
-        }
-
-
-            // PUT api/<ConnectionController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ConnectionController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
