@@ -12,12 +12,18 @@
     </div>
     <div class="field">
       <label for="dar" class="form-label">Data acquisition rate</label>
-      <input
-        class="form-control mb-2"
-        type="text"
+      <select
+        class="form-select"
+        aria-label="Default select example"
         id="dar"
         formControlName="dar"
-      />
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+      </select>
     </div>
     <div class="row justify-content-center mt-3 mb-2">
       Current Control
@@ -31,6 +37,7 @@
           id="current4"
           formControlName="current4"
         />
+        
       </div>
       <div class="field col">
         <label for="current20" class="form-label">20 mA</label>
@@ -87,8 +94,8 @@
       </div>
     </div>
     <div class="button-container">
-      <button class="btn btn-primary m-1">Reset</button>
-      <button type="submit" class="btn btn-secondary m-1">Submit</button>
+      <button type="button" class="btn btn-primary m-1">Reset</button>
+      <button type="submit" [disabled]="settingsForm.invalid" class="btn btn-secondary m-1">Submit</button>
     </div>
   </form>
 </div>
