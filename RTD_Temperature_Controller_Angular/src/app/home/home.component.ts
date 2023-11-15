@@ -7,15 +7,23 @@ import { Component, OnDestroy } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnDestroy {
+
+  color_0_15: string = "green";
+  color_16_30: string = "blue";
+  color_31_45: string = "red";
+  current_selection = "green";
+
   constructor(private http : HttpClient) {  
   }
  
   dataPoints:any[] = [];
   timeout:any = null;
-  xValue:number = 1;
+  xValue:number = 0;
   yValue:number = 10;
-  newDataCount:number = 10;
+  newDataCount:number = 6;
   chart: any;
+  
+  danger: boolean = false;
  
   chartOptions = {
     theme: "light2",
@@ -23,7 +31,11 @@ export class HomeComponent implements OnDestroy {
       text: "RTD Sensed Data"
     },
     axisX: {
-      title: "Time (seconds)"
+      title: "Time (seconds)",
+      valueFormatString: "HH:mm:ss",
+      interval: 1,  //data acquisition rate
+      intervalType: "second",
+      type: 'dateTime',
     },
     axisY: {
       title: "Temperature (°C)"
@@ -33,7 +45,7 @@ export class HomeComponent implements OnDestroy {
       lineThickness: 2,
       dataPoints: this.dataPoints,
       markerColor: "red",
-      lineColor:"black",
+      lineColor:this.current_selection,
     }]
   }
  
@@ -47,24 +59,56 @@ export class HomeComponent implements OnDestroy {
   }
  
   updateData = () => {
-    this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="+this.xValue+"&ystart="+this.yValue+"&length="+this.newDataCount+"type=json", { responseType: 'json' }).subscribe(this.addData);
+    this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="
+    +this.xValue
+    +"&ystart="
+    +this.yValue
+    +"&length="
+    +this.newDataCount
+    +"type=json", { responseType: 'json' })
+    .subscribe(this.addData);
+    
   }
  
   addData = (data:any) => {
+    
+    let time = new Date()
+    console.log("time: "+time)
+
     if(this.newDataCount != 1) {
       data.forEach( (val:any[]) => {
-        this.dataPoints.push({x: val[0], y: parseInt(val[1])});
-        this.xValue++;
+        console.log("1, VAL:"+val+" xVal:"+ this.xValue+" yVal:"+this.yValue)
+        this.dataPoints.push({x: time, y: parseInt(val[1])});
         this.yValue = parseInt(val[1]);  
+        this.xValue++;
       })
     } else {
-      //this.dataPoints.shift();
-      this.dataPoints.push({x: data[0][0], y: parseInt(data[0][1])});
-      this.xValue++;
+      console.log("1, VAL:"+data[0]+" xVal:"+ this.xValue+" yVal:"+this.yValue)
+      this.dataPoints.shift();
+      this.dataPoints.push({x: time, y: parseInt(data[0][1]), lineColor: this.getColor(parseInt(data[0][1]))});
+      this.current_selection = this.getColor(parseInt(data[0][1 ]))
       this.yValue = parseInt(data[0][1]);  
+      this.xValue++;
+      
     }
     this.newDataCount = 1;
     this.chart.render();
-    this.timeout = setTimeout(this.updateData, 1000);
+    this.timeout = setTimeout(this.updateData, 1000);  //data acquisition rate
+  }
+
+  getColor(temperature: number): string {
+    if (temperature >= 0 && temperature <= 15) {
+      this.danger = false;
+      return this.color_0_15;
+    } else if (temperature >= 16 && temperature <= 30) {
+      this.danger = false;
+      return this.color_16_30;
+    } else if (temperature >= 31 && temperature <= 45) {
+      this.danger = true;
+      return this.color_31_45;
+    } else {
+      // Default color for values outside the specified ranges
+      return "black";
+    }
   }
 }                              
