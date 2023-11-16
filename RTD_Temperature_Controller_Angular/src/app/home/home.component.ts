@@ -1,5 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
+import * as signalR from '@microsoft/signalr';
+import { SettingsService } from '../services/settings.service';
+import { HubService } from '../services/hub.service';
+
 
 @Component({
   selector: 'app-home',
@@ -8,13 +12,18 @@ import { Component, OnDestroy } from '@angular/core';
 })
 export class HomeComponent implements OnDestroy {
 
+  //private hubConnection: signalR.HubConnection;
   color_0_15: string = "green";
   color_16_30: string = "blue";
   color_31_45: string = "red";
   current_selection = "green";
 
-  constructor(private http : HttpClient) {  
+  constructor(private http : HttpClient,private hubService:HubService ) {  
+
+    this.hubService.readSocket();
+
   }
+
  
   dataPoints:any[] = [];
   timeout:any = null;
@@ -56,24 +65,27 @@ export class HomeComponent implements OnDestroy {
  
   ngOnDestroy() {
     clearTimeout(this.timeout);
+    this.hubService.close();
   }
  
   updateData = () => {
-    this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="
-    +this.xValue
-    +"&ystart="
-    +this.yValue
-    +"&length="
-    +this.newDataCount
-    +"type=json", { responseType: 'json' })
-    .subscribe(this.addData);
+    // this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="
+    // +this.xValue
+    // +"&ystart="
+    // +this.yValue
+    // +"&length="
+    // +this.newDataCount
+    // +"type=json", { responseType: 'json' })
+    // .subscribe(this.addData);
+    this.hubService.readSocket()
     
   }
  
   addData = (data:any) => {
     
+    
     let time = new Date()
-    console.log("time: "+time)
+    //console.log("time: "+time)
 
     if(this.newDataCount != 1) {
       data.forEach( (val:any[]) => {
@@ -83,7 +95,7 @@ export class HomeComponent implements OnDestroy {
         this.xValue++;
       })
     } else {
-      console.log("1, VAL:"+data[0]+" xVal:"+ this.xValue+" yVal:"+this.yValue)
+      //console.log("1, VAL:"+data[0]+" xVal:"+ this.xValue+" yVal:"+this.yValue)
       this.dataPoints.shift();
       this.dataPoints.push({x: time, y: parseInt(data[0][1]), lineColor: this.getColor(parseInt(data[0][1]))});
       this.current_selection = this.getColor(parseInt(data[0][1 ]))

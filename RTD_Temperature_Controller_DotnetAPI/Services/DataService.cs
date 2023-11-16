@@ -1,6 +1,8 @@
 ﻿using Contracts;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using RTD_Temperature_Controller_DotnetAPI.DBContext;
+using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -14,16 +16,21 @@ namespace Services
     public class DataService : IDataService
     {
         private readonly RTDSensorDBContext _dbContext;
-        public DataService(RTDSensorDBContext dBContext)
+        private readonly IHubContext<TemperatureHub> _hubContext;
+
+        public DataService(RTDSensorDBContext dBContext, IHubContext<TemperatureHub> hubContext)
         {
-            
+            _hubContext = hubContext;   
         }
         public async void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort spL = (SerialPort)sender;
             //Do the parsing and write to database
             //await WriteToDatabase(new Data() { Temperature = 0, Time = DateTime.Now });
+
             Console.WriteLine(spL.ReadExisting());
+            var d = new Data {Temperature= 25, Time = DateTime.Now};
+            await _hubContext.Clients.All.SendAsync("UpdateTemperature", 25);
         }
 
         public async Task<(bool, string)> WriteToDatabase(Data data)

@@ -14,6 +14,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { ManualmodeComponent } from './manualmode/manualmode.component';
 
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import * as signalR from '@microsoft/signalr';
 
 
 @NgModule({
@@ -31,7 +32,7 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    CanvasJSAngularChartsModule
+    CanvasJSAngularChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
