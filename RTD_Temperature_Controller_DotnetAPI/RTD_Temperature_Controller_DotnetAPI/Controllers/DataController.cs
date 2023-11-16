@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RTD_Temperature_Controller_DotnetAPI.DBContext;
 using RTD_Temperature_Controller_DotnetAPI.Models;
@@ -22,25 +17,42 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         }
 
         // GET: api/Data
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Data>>> GetTemperatureTable()
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<Data>>> GetEntireTemperatureData()
         {
-          if (_context.TemperatureTable == null)
-          {
-              return NotFound();
-          }
+            if (_context.TemperatureTable == null)
+            {
+                return NotFound();
+            }
             return await _context.TemperatureTable.Select(d => d).ToListAsync();
         }
 
         // GET: api/Data/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Data>> GetData(DateTime id)
+        public async Task<ActionResult<Data>> GetTemperatureData(DateTime id)
         {
-          if (_context.TemperatureTable == null)
-          {
-              return NotFound();
-          }
+            if (_context.TemperatureTable == null)
+            {
+                return NotFound();
+            }
             var data = await _context.TemperatureTable.FirstOrDefaultAsync(d => d.Time == id);
+
+            if (data == null)
+            {
+                return NotFound();
+            }
+
+            return data;
+        }
+
+        [HttpGet("latest")]
+        public async Task<ActionResult<Data>> GetLatestTemperatureData()
+        {
+            if (_context.TemperatureTable == null)
+            {
+                return NotFound();
+            }
+            var data = await _context.TemperatureTable.LastOrDefaultAsync();
 
             if (data == null)
             {
@@ -61,7 +73,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
 
             var matchData = await _context.TemperatureTable.FirstOrDefaultAsync(d => d.Time == id);
-            matchData.Temperature = data.Temperature; 
+            matchData.Temperature = data.Temperature;
 
             _context.Entry(data).State = EntityState.Modified;
 
@@ -86,32 +98,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 
         // POST: api/Data
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Data>> PostData(Data data)
-        {
-          if (_context.TemperatureTable == null)
-          {
-              return Problem("Entity set 'RTDSensorDBContext.TemperatureTable'  is null.");
-          }
-            _context.TemperatureTable.Add(data);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (DataExists(data.Time))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return CreatedAtAction("GetData", new { id = data.Time }, data);
-        }
 
         // DELETE: api/Data/5
         [HttpDelete("{id}")]

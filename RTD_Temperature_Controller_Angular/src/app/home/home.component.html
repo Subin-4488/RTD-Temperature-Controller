@@ -8,7 +8,8 @@
             <span>23°C</span>
         </h4>
         <h4 style="font-weight: bold; text-align: center;">Indication:
-            <span style="color: green;">SAFE</span>
+            <span *ngIf="!danger" style="color: green;">SAFE</span>
+            <span id="danger" *ngIf="danger" >DANGER!!</span>
         </h4>
     </div>
     <div>
