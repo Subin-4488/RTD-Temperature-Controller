@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -11,6 +13,13 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     [ApiController]
     public class SettingsController : ControllerBase
     {
+
+        private readonly IHubContext<TemperatureHub> _hubContext;
+
+        public SettingsController(IHubContext<TemperatureHub> hubContext)
+        {
+            _hubContext = hubContext;
+        }
         // GET: api/<SettingsController>
         [HttpGet]
         public async Task<Settings> Get()
@@ -19,8 +28,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             using FileStream openStream = System.IO.File.OpenRead(fileName);
             Settings? settingsValue =
                 await JsonSerializer.DeserializeAsync<Settings>(openStream);
+
             return settingsValue;
-            //return new Settings(0, 0, 0, 0, Colors.red, Colors.green, Colors.blue);
         }
 
         // GET api/<SettingsController>/5

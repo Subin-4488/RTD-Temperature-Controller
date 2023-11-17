@@ -29,11 +29,9 @@ export class ConnectionComponent {
   }
 
   onSubmit(value:string){
-    console.log(value)  
     let newConnection = new Connection(this.connectionForm.value.portname,this.connectionForm.value.bps,this.connectionForm.value.databits,this.connectionForm.value.parity,this.connectionForm.value.stopbits)
     this.connectionService.createConnection(newConnection).subscribe(data=>{
       this.connectionStatus=data;
-      console.log(this.connectionStatus)
       if(this.connectionStatus == true)
         this.router.navigateByUrl('dashboard/(navRoute:home)')
       else{
