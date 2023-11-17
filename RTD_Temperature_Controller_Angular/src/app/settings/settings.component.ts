@@ -23,6 +23,7 @@ export class SettingsComponent {
       c2:[,Validators.required],
       c3:[,Validators.required]
     })
+    this.resetSettings()
   }
   onSubmit(value:string){
     let newSettings = new Settings(this.settingsForm.value.threshold,this.settingsForm.value.dar,

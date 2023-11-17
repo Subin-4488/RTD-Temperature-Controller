@@ -20,6 +20,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         private IDataService _dataService;
         private readonly IHubContext<TemperatureHub> _hubContext;
         Thread _thread;
+        private static Boolean _status=false;
 
         public ConnectionController(IHubContext<TemperatureHub> hubContext,ISerialPortService serialPortService, IDataService dataService)
         {
@@ -97,6 +98,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             try
             {
                 _serialPort.Open();
+                _status = true;
                 _thread = new Thread(sendRandom);
                 _thread.Start();
                 return true;
@@ -112,7 +114,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             Console.WriteLine("In thread");
             Random rnd = new Random();
             
-            while (true)
+            while (_status==true)
             {
                 int num = rnd.Next(1, 45);
                 var data = new Data();
@@ -131,6 +133,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             {
                 _serialPort.DataReceived -= _dataService.ReadDataFromHardware;
                 _serialPort.Close();
+                _status = false;
                 //_thread.Abort();
                 return true;
             }

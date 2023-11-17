@@ -5,7 +5,6 @@ import { SettingsService } from '../services/settings.service';
 import { HubService } from '../services/hub.service';
 import { DatePipe } from '@angular/common';
 import { Colors, Settings } from '../models/Settings';
-import { Colors, Settings } from '../models/Settings';
 
 
 @Component({
