@@ -24,10 +24,6 @@ export class HubService {
     });    
   }
 
-  dummy(){
-    console.log()
-  }
-
   close(){
     this.hubConnection.off('UpdateTemperature')
   }

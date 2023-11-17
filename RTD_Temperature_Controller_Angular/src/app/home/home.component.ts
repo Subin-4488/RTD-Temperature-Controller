@@ -22,6 +22,9 @@ export class HomeComponent implements OnDestroy {
     ,private hubService:HubService
     ,private datePipe: DatePipe
     ,private settings_service: SettingsService) {
+
+      if (this.settings.threshold == 0)
+
       this.settings_service.resetSettings().subscribe(data=>{
         
         this.settings = data
@@ -100,7 +103,7 @@ export class HomeComponent implements OnDestroy {
         this.dataPoints.push({x: new Date(val.time), y: parseInt(val.temperature),  lineColor: this.getColor(parseInt(val.temperature))});
         
         var formattedTime = this.datePipe.transform(val.time, 'HH:mm:ss')
-         console.log("Recur: "+formattedTime+":"+val.temperature+":"+this.getColor(parseInt(data[0].temperature)))
+        //  console.log("Recur: "+formattedTime+":"+val.temperature+":"+this.getColor(parseInt(data[0].temperature)))
         
       })
       data = []

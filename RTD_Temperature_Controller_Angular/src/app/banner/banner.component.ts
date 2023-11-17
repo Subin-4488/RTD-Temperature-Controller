@@ -21,11 +21,14 @@ export class BannerComponent {
     this.connectionService.disconnectConnection().subscribe(data=>{
       
       ifDisconnected = data
-      if(ifDisconnected==true)
-        this.router_service.navigate(["/"]);
+      if(ifDisconnected==true){
+        this.router_service.navigate(["/"]).then(() => {
+          window.location.reload()
+        })
+      }
     })
 
     this.hub_service.close()
-    
+  
   }
 }
