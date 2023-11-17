@@ -24,15 +24,22 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         [HttpGet]
         public async Task<Settings> Get()
         {
-            string fileName = "C:\\Users\\Alby Joseph\\Desktop\\RTD-Temperature-Controller\\settingsFile.json";
+            string fileName = @"C:\Users\Subin AM\Desktop\RTD Temperature Controller\settingsFile.json";
             using FileStream openStream = System.IO.File.OpenRead(fileName);
             Settings? settingsValue =
                 await JsonSerializer.DeserializeAsync<Settings>(openStream);
 
             Console.WriteLine("in settings");
-            await _hubContext.Clients.All.SendAsync("UpdateTemperature", 25);
-            await _hubContext.Clients.All.SendAsync("UpdateTemperature", 26);
-            await _hubContext.Clients.All.SendAsync("UpdateTemperature", 27);
+
+            //instead use thread+random generator for adding data to soxket for testing
+            Task.Run(async() =>
+            {
+                while (true)
+                {
+                    await _hubContext.Clients.All.SendAsync("UpdateTemperature", new Random().Next(1, 45));
+                    Thread.Sleep(1000);
+                }
+            });
 
 
 
@@ -60,7 +67,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             newSettings.Color_16_30 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_16_30"]));
             newSettings.Color_31_45 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_31_45"]));
             string jsonString = JsonSerializer.Serialize<Settings>(newSettings);
-            System.IO.File.WriteAllText(@"C:\Users\Alby Joseph\Desktop\RTD-Temperature-Controller\settingsFile.json", jsonString);
+            System.IO.File.WriteAllText(@"C:\Users\Subin AM\Desktop\RTD Temperature Controller\settingsFile.json", jsonString);
         }
 
         // PUT api/<SettingsController>/5

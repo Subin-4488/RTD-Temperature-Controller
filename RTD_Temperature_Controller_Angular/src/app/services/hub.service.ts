@@ -6,6 +6,10 @@ import * as signalR from '@microsoft/signalr';
 })
 export class HubService {
 
+  //temperature provider
+  temperatureFromSensor: number[] = [];
+
+
   private hubConnection: signalR.HubConnection;
   constructor() {
     console.log("sadfasfasfsdfasfas")
@@ -13,19 +17,15 @@ export class HubService {
       .withUrl('https://localhost:3000/temperatureHub',{ withCredentials: false })
       .build();
 
-    this.hubConnection.start().then(() => {
+    this.hubConnection.start().then(() => { 
       console.log('Connection started');
+      console.log("READ SOCKET....")
+      this.hubConnection.on('UpdateTemperature', (temperature: number) => {
+        //this.temperature = temperature;
+        this.temperatureFromSensor.push(temperature);
+      })
     });
-    console.log("registered callback...")
-    this.hubConnection.on('UpdateTemperature', (temperature: number) => {
-      //this.temperature = temperature;
-      console.log(`Received temperature update: ${temperature}`);
-    });
-    console.log("finished registering callback...")
     
-  }
-
-  readSocket(){
     
   }
 

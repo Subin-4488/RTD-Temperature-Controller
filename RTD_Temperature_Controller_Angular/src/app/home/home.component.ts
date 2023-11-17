@@ -19,9 +19,7 @@ export class HomeComponent implements OnDestroy {
   current_selection = "green";
 
   constructor(private http : HttpClient,private hubService:HubService ) {  
-
-    this.hubService.readSocket();
-
+    
   }
 
  
@@ -65,20 +63,26 @@ export class HomeComponent implements OnDestroy {
  
   ngOnDestroy() {
     clearTimeout(this.timeout);
-    this.hubService.close();
   }
  
   updateData = () => {
-    // this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="
-    // +this.xValue
-    // +"&ystart="
-    // +this.yValue
-    // +"&length="
-    // +this.newDataCount
-    // +"type=json", { responseType: 'json' })
-    // .subscribe(this.addData);
-    this.hubService.readSocket()
+    this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="
+    +this.xValue
+    +"&ystart="
+    +this.yValue
+    +"&length="
+    +this.newDataCount
+    +"type=json", { responseType: 'json' })
+    .subscribe(this.addData);
+    // this.hubService.readSocket()
     
+    let temperatureData: number[] = [];
+    this.hubService.temperatureFromSensor.forEach(d => {
+      temperatureData.push(d)
+      console.log(`Received temperature update: ${d}`)
+    })  
+
+    //call addData(temperatureData)
   }
  
   addData = (data:any) => {
@@ -89,7 +93,7 @@ export class HomeComponent implements OnDestroy {
 
     if(this.newDataCount != 1) {
       data.forEach( (val:any[]) => {
-        console.log("1, VAL:"+val+" xVal:"+ this.xValue+" yVal:"+this.yValue)
+        // console.log("1, VAL:"+val+" xVal:"+ this.xValue+" yVal:"+this.yValue)
         this.dataPoints.push({x: time, y: parseInt(val[1])});
         this.yValue = parseInt(val[1]);  
         this.xValue++;
