@@ -2,6 +2,7 @@
 using Contracts;
 using Microsoft.EntityFrameworkCore;
 using RTD_Temperature_Controller_DotnetAPI.DBContext;
+using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
 using Services;
 using System.IO.Ports;
@@ -17,6 +18,9 @@ namespace RTD_Temperature_Controller_DotnetAPI
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            //websocket
+            builder.Services.AddSignalR();
 
             //database
             builder.Services.AddDbContext<RTDSensorDBContext>(
@@ -49,7 +53,11 @@ namespace RTD_Temperature_Controller_DotnetAPI
 
             app.UseAuthorization();
 
+            app.MapHub<TemperatureHub>("/temperatureHub");
+
             app.MapControllers();
+
+            
 
             //app.MapGet("/config", () => app.Configuration["ConnectionStrings:ConStr"] + " " + app.Configuration["Credentials:password"]);
 

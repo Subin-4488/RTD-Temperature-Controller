@@ -28,7 +28,6 @@ export class SettingsService {
     else{
       msg='Error Code: ${error.status}\n Message: ${error.message}';
     }
-    console.log(msg)
     return throwError(msg)
 
   }

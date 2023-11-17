@@ -1,5 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
+import * as signalR from '@microsoft/signalr';
+import { SettingsService } from '../services/settings.service';
+import { HubService } from '../services/hub.service';
+import { DatePipe } from '@angular/common';
+import { Colors, Settings } from '../models/Settings';
+import { Colors, Settings } from '../models/Settings';
+
 
 @Component({
   selector: 'app-home',
@@ -8,34 +15,45 @@ import { Component, OnDestroy } from '@angular/core';
 })
 export class HomeComponent implements OnDestroy {
 
-  color_0_15: string = "green";
-  color_16_30: string = "blue";
-  color_31_45: string = "red";
+  settings: Settings = new Settings(0,0,0,0,'','','');
   current_selection = "green";
 
-  constructor(private http : HttpClient) {  
+
+  constructor(private http : HttpClient
+    ,private hubService:HubService
+    ,private datePipe: DatePipe
+    ,private settings_service: SettingsService) {
+      this.settings_service.resetSettings().subscribe(data=>{
+        
+        this.settings = data
+        this.settings.color_0_15 = Colors[Number(data.color_0_15)]
+        this.settings.color_16_30 = Colors[Number(data.color_16_30)]
+        this.settings.color_31_45 = Colors[Number(data.color_31_45)]
+      })  
+      
   }
+
  
   dataPoints:any[] = [];
   timeout:any = null;
-  xValue:number = 0;
-  yValue:number = 10;
-  newDataCount:number = 6;
   chart: any;
   
   danger: boolean = false;
- 
+
+
   chartOptions = {
     theme: "light2",
     title: {
       text: "RTD Sensed Data"
     },
     axisX: {
+      type: Date,
       title: "Time (seconds)",
-      valueFormatString: "HH:mm:ss",
-      interval: 1,  //data acquisition rate
-      intervalType: "second",
-      type: 'dateTime',
+       valueFormatString: "HH:mm:ss",
+      //  interval: 1,  //data acquisition rate
+      // intervalType: "second",
+     
+
     },
     axisY: {
       title: "Temperature (°C)"
@@ -48,67 +66,77 @@ export class HomeComponent implements OnDestroy {
       lineColor:this.current_selection,
     }]
   }
+
+  
  
   getChartInstance(chart: object) {
     this.chart = chart;
-    this.updateData();
+    this.settings_service.resetSettings().subscribe(data=>{
+      this.settings = data
+      this.settings.color_0_15 = Colors[Number(data.color_0_15)]
+      this.settings.color_16_30 = Colors[Number(data.color_16_30)]
+      this.settings.color_31_45 = Colors[Number(data.color_31_45)]
+      this.updateData();
+    })     
   }
- 
+  
   ngOnDestroy() {
     clearTimeout(this.timeout);
   }
  
-  updateData = () => {
-    this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="
-    +this.xValue
-    +"&ystart="
-    +this.yValue
-    +"&length="
-    +this.newDataCount
-    +"type=json", { responseType: 'json' })
-    .subscribe(this.addData);
-    
+  updateData = () => { 
+    let temperatureData: number[] = [];
+    this.hubService.temperatureFromSensor.forEach(d => {
+      temperatureData.push(d)
+    })  
+    this.addData(temperatureData)
+      this.hubService.temperatureFromSensor = []
   }
- 
-  addData = (data:any) => {
-    
-    let time = new Date()
-    console.log("time: "+time)
+  
+  addData = (data:any[]) => {
 
-    if(this.newDataCount != 1) {
-      data.forEach( (val:any[]) => {
-        console.log("1, VAL:"+val+" xVal:"+ this.xValue+" yVal:"+this.yValue)
-        this.dataPoints.push({x: time, y: parseInt(val[1])});
-        this.yValue = parseInt(val[1]);  
-        this.xValue++;
+    if(data.length > 1) {
+      data.forEach( (val:any) => {
+        
+        this.dataPoints.push({x: new Date(val.time), y: parseInt(val.temperature),  lineColor: this.getColor(parseInt(val.temperature))});
+        
+        var formattedTime = this.datePipe.transform(val.time, 'HH:mm:ss')
+         console.log("Recur: "+formattedTime+":"+val.temperature+":"+this.getColor(parseInt(data[0].temperature)))
+        
       })
-    } else {
-      console.log("1, VAL:"+data[0]+" xVal:"+ this.xValue+" yVal:"+this.yValue)
-      this.dataPoints.shift();
-      this.dataPoints.push({x: time, y: parseInt(data[0][1]), lineColor: this.getColor(parseInt(data[0][1]))});
-      this.current_selection = this.getColor(parseInt(data[0][1 ]))
-      this.yValue = parseInt(data[0][1]);  
-      this.xValue++;
+      data = []
+
+    } 
+    else {
+      var formattedTime = this.datePipe.transform(data[0].time, 'HH:mm:ss')
+      // console.log("normal: "+formattedTime+":"+data[0].temperature)
+        
+      this.dataPoints.push({x: new Date(data[0].time), y: parseInt(data[0].temperature), lineColor: this.getColor(parseInt(data[0].temperature))});
+      this.current_selection = this.getColor(parseInt(data[0].temperature))
       
     }
-    this.newDataCount = 1;
     this.chart.render();
-    this.timeout = setTimeout(this.updateData, 1000);  //data acquisition rate
+    if (this.dataPoints.length>4){
+      while (this.dataPoints.length>=4)
+        this.dataPoints.shift();
+    }
+    this.timeout = setTimeout(this.updateData, this.settings.dataAcquisitionRate*1000);  //data acquisition rate
+
   }
 
   getColor(temperature: number): string {
     if (temperature >= 0 && temperature <= 15) {
       this.danger = false;
-      return this.color_0_15;
+      return this.settings.color_0_15; 
     } else if (temperature >= 16 && temperature <= 30) {
       this.danger = false;
-      return this.color_16_30;
+      return this.settings.color_16_30;
     } else if (temperature >= 31 && temperature <= 45) {
       this.danger = true;
-      return this.color_31_45;
+      return this.settings.color_31_45;
     } else {
       // Default color for values outside the specified ranges
       return "black";
     }
   }
-}                              
+}                               
