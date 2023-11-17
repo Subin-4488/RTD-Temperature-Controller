@@ -40,7 +40,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                     var d = random.Next(1,45);
                     await _hubContext.Clients.All.SendAsync("UpdateTemperature", d);
                     Console.WriteLine("Write to socket: "+d);
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1000);
                 }
             });
 

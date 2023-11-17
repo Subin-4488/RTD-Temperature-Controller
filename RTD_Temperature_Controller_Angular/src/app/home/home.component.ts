@@ -19,9 +19,6 @@ export class HomeComponent implements OnDestroy {
 
   dataPoints:any[] = [];
   timeout:any = null;
-  xValue:number = 0;
-  yValue:number = 10;
-  newDataCount:number = 5;
   chart: any;
   
   danger: boolean = false;
@@ -34,8 +31,11 @@ export class HomeComponent implements OnDestroy {
       text: "RTD Sensed Data"
     },
     axisX: {
+      type: Date,
       title: "Time (seconds)",
-      valueFormatString: "HH:mm:ss"
+       valueFormatString: "HH:mm:ss",
+       interval: 1,  //data acquisition rate
+      intervalType: "second",
      
     },
     axisY: {
@@ -56,12 +56,12 @@ export class HomeComponent implements OnDestroy {
     this.chart = chart;
     this.updateData();
   }
- 
+  
   ngOnDestroy() {
     clearTimeout(this.timeout);
   }
  
-  updateData = () => {
+  updateData = () => { 
     
     let temperatureData: number[] = [];
     this.hubService.temperatureFromSensor.forEach(d => {
@@ -76,30 +76,26 @@ export class HomeComponent implements OnDestroy {
 
     console.log("Data to plot in AddData(): "+data)
     console.log("LENGTH: "+this.dataPoints.length)
-    let time = new Date()
+
 
     if(data.length > 1) {
       data.forEach( (val:any) => {
         console.log("recur: "+val)
-        this.dataPoints.push({x: time, y: parseInt(val)});
-        this.yValue = parseInt(val)
-        this.xValue++;
+        this.dataPoints.push({x: new Date(), y: parseInt(val)});
+
       })
     } else {
       if (this.dataPoints.length>4){
-        while (this.dataPoints.length!=5)
+        while (this.dataPoints.length!=4)
           this.dataPoints.shift();
       }
         
-      this.dataPoints.push({x: time, y: parseInt(data), lineColor: this.getColor(parseInt(data))});
+      this.dataPoints.push({x: new Date(), y: parseInt(data), lineColor: this.getColor(parseInt(data))});
       this.current_selection = this.getColor(parseInt(data))
-      this.yValue = parseInt(data);  
-      this.xValue++;
-      
+
     }
-    this.newDataCount = 1;
     this.chart.render();
-    this.timeout = setTimeout(this.updateData, 2000);  //data acquisition rate
+    this.timeout = setTimeout(this.updateData, 1000);  //data acquisition rate
   }
 
   getColor(temperature: number): string {
@@ -117,4 +113,4 @@ export class HomeComponent implements OnDestroy {
       return "black";
     }
   }
-}                              
+}                               
