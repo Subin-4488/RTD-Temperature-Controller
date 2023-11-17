@@ -6,6 +6,10 @@ import * as signalR from '@microsoft/signalr';
 })
 export class HubService {
 
+  //temperature provider
+  temperatureFromSensor: number[] = [];
+
+
   public hubConnection: signalR.HubConnection;
   constructor() {
     console.log("sadfasfasfsdfasfas")
