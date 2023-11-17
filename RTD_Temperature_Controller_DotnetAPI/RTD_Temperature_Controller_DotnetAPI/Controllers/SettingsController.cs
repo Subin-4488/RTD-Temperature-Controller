@@ -29,25 +29,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             Settings? settingsValue =
                 await JsonSerializer.DeserializeAsync<Settings>(openStream);
 
-            Console.WriteLine("in settings");
-
-            //instead use thread+random generator for adding data to soxket for testing
-            Task.Run(async() =>
-            {
-                Random random = new Random();
-                while (true)
-                {
-                    var d = random.Next(1,45);
-                    await _hubContext.Clients.All.SendAsync("UpdateTemperature", d);
-                    Console.WriteLine("Write to socket: "+d);
-                    Thread.Sleep(1000);
-                }
-            });
-
-
-
             return settingsValue;
-            //return new Settings(0, 0, 0, 0, Colors.red, Colors.green, Colors.blue);
         }
 
         // GET api/<SettingsController>/5

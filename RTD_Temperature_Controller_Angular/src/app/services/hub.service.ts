@@ -7,23 +7,25 @@ import * as signalR from '@microsoft/signalr';
 export class HubService {
 
   //temperature provider
-  temperatureFromSensor: number[] = [];
+  temperatureFromSensor: any[] = [];
 
 
-  private hubConnection: signalR.HubConnection;
+  public hubConnection: signalR.HubConnection;
   constructor() {
-    console.log("sadfasfasfsdfasfas")
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl('https://localhost:3000/temperatureHub',{ withCredentials: false })
       .build();
 
-    this.hubConnection.start().then(() => { 
-      console.log("READ SOCKET....")
-      this.hubConnection.on('UpdateTemperature', (temperature: number) => {
-        //this.temperature = temperature;
-        this.temperatureFromSensor.push(temperature);
-      })
-    });
+    this.hubConnection.start().then(() => {
+      this.hubConnection.on('UpdateTemperature', (temperature: any) => {
+        this.temperatureFromSensor.push(temperature)
+        // console.log(temperature.time+" : "+temperature.temperature)
+      });
+    });    
+  }
+
+  dummy(){
+    console.log()
   }
 
   close(){

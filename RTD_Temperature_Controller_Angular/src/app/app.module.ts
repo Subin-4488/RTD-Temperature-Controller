@@ -15,6 +15,7 @@ import { ManualmodeComponent } from './manualmode/manualmode.component';
 
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import * as signalR from '@microsoft/signalr';
+import { DatePipe } from '@angular/common';
 
 
 @NgModule({
@@ -34,7 +35,9 @@ import * as signalR from '@microsoft/signalr';
     HttpClientModule,
     CanvasJSAngularChartsModule,
   ],
-  providers: [],
+  providers: [
+    DatePipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

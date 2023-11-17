@@ -21,7 +21,6 @@ export class BannerComponent {
     this.connectionService.disconnectConnection().subscribe(data=>{
       
       ifDisconnected = data
-      console.log(ifDisconnected)
       if(ifDisconnected==true)
         this.router_service.navigate(["/"]);
     })
