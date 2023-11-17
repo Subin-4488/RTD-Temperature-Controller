@@ -5,6 +5,7 @@ import { SettingsService } from '../services/settings.service';
 import { HubService } from '../services/hub.service';
 import { DatePipe } from '@angular/common';
 import { Colors, Settings } from '../models/Settings';
+import { Colors, Settings } from '../models/Settings';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class HomeComponent implements OnDestroy {
 
   settings: Settings = new Settings(0,0,0,0,'','','');
   current_selection = "green";
+
 
   constructor(private http : HttpClient
     ,private hubService:HubService
@@ -51,6 +53,7 @@ export class HomeComponent implements OnDestroy {
       //  interval: 1,  //data acquisition rate
       // intervalType: "second",
      
+
     },
     axisY: {
       title: "Temperature (°C)"
@@ -118,6 +121,7 @@ export class HomeComponent implements OnDestroy {
         this.dataPoints.shift();
     }
     this.timeout = setTimeout(this.updateData, this.settings.dataAcquisitionRate*1000);  //data acquisition rate
+
   }
 
   getColor(temperature: number): string {

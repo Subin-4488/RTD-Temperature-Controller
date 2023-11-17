@@ -38,7 +38,6 @@ export class ConnectionComponent {
         alert("Connection error. Try changing the values.")
       }
     })
-    
   }
 
   resetValues(){
