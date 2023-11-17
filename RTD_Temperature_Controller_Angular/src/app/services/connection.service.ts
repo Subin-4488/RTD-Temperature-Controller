@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Connection } from '../models/Connection';
 import { Observable, catchError, throwError } from 'rxjs';
+import { HubService } from './hub.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class ConnectionService {
       'Content-Type':'application/json'
     })}
 
-  constructor(private httpClient:HttpClient) { 
+  constructor(private httpClient:HttpClient,private hubService:HubService) { 
 
   }
 
@@ -42,6 +43,7 @@ export class ConnectionService {
   }
 
   disconnectConnection():Observable<boolean>{
+    this.hubService.close();
     return this.httpClient.post<boolean>(this.baseurl+'/connection/disconnect/','',this.httpHeader)
     .pipe(
       catchError(this.httpError)

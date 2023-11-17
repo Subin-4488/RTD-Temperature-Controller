@@ -29,10 +29,10 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             Settings? settingsValue =
                 await JsonSerializer.DeserializeAsync<Settings>(openStream);
 
-            Console.WriteLine("in settings");
-            await _hubContext.Clients.All.SendAsync("UpdateTemperature", 25);
-            await _hubContext.Clients.All.SendAsync("UpdateTemperature", 26);
-            await _hubContext.Clients.All.SendAsync("UpdateTemperature", 27);
+            //Console.WriteLine("in settings");
+            //await _hubContext.Clients.All.SendAsync("UpdateTemperature", 25);
+            //await _hubContext.Clients.All.SendAsync("UpdateTemperature", 26);
+            //await _hubContext.Clients.All.SendAsync("UpdateTemperature", 27);
 
 
 

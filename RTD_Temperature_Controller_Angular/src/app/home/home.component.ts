@@ -3,6 +3,7 @@ import { Component, OnDestroy } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { SettingsService } from '../services/settings.service';
 import { HubService } from '../services/hub.service';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -18,10 +19,16 @@ export class HomeComponent implements OnDestroy {
   color_31_45: string = "red";
   current_selection = "green";
 
-  constructor(private http : HttpClient,private hubService:HubService ) {  
+  constructor(private http : HttpClient,private hubService:HubService,private datePipe: DatePipe ) {  
+    console.log("constructor")
+    this.hubService.hubConnection.on('UpdateTemperature', (temperature: any) => {
 
-    this.hubService.readSocket();
-
+      var curtime = new Date(temperature.time);
+      var formattedTime = this.datePipe.transform(curtime, 'HH:mm:ss')
+      console.log(formattedTime)
+      this.dataPoints.push({x: curtime, y: temperature.temperature, lineColor: this.getColor(parseInt(temperature.temperature))});
+      this.chart.render()
+    });
   }
 
  
@@ -60,36 +67,38 @@ export class HomeComponent implements OnDestroy {
  
   getChartInstance(chart: object) {
     this.chart = chart;
-    this.updateData();
+    //this.updateData();
+    
   }
  
   ngOnDestroy() {
+    console.log("destroyed")
     clearTimeout(this.timeout);
     this.hubService.close();
   }
  
   updateData = () => {
-    // this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="
-    // +this.xValue
-    // +"&ystart="
-    // +this.yValue
-    // +"&length="
-    // +this.newDataCount
-    // +"type=json", { responseType: 'json' })
-    // .subscribe(this.addData);
-    this.hubService.readSocket()
+    this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="
+    +this.xValue
+    +"&ystart="
+    +this.yValue
+    +"&length="
+    +this.newDataCount
+    +"type=json", { responseType: 'json' })
+    .subscribe(this.addData);
+    //this.hubService.readSocket()  
     
   }
  
   addData = (data:any) => {
     
-    
+    //console.log(data)
     let time = new Date()
     //console.log("time: "+time)
 
     if(this.newDataCount != 1) {
       data.forEach( (val:any[]) => {
-        console.log("1, VAL:"+val+" xVal:"+ this.xValue+" yVal:"+this.yValue)
+        //console.log("1, VAL:"+val+" xVal:"+ this.xValue+" yVal:"+this.yValue)
         this.dataPoints.push({x: time, y: parseInt(val[1])});
         this.yValue = parseInt(val[1]);  
         this.xValue++;
