@@ -34,10 +34,13 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             //instead use thread+random generator for adding data to soxket for testing
             Task.Run(async() =>
             {
+                Random random = new Random();
                 while (true)
                 {
-                    await _hubContext.Clients.All.SendAsync("UpdateTemperature", new Random().Next(1, 45));
-                    Thread.Sleep(1000);
+                    var d = random.Next(1,45);
+                    await _hubContext.Clients.All.SendAsync("UpdateTemperature", d);
+                    Console.WriteLine("Write to socket: "+d);
+                    Thread.Sleep(3000);
                 }
             });
 

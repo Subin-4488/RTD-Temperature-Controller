@@ -18,15 +18,12 @@ export class HubService {
       .build();
 
     this.hubConnection.start().then(() => { 
-      console.log('Connection started');
       console.log("READ SOCKET....")
       this.hubConnection.on('UpdateTemperature', (temperature: number) => {
         //this.temperature = temperature;
         this.temperatureFromSensor.push(temperature);
       })
     });
-    
-    
   }
 
   close(){

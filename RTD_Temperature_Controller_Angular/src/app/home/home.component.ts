@@ -18,9 +18,7 @@ export class HomeComponent implements OnDestroy {
   color_31_45: string = "red";
   current_selection = "green";
 
-  constructor(private http : HttpClient,private hubService:HubService ) {  
-    
-  }
+  constructor(private http : HttpClient,private hubService:HubService ) {}
 
  
   dataPoints:any[] = [];
@@ -40,7 +38,7 @@ export class HomeComponent implements OnDestroy {
     axisX: {
       title: "Time (seconds)",
       valueFormatString: "HH:mm:ss",
-      interval: 1,  //data acquisition rate
+      interval: 1,
       intervalType: "second",
       type: 'dateTime',
     },
@@ -66,20 +64,20 @@ export class HomeComponent implements OnDestroy {
   }
  
   updateData = () => {
-    this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="
-    +this.xValue
-    +"&ystart="
-    +this.yValue
-    +"&length="
-    +this.newDataCount
-    +"type=json", { responseType: 'json' })
-    .subscribe(this.addData);
-    // this.hubService.readSocket()
+    // this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="
+    // +this.xValue
+    // +"&ystart="
+    // +this.yValue
+    // +"&length="
+    // +this.newDataCount
+    // +"type=json", { responseType: 'json' })
+    // .subscribe(this.addData);
     
     let temperatureData: number[] = [];
     this.hubService.temperatureFromSensor.forEach(d => {
       temperatureData.push(d)
       console.log(`Received temperature update: ${d}`)
+      this.addData(temperatureData)
     })  
 
     //call addData(temperatureData)
@@ -87,29 +85,30 @@ export class HomeComponent implements OnDestroy {
  
   addData = (data:any) => {
     
+    console.log("Data to plot in AddData(): "+data)
     
     let time = new Date()
     //console.log("time: "+time)
 
     if(this.newDataCount != 1) {
-      data.forEach( (val:any[]) => {
+      data.forEach( (val:number) => {
         // console.log("1, VAL:"+val+" xVal:"+ this.xValue+" yVal:"+this.yValue)
-        this.dataPoints.push({x: time, y: parseInt(val[1])});
-        this.yValue = parseInt(val[1]);  
+        this.dataPoints.push({x: time, y: val});
+        this.yValue = val;  
         this.xValue++;
       })
     } else {
       //console.log("1, VAL:"+data[0]+" xVal:"+ this.xValue+" yVal:"+this.yValue)
       this.dataPoints.shift();
-      this.dataPoints.push({x: time, y: parseInt(data[0][1]), lineColor: this.getColor(parseInt(data[0][1]))});
-      this.current_selection = this.getColor(parseInt(data[0][1 ]))
-      this.yValue = parseInt(data[0][1]);  
+      this.dataPoints.push({x: time, y: data[0], lineColor: this.getColor(data[0])});
+      this.current_selection = this.getColor(data[0])
+      this.yValue = data[0];  
       this.xValue++;
       
     }
     this.newDataCount = 1;
     this.chart.render();
-    this.timeout = setTimeout(this.updateData, 1000);  //data acquisition rate
+    this.timeout = setTimeout(this.updateData, 3000);  //data acquisition rate
   }
 
   getColor(temperature: number): string {
