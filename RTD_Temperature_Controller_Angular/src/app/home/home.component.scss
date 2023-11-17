@@ -1,0 +1,10 @@
+#danger{
+    color: red;
+    animation: dangerAnimation .2s infinite;
+    font-size: 28px;
+}
+
+@keyframes dangerAnimation {
+    from {background-color: red;}
+    to {background-color: yellow;}
+  }
