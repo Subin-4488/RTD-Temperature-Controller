@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
+import { Colors, Settings } from '../models/Settings';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-home',
@@ -8,12 +10,19 @@ import { Component, OnDestroy } from '@angular/core';
 })
 export class HomeComponent implements OnDestroy {
 
-  color_0_15: string = "green";
-  color_16_30: string = "blue";
-  color_31_45: string = "red";
+  settings: Settings = new Settings(0,0,0,0,'','','');
   current_selection = "green";
 
-  constructor(private http : HttpClient) {  
+  constructor(private http : HttpClient, private settings_service: SettingsService) {
+    this.settings_service.resetSettings().subscribe(data=>{
+      console.log(data)
+      
+      this.settings = data
+      this.settings.color_0_15 = Colors[Number(data.color_0_15)]
+      this.settings.color_16_30 = Colors[Number(data.color_16_30)]
+      this.settings.color_31_45 = Colors[Number(data.color_31_45)]
+      
+    })  
   }
  
   dataPoints:any[] = [];
@@ -33,7 +42,7 @@ export class HomeComponent implements OnDestroy {
     axisX: {
       title: "Time (seconds)",
       valueFormatString: "HH:mm:ss",
-      interval: 1,  //data acquisition rate
+      interval: 0,  //data acquisition rate
       intervalType: "second",
       type: 'dateTime',
     },
@@ -93,19 +102,19 @@ export class HomeComponent implements OnDestroy {
     }
     this.newDataCount = 1;
     this.chart.render();
-    this.timeout = setTimeout(this.updateData, 1000);  //data acquisition rate
+    this.timeout = setTimeout(this.updateData, this.settings.dataAcquisitionRate*100);  //data acquisition rate
   }
 
   getColor(temperature: number): string {
     if (temperature >= 0 && temperature <= 15) {
       this.danger = false;
-      return this.color_0_15;
+      return this.settings.color_0_15;
     } else if (temperature >= 16 && temperature <= 30) {
       this.danger = false;
-      return this.color_16_30;
+      return this.settings.color_16_30;
     } else if (temperature >= 31 && temperature <= 45) {
       this.danger = true;
-      return this.color_31_45;
+      return this.settings.color_31_45;
     } else {
       // Default color for values outside the specified ranges
       return "black";

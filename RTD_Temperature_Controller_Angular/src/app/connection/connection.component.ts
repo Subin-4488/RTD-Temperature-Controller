@@ -29,7 +29,7 @@ export class ConnectionComponent {
   }
 
   onSubmit(value:string){
-    console.log(value)
+    console.log(value)  
     let newConnection = new Connection(this.connectionForm.value.portname,this.connectionForm.value.bps,this.connectionForm.value.databits,this.connectionForm.value.parity,this.connectionForm.value.stopbits)
     this.connectionService.createConnection(newConnection).subscribe(data=>{
       this.connectionStatus=data;
@@ -40,7 +40,6 @@ export class ConnectionComponent {
         alert("Connection error. Try changing the values.")
       }
     })
-    
   }
 
   resetValues(){
