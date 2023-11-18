@@ -5,6 +5,8 @@ import { SettingsService } from '../services/settings.service';
 import { HubService } from '../services/hub.service';
 import { DatePipe } from '@angular/common';
 import { Colors, Settings } from '../models/Settings';
+import { HomeService } from '../services/home.service';
+import { Command } from '../models/Command';
 
 
 @Component({
@@ -21,7 +23,8 @@ export class HomeComponent implements OnDestroy {
   constructor(private http : HttpClient
     ,private hubService:HubService
     ,private datePipe: DatePipe
-    ,private settings_service: SettingsService) {
+    ,private settings_service: SettingsService,
+    private home_service: HomeService) {
 
       if (this.settings.threshold == 0)
 
@@ -41,6 +44,7 @@ export class HomeComponent implements OnDestroy {
   chart: any;
   
   danger: boolean = false;
+  sensor_status: boolean = false;
 
 
   chartOptions = {
@@ -139,6 +143,17 @@ export class HomeComponent implements OnDestroy {
     } else {
       // Default color for values outside the specified ranges
       return "black";
+    }
+  }
+
+  graphInitializer(){
+    if (!this.sensor_status){
+      this.sensor_status=true;
+      
+      this.home_service.sendCommand(new Command("GET","GET TMP")).subscribe(d =>{
+
+      })
+
     }
   }
 }                               
