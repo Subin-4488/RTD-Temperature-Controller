@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ManualmodeService } from '../services/manualmode.service';
 import { Command } from '../models/Command';
@@ -8,7 +8,7 @@ import { Command } from '../models/Command';
   templateUrl: './manualmode.component.html',
   styleUrls: ['./manualmode.component.scss']
 })
-export class ManualmodeComponent {
+export class ManualmodeComponent implements OnDestroy {
 
   pwmFormGroup: FormGroup;
   submitted: boolean = false
@@ -17,6 +17,19 @@ export class ManualmodeComponent {
   constructor(fb: FormBuilder,private manualmodeService:ManualmodeService){
     this.pwmFormGroup = fb.group({
       pwmCycleControl: ['', [Validators.required, Validators.pattern("^0*(?:[0-9][0-9]?|100)$")]]
+    })
+    this.newCommand.Command="Set"
+    this.newCommand.Value = "SET MOD MAN\r"
+    this.manualmodeService.sendCommand(this.newCommand).subscribe(data=>{
+      console.log("manual mode done")
+    })
+  }
+
+  ngOnDestroy(){
+    this.newCommand.Command="Set"
+    this.newCommand.Value = "SET MOD ATM\r"
+    this.manualmodeService.sendCommand(this.newCommand).subscribe(data=>{
+      console.log("manual mode done")
     })
   }
 
