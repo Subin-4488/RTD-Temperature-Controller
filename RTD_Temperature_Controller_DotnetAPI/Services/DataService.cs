@@ -28,9 +28,23 @@ namespace Services
             //Do the parsing and write to database
             //await WriteToDatabase(new Data() { Temperature = 0, Time = DateTime.Now });
 
-            Console.WriteLine(spL.ReadExisting());
-            var d = new Data {Temperature= 25, Time = DateTime.Now};
-            await _hubContext.Clients.All.SendAsync("UpdateTemperature", 25);
+
+            string reply = spL.ReadTo("\r");
+            //Console.WriteLine(reply);
+
+            if(reply.StartsWith("OK TMP"))
+            {
+                Console.WriteLine(reply);
+                double temp = Convert.ToDouble( reply.Split(' ')[2]);
+                
+                var data = new Data { Temperature = temp, Time = DateTime.Now };
+                await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
+            }
+            else
+            {
+                Console.WriteLine(reply);
+            }
+
         }
 
         public async Task<(bool, string)> WriteToDatabase(Data data)

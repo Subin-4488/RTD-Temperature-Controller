@@ -99,8 +99,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             {
                 _serialPort.Open();
                 _status = true;
-                _thread = new Thread(sendRandom);
-                _thread.Start();
+                //_thread = new Thread(sendRandom);
+                //_thread.Start();
                 return true;
             }
             catch(Exception ex) {
