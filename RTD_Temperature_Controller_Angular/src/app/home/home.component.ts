@@ -91,12 +91,12 @@ export class HomeComponent implements OnDestroy {
   }
  
   updateData = () => { 
-    let temperatureData: number[] = [];
-    this.hubService.temperatureFromSensor.forEach(d => {
-      temperatureData.push(d)
-    })  
-    this.addData(temperatureData)
-      this.hubService.temperatureFromSensor = []
+    // let temperatureData: number[] = [];
+    // this.hubService.temperatureFromSensor.forEach(d => {
+    //   temperatureData.push(d)
+    // })  
+    // this.addData(temperatureData)
+    //   this.hubService.temperatureFromSensor = []
   }
   
   addData = (data:any[]) => {
@@ -147,13 +147,14 @@ export class HomeComponent implements OnDestroy {
   }
 
   graphInitializer(){
-    if (!this.sensor_status){
-      this.sensor_status=true;
+    this.sensor_status = !this.sensor_status
+    // if (!this.sensor_status){
+    //   this.sensor_status=true;
       
-      this.home_service.sendCommand(new Command("GET","GET TMP")).subscribe(d =>{
+    //   this.home_service.sendCommand(new Command("GET","GET TMP")).subscribe(d =>{
 
-      })
+    //   })
 
-    }
+    // }
   }
 }                               

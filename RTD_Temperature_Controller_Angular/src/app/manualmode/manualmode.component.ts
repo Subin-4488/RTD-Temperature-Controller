@@ -1,34 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ManualmodeService } from '../services/manualmode.service';
 import { Command } from '../models/Command';
+import { HubService } from '../services/hub.service';
 
 @Component({
   selector: 'app-manualmode',
   templateUrl: './manualmode.component.html',
   styleUrls: ['./manualmode.component.scss']
 })
-export class ManualmodeComponent {
+export class ManualmodeComponent implements OnDestroy {
 
   pwmFormGroup: FormGroup;
   submitted: boolean = false
   newCommand:Command = new Command('','')
+  input: string = ""
 
-  constructor(fb: FormBuilder,private manualmodeService:ManualmodeService){
+  constructor(fb: FormBuilder,private manualmodeService:ManualmodeService, private hub_service: HubService){
     this.pwmFormGroup = fb.group({
-      pwmCycleControl: ['', [Validators.required, Validators.pattern("^0*(?:[0-9][0-9]?|100)$")]]
+      pwmCycleControl: ['', [Validators.required, Validators.pattern("^0*(?:[0-9][0-9]?|100)$")]]  
     })
+
+    hub_service.hubConnection.on('manualmodedata', (manualmodedata: any) => {
+      this.input = manualmodedata.value
+    });
+  }
+  ngOnDestroy(): void {
+    this.hub_service.close()
   }
 
   get getPWMFormControls(){
     return this.pwmFormGroup.controls;
-  }
-  
-
-  setPWMDutyCycle(){
-    this.submitted = true;
-    if (this.pwmFormGroup.invalid) return;
-
   }
 
   setLed1(){
@@ -71,5 +73,22 @@ export class ManualmodeComponent {
     })
   }
 
+  setPWMDutyCycle(){
+    this.submitted = true;
+    if (this.pwmFormGroup.invalid) return;
 
+    this.manualmodeService.sendCommand(new Command("SET", "SET DTY "+this.pwmFormGroup.value.pwmCycleControl+"\r")).subscribe(d =>{})
+  }
+
+  getTemperature(){
+    this.manualmodeService.sendCommand(new Command("GET", "GET TMP\r")).subscribe(d =>{})
+  }
+
+  getResistance(){
+    this.manualmodeService.sendCommand(new Command("GET", "GET RES\r")).subscribe(d =>{})
+  }
+
+  getEPROM(){
+    this.manualmodeService.sendCommand(new Command("GET", "GET EPR\r")).subscribe(d =>{})
+  }
 }

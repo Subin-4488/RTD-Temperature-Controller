@@ -134,6 +134,7 @@
             style="min-width: 50%; background-color: green"
             class="btn btn-primary"
             type="submit"
+            (click)="getTemperature()"
           >
             Temperature
           </button>
@@ -143,6 +144,7 @@
             style="min-width: 50%; background-color: green"
             class="btn btn-primary"
             type="submit"
+            (click)="getResistance()"
           >
             Resistance
           </button>
@@ -152,6 +154,7 @@
             style="min-width: 50%; background-color: green"
             class="btn btn-primary"
             type="submit"
+            (click)="getEPROM()"
           >
             EPROM
           </button>
@@ -166,7 +169,7 @@
     style="margin-top: 1%; display: flex; justify-content: center"
   >
     <div style="text-align: center; width: 20%">
-      <input class="form-control" disabled value="0" />
+      <input [(ngModel)]="input" class="form-control" disabled value="0" />
     </div>
   </div>
 </div>
