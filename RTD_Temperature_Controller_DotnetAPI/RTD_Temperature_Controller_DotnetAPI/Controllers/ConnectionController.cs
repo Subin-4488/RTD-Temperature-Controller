@@ -95,6 +95,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             try
             {
                 _serialPort.Open();
+                byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
+                //_serialPort.Write(bytes, 0, bytes.Length);
                 _status = true;
                 //_thread = new Thread(sendRandom);
                 //_thread.Start();

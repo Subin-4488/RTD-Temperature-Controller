@@ -8,15 +8,19 @@ export class HubService {
 
   public hubConnection: signalR.HubConnection;
   constructor() {
+    console.log("hi")
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl('https://localhost:3000/temperatureHub',{ withCredentials: false })
       .build();
-
     this.hubConnection.start()
+
   }
 
   close(){
     this.hubConnection.off('UpdateTemperature')
+  }
+  closeManualMode(){
+    this.hubConnection.off('manualmodedata')
   }
 
 }

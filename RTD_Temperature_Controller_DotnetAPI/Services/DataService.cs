@@ -20,7 +20,8 @@ namespace Services
 
         public DataService(RTDSensorDBContext dBContext, IHubContext<TemperatureHub> hubContext)
         {
-            _hubContext = hubContext;   
+            _hubContext = hubContext;
+            _dbContext = dBContext;
         }
         public async void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e)
         {
@@ -56,7 +57,6 @@ namespace Services
                     var data = new ManualModeData { Response = resultArr[0]+" " + resultArr[1], value = resultArr[0] + " " + resultArr[1] };
                     await _hubContext.Clients.All.SendAsync("manualmodedata", data);
                 }
-            }
 
         }
 
