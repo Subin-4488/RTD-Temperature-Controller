@@ -42,14 +42,14 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             Console.WriteLine(bytes);
             string hexString = Convert.ToHexString(bytes);
             Console.WriteLine(hexString);
-            //try
-            //{
-            //    _serialPort.Write(bytes, 0, bytes.Length);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine($"Exception: {ex.Message}");
-            //}
+            try
+            {
+                _serialPort.Write(bytes, 0, bytes.Length);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
             return true;
         }
 

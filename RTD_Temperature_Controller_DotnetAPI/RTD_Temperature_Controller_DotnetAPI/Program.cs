@@ -27,7 +27,7 @@ namespace RTD_Temperature_Controller_DotnetAPI
                 options =>
                 {
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-                });
+                }, ServiceLifetime.Singleton);
 
             //dependency injection (IOC Service) for Serial port
             builder.Services.AddSingleton<ISerialPortService, SerialPortService>();
@@ -57,7 +57,7 @@ namespace RTD_Temperature_Controller_DotnetAPI
 
             app.MapControllers();
 
-            
+
 
             //app.MapGet("/config", () => app.Configuration["ConnectionStrings:ConStr"] + " " + app.Configuration["Credentials:password"]);
 

@@ -17,17 +17,23 @@ export class ManualmodeComponent implements OnDestroy {
   input: string = ""
 
   constructor(fb: FormBuilder,private manualmodeService:ManualmodeService, private hub_service: HubService){
+    this.newCommand.Command="Set"
+    this.newCommand.Value = "SET MOD MAN\r"
+    this.manualmodeService.sendCommand(this.newCommand).subscribe(data=>{
+      console.log("manual mode done")
+    })
     this.pwmFormGroup = fb.group({
       pwmCycleControl: ['', [Validators.required, Validators.pattern("^0*(?:[0-9][0-9]?|100)$")]]  
     })
     hub_service.hubConnection.on('manualmodedata', (manualmodedata: any) => {
+      console.log(manualmodedata)
       this.input = manualmodedata.value
     });
   }
   ngOnDestroy(): void {
     this.hub_service.close()
     this.newCommand.Command="Set"
-    this.newCommand.Value = "SET MOD MAN\r"
+    this.newCommand.Value = "SET MOD ATM\r"
     this.manualmodeService.sendCommand(this.newCommand).subscribe(data=>{
       console.log("manual mode done")
     })
