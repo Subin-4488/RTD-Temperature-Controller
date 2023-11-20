@@ -13,12 +13,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     [ApiController]
     public class SettingsController : ControllerBase
     {
-
-        private readonly IHubContext<TemperatureHub> _hubContext;
-
-        public SettingsController(IHubContext<TemperatureHub> hubContext)
+        public SettingsController()
         {
-            _hubContext = hubContext;
         }
         // GET: api/<SettingsController>
         [HttpGet]

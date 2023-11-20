@@ -29,22 +29,34 @@ namespace Services
             //Do the parsing and write to database
             //await WriteToDatabase(new Data() { Temperature = 0, Time = DateTime.Now });
 
+            string result = spL.ReadExisting();
+            result = result.Substring(0, result.Length - 1);
+            string[] resultArr  = result.Split(' ');
+            Console.WriteLine(spL.ReadExisting());
 
-            string reply = spL.ReadTo("\r");
-            //Console.WriteLine(reply);
-
-            if(reply.StartsWith("OK TMP"))
+            if (resultArr[0]=="OK" && resultArr[1]=="TMP")
             {
-                Console.WriteLine(reply);
-                double temp = Convert.ToDouble( reply.Split(' ')[2]);
-                
-                var data = new Data { Temperature = temp, Time = DateTime.Now };
+                var data = new Data { Temperature = Convert.ToDouble(resultArr[2]), Time = DateTime.Now };
                 await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
+               
             }
-            else
+            else if (resultArr[0] == "OK" && resultArr[1]=="MAN")
             {
-                Console.WriteLine(reply);
-            }
+                if (resultArr[2] == "TMP")
+                {
+                    var data = new ManualModeData { Response = "OK MAN TMP", value = resultArr[3] };
+                    await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                }
+                else if (resultArr[2] == "RES")
+                {
+                    var data = new ManualModeData { Response = "OK MAN RES", value = resultArr[3] };
+                    await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                }
+                else //for EEPROM and SET PWM
+                {
+                    var data = new ManualModeData { Response = resultArr[0]+" " + resultArr[1], value = resultArr[0] + " " + resultArr[1] };
+                    await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                }
 
         }
 

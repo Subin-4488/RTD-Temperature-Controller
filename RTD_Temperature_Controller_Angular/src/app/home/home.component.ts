@@ -1,12 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy } from '@angular/core';
-import * as signalR from '@microsoft/signalr';
-import { SettingsService } from '../services/settings.service';
-import { HubService } from '../services/hub.service';
-import { DatePipe } from '@angular/common';
-import { Colors, Settings } from '../models/Settings';
-import { HomeService } from '../services/home.service';
-import { Command } from '../models/Command';
+
+import { Component } from '@angular/core';
 
 
 @Component({
@@ -14,6 +7,11 @@ import { Command } from '../models/Command';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
+
+export class HomeComponent{
+
+  constructor() {
+
 export class HomeComponent implements OnDestroy {
 
   settings: Settings = new Settings(0,0,0,0,'','','');
@@ -130,6 +128,7 @@ export class HomeComponent implements OnDestroy {
   //   this.timeout = setTimeout(this.updateData, this.settings.dataAcquisitionRate*1000);  //data acquisition rate
 
   // }
+
 
   getColor(temperature: number): string {
     if (temperature >= 0 && temperature <= 15) {

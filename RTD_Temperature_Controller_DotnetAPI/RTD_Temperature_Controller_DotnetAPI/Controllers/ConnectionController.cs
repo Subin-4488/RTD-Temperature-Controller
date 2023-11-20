@@ -8,7 +8,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 {
@@ -18,15 +17,13 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     {
         private readonly SerialPort _serialPort;
         private IDataService _dataService;
-        private readonly IHubContext<TemperatureHub> _hubContext;
-        Thread _thread;
+        //Thread _thread;
         private static Boolean _status=false;
 
-        public ConnectionController(IHubContext<TemperatureHub> hubContext,ISerialPortService serialPortService, IDataService dataService)
+        public ConnectionController(ISerialPortService serialPortService, IDataService dataService)
         {
             this._serialPort = serialPortService.SerialPort;
             this._dataService = dataService;
-            _hubContext = hubContext;
 
             if (this._serialPort.IsOpen) this._serialPort.Close();
 
@@ -101,8 +98,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
                 //_serialPort.Write(bytes, 0, bytes.Length);
                 _status = true;
-                _thread = new Thread(sendRandom);
-                _thread.Start();
+                //_thread = new Thread(sendRandom);
+                //_thread.Start();
                 return true;
             }
             catch(Exception ex) {
@@ -111,22 +108,22 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
         }
 
-        private async void sendRandom()
-        {
-            Console.WriteLine("In thread");
-            Random rnd = new Random();
+        //private async void sendRandom()
+        //{
+        //    Console.WriteLine("In thread");
+        //    Random rnd = new Random();
             
-            while (_status==true)
-            {
-                int num = rnd.Next(1, 45);
-                var data = new Data();
-                data.Time = DateTime.Now;
-                data.Temperature = num;
-                await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
-                Console.WriteLine(data.Time+" : "+data.Temperature);
-                Thread.Sleep(1000);
-            }
-        }
+        //    while (_status==true)
+        //    {
+        //        int num = rnd.Next(1, 45);
+        //        var data = new Data();
+        //        data.Time = DateTime.Now;
+        //        data.Temperature = num;
+        //        await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
+        //        Console.WriteLine(data.Time+" : "+data.Temperature);
+        //        Thread.Sleep(1000);
+        //    }
+        //}
 
         [HttpPost("disconnect")]
         public bool Post()

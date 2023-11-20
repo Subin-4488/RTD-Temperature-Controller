@@ -9,5 +9,10 @@ namespace RTD_Temperature_Controller_DotnetAPI.Hubs
         {
             await Clients.All.SendAsync("UpdateTemperature", data);
         }
+
+        public async Task SendManualModeData(ManualModeData data)
+        {
+            await Clients.All.SendAsync("manualmodedata", data);
+        }
     }
 }
