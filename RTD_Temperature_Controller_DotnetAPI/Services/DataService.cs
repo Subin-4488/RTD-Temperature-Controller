@@ -20,7 +20,8 @@ namespace Services
 
         public DataService(RTDSensorDBContext dBContext, IHubContext<TemperatureHub> hubContext)
         {
-            _hubContext = hubContext;   
+            _hubContext = hubContext;
+            _dbContext = dBContext;
         }
         public async void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e)
         {
