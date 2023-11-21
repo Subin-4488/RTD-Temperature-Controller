@@ -1,12 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+
 import { Component, OnDestroy } from '@angular/core';
-import * as signalR from '@microsoft/signalr';
-import { SettingsService } from '../services/settings.service';
-import { HubService } from '../services/hub.service';
-import { DatePipe } from '@angular/common';
+import { Command } from '../models/Command';
 import { Colors, Settings } from '../models/Settings';
 import { HomeService } from '../services/home.service';
-import { Command } from '../models/Command';
+import { HubService } from '../services/hub.service';
+import { SettingsService } from '../services/settings.service';
 
 
 @Component({
@@ -14,15 +12,15 @@ import { Command } from '../models/Command';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
+
 export class HomeComponent implements OnDestroy {
 
   settings: Settings = new Settings(0,0,0,0,'','','');
   current_selection = "green";
+  dar=0
 
 
-  constructor(private http : HttpClient
-    ,private hubService:HubService
-    ,private datePipe: DatePipe
+  constructor(private hubService:HubService
     ,private settings_service: SettingsService,
     private home_service: HomeService) {
 
@@ -48,9 +46,13 @@ export class HomeComponent implements OnDestroy {
 
 
   chartOptions = {
+    zoomEnabled: true,
     theme: "light2",
     title: {
       text: "RTD Sensed Data"
+    },
+    toolTip:{             
+      content: "{x}: {y}"
     },
     axisX: {
       type: Date,
@@ -131,6 +133,7 @@ export class HomeComponent implements OnDestroy {
 
   // }
 
+
   getColor(temperature: number): string {
     if (temperature >= 0 && temperature <= 15) {
       this.danger = false;
@@ -156,8 +159,11 @@ export class HomeComponent implements OnDestroy {
         if(d==true){
           this.hubService.hubConnection.on('UpdateTemperature',(temperatureData) =>{
             console.log(this.getColor(parseInt(temperatureData.temperature)))
-            console.log(this.dataPoints)
-            this.dataPoints.push({x: new Date(temperatureData.time), y: parseInt(temperatureData.temperature),  lineColor: this.getColor(parseInt(temperatureData.temperature))});
+            //console.log(this.dataPoints)
+            if(this.dar == 0)
+              this.dataPoints.push({x: new Date(temperatureData.time), y: parseInt(temperatureData.temperature),markerColor:this.getColor(parseInt(temperatureData.temperature)),  lineColor: this.getColor(parseInt(temperatureData.temperature))});
+            this.dar = (this.dar+1)%this.settings.dataAcquisitionRate
+            
             //this.dataPoints.push({x: new Date(temperatureData.time), y: parseInt(temperatureData.temperature)});
 
             if(this.dataPoints.length>20)
