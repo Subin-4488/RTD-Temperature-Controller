@@ -1,6 +1,7 @@
 <div id="main-div">
-  <h3>Set up connection</h3>
+  <h3>SET UP CONNECTION</h3>
   <form
+  class="crd"
     id="con-form"
     [formGroup]="connectionForm"
     (ngSubmit)="onSubmit(connectionForm.value)"
@@ -64,10 +65,10 @@
       <input type="text" class="form-control" id="exampleInputPassword1" />
     </div> -->
     <div class="button-container">
-      <button type="button" class="btn btn-primary m-1" (click)="resetValues()">
+      <button type="button" class="btn btn-secondary m-1" (click)="resetValues()">
         Reset
       </button>
-      <button type="submit" class="btn btn-secondary m-1">Submit</button>
+      <button type="submit" class="btn btn-primary m-1" >Submit</button>
     </div>
   </form>
 </div>

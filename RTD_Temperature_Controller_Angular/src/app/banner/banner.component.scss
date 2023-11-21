@@ -6,32 +6,33 @@
 
 .nav-title{
     text-decoration: none;
-    color: #000;
-    font-weight:900; 
-    font-size: 22px;
-    text-shadow: 5px 2px 9px rgb(177, 175, 178);
+    color: yellow;
+    font-weight:200; 
+    font-family:'Kdam Thmor Pro';
+    font-size: 28px;
     transition: all .1s;
 }
 
 .nav-title:hover{
     font-weight: bold; 
-    font-size: 24px; 
-    text-shadow: 5px 2px 9px rgb(172, 172, 172)
+    font-size: 29px; 
 }
 
-
+.nav-link{
+    color: white;
+}
 .nav-item{
     display: inline-block;
-    color: black;
+    color: white;
 }
 
 .nav-item :hover{
-    color: white;
+    color: yellow;
     transition: all .2s linear;
     transform: translateY(-5px);
 }
 
-.disconnectbtn{
-    display: inline-block;
-    color: rgb(255, 74, 74);
+.nav-item :focus{
+    color:  yellow;
+    transition: all .2s linear;
 }

@@ -92,7 +92,7 @@ export class ManualmodeComponent implements OnDestroy {
   }
 
   getTemperature(){
-    this.manualmodeService.sendCommand(new Command("GET", "GET TMP\r")).subscribe(d =>{})
+    this.manualmodeService.sendCommand(new Command("GET", "GET TMPM\r")).subscribe(d =>{})
   }
 
   getResistance(){

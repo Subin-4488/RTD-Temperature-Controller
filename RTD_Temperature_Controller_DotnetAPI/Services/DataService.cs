@@ -4,12 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RTD_Temperature_Controller_DotnetAPI.DBContext;
 using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
-using System;
-using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
@@ -27,13 +22,6 @@ namespace Services
         {
             SerialPort spL = (SerialPort)sender;
             //Do the parsing and write to database
-<<<<<<< HEAD
-
-            string result = spL.ReadExisting();
-            result = result.Substring(0, result.Length - 1);
-            string[] resultArr  = result.Split(' ');
-            Console.WriteLine(spL.ReadExisting());
-=======
             if (!spL.IsOpen)
             {
                 return;
@@ -42,16 +30,11 @@ namespace Services
             //result = result.Substring(0, result.Length - 1);
             string[] resultArr = result.Split(' ');
             Console.WriteLine(result);
->>>>>>> 6edb0b5c51109136db54897da82c1927f0c6434f
-
-            if (resultArr[0] == "OK" && resultArr[1] == "TMP")
+             
+            if (resultArr[0] == "OK" && resultArr[1] == "TMPA")
             {
                 var data = new Data { Temperature = Convert.ToDouble(resultArr[2]), Time = DateTime.Now };
                 await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
-                
-                //db
-                await _dbContext.TemperatureTable.AddAsync(data);
-                await _dbContext.SaveChangesAsync();
 
                 //db
                 //var flag = await WriteToDatabase(data);
@@ -60,21 +43,46 @@ namespace Services
                 await _dbContext.SaveChangesAsync();
 
             }
-            else if (resultArr[0] == "OK" && resultArr[1] == "MAN")
+            else if (resultArr[0] == "OK" && resultArr[1] == "CON")
             {
-                if (resultArr[2] == "TMP")
+                string[] properties = resultArr[2].Split(',');
+                foreach (var item in properties)
                 {
-                    var data = new ManualModeData { Response = "OK MAN TMP", value = resultArr[3] };
+                    var d = item.Split(':');
+                    if (d[0] == "LED")
+                    {
+
+                    }
+                    else if (d[0] == "OL")
+                    {
+
+                    }
+                    else if (d[0] == "OH")
+                    {
+
+                    }
+                }
+            }
+            else  //manual mode
+            {
+                if (resultArr[0] == "OK" && resultArr[2] == "TMPM")
+                {
+                    var data = new ManualModeData { Response = "OK TMPM", value = resultArr[2] };
                     await _hubContext.Clients.All.SendAsync("manualmodedata", data);
                 }
-                else if (resultArr[2] == "RES")
+                else if (resultArr[0] == "OK" && resultArr[2] == "RES")
                 {
-                    var data = new ManualModeData { Response = "OK MAN RES", value = resultArr[3] };
+                    var data = new ManualModeData { Response = "OK RES", value = resultArr[2] };
                     await _hubContext.Clients.All.SendAsync("manualmodedata", data);
                 }
-                else //for EEPROM and SET PWM
+                else if (resultArr[0] == "OK" && resultArr[2] == "EPR")
                 {
-                    var data = new ManualModeData { Response = resultArr[0] + " " + resultArr[1], value = resultArr[0] + " " + resultArr[1] };
+                    var data = new ManualModeData { Response = "OK EPR", value = "OK EPR" };
+                    await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                }
+                else if (resultArr[0] == "OK" && resultArr[2] == "MOD")
+                {
+                    var data = new ManualModeData { Response = "OK MOD", value = "OK MOD" };
                     await _hubContext.Clients.All.SendAsync("manualmodedata", data);
                 }
 

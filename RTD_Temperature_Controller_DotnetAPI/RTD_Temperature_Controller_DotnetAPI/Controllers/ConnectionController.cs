@@ -30,7 +30,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 
         public ConnectionController(IHubContext<TemperatureHub> hubContext, 
             ISerialPortService serialPortService, 
-            IDataService dataService,
+            IDataService dataService
             //RTDSensorDBContext dbContext
             )
         {
@@ -114,13 +114,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
                 _serialPort.Write(bytes, 0, bytes.Length);
                 _status = true;
-<<<<<<< HEAD
-                _thread = new Thread(() => sendRandom());
-                _thread.Start();
-=======
                 //_thread = new Thread(sendRandom);
                 //_thread.Start();
->>>>>>> 6edb0b5c51109136db54897da82c1927f0c6434f
                 return true;
             }
             catch (Exception ex)

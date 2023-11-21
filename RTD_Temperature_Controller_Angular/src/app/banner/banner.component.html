@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary " style=" padding-top: 0px !important; min-height: 13vh;background-color: #3F88C5 !important; ">
-  <div class="container-fluid" style="background-color: #3F88C5 !important; ">
+<nav class="navbar navbar-expand-lg bg-body-tertiary " style=" padding-top: 0px !important; min-height: 11vh;background-color: #345995!important; ">
+  <div class="container-fluid">
     <a [routerLink]="['/dashboard', {outlets: {navRoute: ['home']}}]" class="nav-title">RTD Temperature Controller</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -24,12 +24,8 @@
         [routerLink]="['/dashboard', {outlets: {navRoute: ['manualmode']}}]" >Manual Mode</a>
         </div>
         
-        <div class="nav-item">
-          <a (click)="disconnect()" type="button" class="nav-link">
-          <div class="disconnectbtn">
-            Disconnect
-          </div>
-        </a>
+        <div class="nav-item" style="padding-top: 3px;">
+          <button class="nav-link" (click)="disconnect()" mat-raised-button color="warn">Disconnect</button>
         </div>
       </div>
     </div>

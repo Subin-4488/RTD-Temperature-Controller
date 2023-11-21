@@ -1,21 +1,30 @@
+*{
+    font-family: 'Roboto';
+}
 #con-form{
     align-items: center;
     width: 50%;
-    background-color: antiquewhite;
+    background-color: aliceblue;
     margin: 0 auto;
     display: block;
-    padding: 15px;
+    padding: 35px;
+    border-radius: 30px;
 }
 #main-div{
     height: 100%;
     width: 100%;
 }
 
+.crd{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
 h3{
     text-align: center;
     display: block;
+    
     margin: 15vh auto 10px auto;
-    font-family: 'Roboto';
+    
 }
 
 .button-container {

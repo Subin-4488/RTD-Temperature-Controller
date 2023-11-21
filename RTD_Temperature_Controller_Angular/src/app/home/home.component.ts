@@ -47,9 +47,10 @@ export class HomeComponent implements OnDestroy {
 
   chartOptions = {
     zoomEnabled: true,
+    backgroundColor: "#edf5fc",
     theme: "light2",
     title: {
-      text: "RTD Sensed Data"
+      text: "RTD Sensed Data",
     },
     toolTip:{             
       content: "{x}: {y}"
@@ -84,7 +85,6 @@ export class HomeComponent implements OnDestroy {
       this.settings.color_0_15 = Colors[Number(data.color_0_15)]
       this.settings.color_16_30 = Colors[Number(data.color_16_30)]
       this.settings.color_31_45 = Colors[Number(data.color_31_45)]
-      //this.updateData();
     })     
   }
   
@@ -135,14 +135,19 @@ export class HomeComponent implements OnDestroy {
 
 
   getColor(temperature: number): string {
-    if (temperature >= 0 && temperature <= 15) {
+    
+    if (temperature > this.settings.threshold){
+      this.danger = true;
+    }
+    else{
       this.danger = false;
+    }
+
+    if (temperature >= 0 && temperature <= 15) {
       return this.settings.color_0_15; 
     } else if (temperature >= 16 && temperature <= 30) {
-      this.danger = false;
       return this.settings.color_16_30;
     } else if (temperature >= 31 && temperature <= 45) {
-      this.danger = true;
       return this.settings.color_31_45;
     } else {
       // Default color for values outside the specified ranges
@@ -155,7 +160,7 @@ export class HomeComponent implements OnDestroy {
     this.sensor_status = !this.sensor_status
     if(this.sensor_status){
       //console.log("hello")
-      this.home_service.sendCommand(new Command("GET","GET TMP\r")).subscribe(d=>{
+      this.home_service.sendCommand(new Command("GET","GET TMPA\r")).subscribe(d=>{
         if(d==true){
           this.hubService.hubConnection.on('UpdateTemperature',(temperatureData) =>{
             console.log(this.getColor(parseInt(temperatureData.temperature)))
@@ -176,14 +181,5 @@ export class HomeComponent implements OnDestroy {
     else{
       this.hubService.hubConnection.off('UpdateTemperature')
     }
-
-    // if (!this.sensor_status){
-    //   this.sensor_status=true;
-      
-    //   this.home_service.sendCommand(new Command("GET","GET TMP")).subscribe(d =>{
-
-    //   })
-
-    // }
   }
 }                               
