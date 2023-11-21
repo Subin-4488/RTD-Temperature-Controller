@@ -24,8 +24,12 @@
         [routerLink]="['/dashboard', {outlets: {navRoute: ['manualmode']}}]" >Manual Mode</a>
         </div>
         
-        <div class="disconnectbtn">
-          <a (click)="disconnect()" type="button" class="nav-link">Disconnect</a>
+        <div class="nav-item">
+          <a (click)="disconnect()" type="button" class="nav-link">
+          <div class="disconnectbtn">
+            Disconnect
+          </div>
+        </a>
         </div>
       </div>
     </div>

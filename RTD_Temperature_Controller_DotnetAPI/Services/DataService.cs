@@ -27,7 +27,6 @@ namespace Services
         {
             SerialPort spL = (SerialPort)sender;
             //Do the parsing and write to database
-            //await WriteToDatabase(new Data() { Temperature = 0, Time = DateTime.Now });
 
             string result = spL.ReadExisting();
             result = result.Substring(0, result.Length - 1);
@@ -38,6 +37,10 @@ namespace Services
             {
                 var data = new Data { Temperature = Convert.ToDouble(resultArr[2]), Time = DateTime.Now };
                 await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
+                
+                //db
+                await _dbContext.TemperatureTable.AddAsync(data);
+                await _dbContext.SaveChangesAsync();
 
             }
             else if (resultArr[0] == "OK" && resultArr[1] == "MAN")
