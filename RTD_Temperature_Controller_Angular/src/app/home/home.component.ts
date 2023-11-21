@@ -46,9 +46,13 @@ export class HomeComponent implements OnDestroy {
 
 
   chartOptions = {
+    zoomEnabled: true,
     theme: "light2",
     title: {
       text: "RTD Sensed Data"
+    },
+    toolTip:{             
+      content: "{x}: {y}"
     },
     axisX: {
       type: Date,
@@ -157,7 +161,7 @@ export class HomeComponent implements OnDestroy {
             console.log(this.getColor(parseInt(temperatureData.temperature)))
             //console.log(this.dataPoints)
             if(this.dar == 0)
-              this.dataPoints.push({x: new Date(temperatureData.time), y: parseInt(temperatureData.temperature),  lineColor: this.getColor(parseInt(temperatureData.temperature))});
+              this.dataPoints.push({x: new Date(temperatureData.time), y: parseInt(temperatureData.temperature),markerColor:this.getColor(parseInt(temperatureData.temperature)),  lineColor: this.getColor(parseInt(temperatureData.temperature))});
             this.dar = (this.dar+1)%this.settings.dataAcquisitionRate
             
             //this.dataPoints.push({x: new Date(temperatureData.time), y: parseInt(temperatureData.temperature)});

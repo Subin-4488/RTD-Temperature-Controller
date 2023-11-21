@@ -27,11 +27,22 @@ namespace Services
         {
             SerialPort spL = (SerialPort)sender;
             //Do the parsing and write to database
+<<<<<<< HEAD
 
             string result = spL.ReadExisting();
             result = result.Substring(0, result.Length - 1);
             string[] resultArr  = result.Split(' ');
             Console.WriteLine(spL.ReadExisting());
+=======
+            if (!spL.IsOpen)
+            {
+                return;
+            }
+            string result = spL.ReadTo("\r");
+            //result = result.Substring(0, result.Length - 1);
+            string[] resultArr = result.Split(' ');
+            Console.WriteLine(result);
+>>>>>>> 6edb0b5c51109136db54897da82c1927f0c6434f
 
             if (resultArr[0] == "OK" && resultArr[1] == "TMP")
             {
@@ -39,6 +50,12 @@ namespace Services
                 await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
                 
                 //db
+                await _dbContext.TemperatureTable.AddAsync(data);
+                await _dbContext.SaveChangesAsync();
+
+                //db
+                //var flag = await WriteToDatabase(data);
+                //await Console.Out.WriteLineAsync(flag.Item2);
                 await _dbContext.TemperatureTable.AddAsync(data);
                 await _dbContext.SaveChangesAsync();
 
@@ -60,7 +77,9 @@ namespace Services
                     var data = new ManualModeData { Response = resultArr[0] + " " + resultArr[1], value = resultArr[0] + " " + resultArr[1] };
                     await _hubContext.Clients.All.SendAsync("manualmodedata", data);
                 }
+
             }
+           
 
         }
 
@@ -70,7 +89,7 @@ namespace Services
             {
                 return (false, "Entity set 'RTDSensorDBContext.TemperatureTable'  is null.");
             }
-            _dbContext.TemperatureTable.Add(data);
+            await _dbContext.TemperatureTable.AddAsync(data);
             try
             {
                 await _dbContext.SaveChangesAsync();
