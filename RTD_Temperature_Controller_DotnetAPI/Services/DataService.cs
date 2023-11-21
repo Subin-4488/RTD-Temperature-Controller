@@ -5,6 +5,7 @@ using RTD_Temperature_Controller_DotnetAPI.DBContext;
 using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
 using System.IO.Ports;
+using System.Text.Json;
 
 namespace Services
 {
@@ -21,13 +22,11 @@ namespace Services
         public async void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort spL = (SerialPort)sender;
-            //Do the parsing and write to database
             if (!spL.IsOpen)
             {
                 return;
             }
             string result = spL.ReadTo("\r");
-            //result = result.Substring(0, result.Length - 1);
             string[] resultArr = result.Split(' ');
             Console.WriteLine(result);
              
@@ -46,22 +45,38 @@ namespace Services
             else if (resultArr[0] == "OK" && resultArr[1] == "CON")
             {
                 string[] properties = resultArr[2].Split(',');
+
+                string fileName = @"..\..\settingsFile.json";
+                using FileStream openStream = System.IO.File.OpenRead(fileName);
+                Settings? settingsValue =
+                    await JsonSerializer.DeserializeAsync<Settings>(openStream);
+
+                var newSettings = new Settings();
+                newSettings.Threshold = settingsValue.Threshold;
+                newSettings.DataAcquisitionRate = settingsValue.DataAcquisitionRate;
+
                 foreach (var item in properties)
                 {
                     var d = item.Split(':');
+
                     if (d[0] == "LED")
                     {
-
+                        string s = d[1];
+                        newSettings.Color_0_15 = (Colors)Enum.Parse(typeof(Colors), GetColorCode(s[0]).ToString());
+                        newSettings.Color_16_30 = (Colors)Enum.Parse(typeof(Colors), GetColorCode(s[1]).ToString());
+                        newSettings.Color_31_45 = (Colors)Enum.Parse(typeof(Colors), GetColorCode(s[2]).ToString());
                     }
                     else if (d[0] == "OL")
                     {
-
+                        newSettings.Temperature_4mA = Convert.ToInt32(d[1]);
                     }
                     else if (d[0] == "OH")
                     {
-
+                        newSettings.Temperature_20mA = Convert.ToInt32(d[1]);
                     }
                 }
+                string jsonString = JsonSerializer.Serialize<Settings>(newSettings);
+                System.IO.File.WriteAllText(@"..\..\settingsFile.json", jsonString);
             }
             else  //manual mode
             {
@@ -85,10 +100,7 @@ namespace Services
                     var data = new ManualModeData { Response = "OK MOD", value = "OK MOD" };
                     await _hubContext.Clients.All.SendAsync("manualmodedata", data);
                 }
-
             }
-           
-
         }
 
         public async Task<(bool, string)> WriteToDatabase(Data data)
@@ -116,6 +128,20 @@ namespace Services
             }
 
             return (true, "Successfully added to database");
+        }
+
+        private int GetColorCode(char c)
+        {
+            switch (c)
+            {
+                case 'R':
+                    return 0;
+                case 'G':
+                    return 1;
+                case 'B':
+                    return 2;
+            }
+            return -1;
         }
     }
 }
