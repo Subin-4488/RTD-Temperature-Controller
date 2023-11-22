@@ -2,7 +2,7 @@
 {
     public enum Colors
     {
-        red, green, blue 
+        red = 'R', green = 'G', blue = 'B' 
     }
 
 

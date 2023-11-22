@@ -90,12 +90,14 @@ export class HomeComponent implements OnDestroy {
   
   ngOnDestroy() {
     clearTimeout(this.timeout);
-    this.hubService.hubConnection.off('UpdateTemperature')
+    this.hubService.closeAutomatic()
   }
 
   getColor(temperature: number): string {
-    
-    if (temperature > this.settings.threshold){
+    //console.log(temperature)
+    //console.log(this.settings.threshold)
+    if (temperature > (this.settings.threshold)){
+      //console.log(this.danger)
       this.danger = true;
     }
     else{
@@ -122,10 +124,12 @@ export class HomeComponent implements OnDestroy {
       this.home_service.sendCommand(new Command("GET","GET TMPA\r")).subscribe(d=>{
         if(d==true){
           this.hubService.hubConnection.on('UpdateTemperature',(temperatureData) =>{
-            console.log(this.getColor(parseInt(temperatureData.temperature)))
+            //console.log(this.getColor(parseInt(temperatureData.temperature)))
             //console.log(this.dataPoints)
-            if(this.dar == 0)
-              this.dataPoints.push({x: new Date(temperatureData.time), y: parseInt(temperatureData.temperature),markerColor:this.getColor(parseInt(temperatureData.temperature)),  lineColor: this.getColor(parseInt(temperatureData.temperature))});
+            if(this.dar == 0){
+              var pointColor = this.getColor(parseFloat(temperatureData.temperature))
+              this.dataPoints.push({x: new Date(temperatureData.time), y: parseFloat(temperatureData.temperature),markerColor: pointColor,  lineColor: pointColor});
+            }
             this.dar = (this.dar+1)%this.settings.dataAcquisitionRate
             
             //this.dataPoints.push({x: new Date(temperatureData.time), y: parseInt(temperatureData.temperature)});
@@ -138,7 +142,7 @@ export class HomeComponent implements OnDestroy {
       })
     }
     else{
-      this.hubService.hubConnection.off('UpdateTemperature')
+      this.hubService.closeAutomatic()
     }
   }
 }                               

@@ -31,7 +31,7 @@ export class ManualmodeComponent implements OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    this.hub_service.close()
+    this.hub_service.closeManualMode()
     this.newCommand.Command="Set"
     this.newCommand.Value = "SET MOD ATM\r"
     this.manualmodeService.sendCommand(this.newCommand).subscribe(data=>{
@@ -47,10 +47,10 @@ export class ManualmodeComponent implements OnDestroy {
   setLed1(){
     const ele = document.getElementById('led1') as HTMLInputElement
     if(ele.checked){
-      this.newCommand.Value="SET LED ON 1\r"
+      this.newCommand.Value="SET LEDR ON\r"
     }
     else{
-      this.newCommand.Value="SET LED OFF 1\r"
+      this.newCommand.Value="SET LEDR OFF\r"
     }
     this.newCommand.Command="Set"
     //this.newCommand.Value="SET LED ON 1\r"
@@ -60,10 +60,10 @@ export class ManualmodeComponent implements OnDestroy {
   setLed2(){
     const ele = document.getElementById('led2') as HTMLInputElement
     if(ele.checked){
-      this.newCommand.Value="SET LED ON 2\r"
+      this.newCommand.Value="SET LEDG ON\r"
     }
     else{
-      this.newCommand.Value="SET LED OFF 2\r"
+      this.newCommand.Value="SET LEDG OFF\r"
     }
     this.newCommand.Command="Set"
     //this.newCommand.Value="SET LED ON 2\r"
@@ -73,10 +73,10 @@ export class ManualmodeComponent implements OnDestroy {
   setLed3(){
     const ele = document.getElementById('led3') as HTMLInputElement
     if(ele.checked){
-      this.newCommand.Value="SET LED ON 3\r"
+      this.newCommand.Value="SET LEDB ON\r"
     }
     else{
-      this.newCommand.Value="SET LED OFF 3\r"
+      this.newCommand.Value="SET LEDB OFF\r"
     }
     this.newCommand.Command="Set"
     //this.newCommand.Value="SET LED ON 3\r"

@@ -19,6 +19,7 @@ export class BannerComponent {
   disconnect(){
     //write the disconnecting code
     let ifDisconnected
+    this.hub_service.end()
     this.connectionService.disconnectConnection().subscribe(data=>{
       
       ifDisconnected = data
@@ -29,7 +30,7 @@ export class BannerComponent {
       }
     })
 
-    this.hub_service.close()
+    
   
   }
 }
