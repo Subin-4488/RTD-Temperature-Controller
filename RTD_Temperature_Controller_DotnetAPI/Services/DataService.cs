@@ -11,13 +11,18 @@ namespace Services
 {
     public class DataService : IDataService
     {
-        private readonly RTDSensorDBContext _dbContext;
+        //private readonly RTDSensorDBContext _dbContext;
         private readonly IHubContext<TemperatureHub> _hubContext;
 
-        public DataService(RTDSensorDBContext dBContext, IHubContext<TemperatureHub> hubContext)
+        //public DataService(RTDSensorDBContext dBContext, IHubContext<TemperatureHub> hubContext)
+        //{
+        //    _hubContext = hubContext;
+        //    _dbContext = dBContext;
+        //}
+        public DataService(IHubContext<TemperatureHub> hubContext)
         {
             _hubContext = hubContext;
-            _dbContext = dBContext;
+            //_dbContext = dBContext;
         }
         public async void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e)
         {
@@ -36,10 +41,10 @@ namespace Services
                 await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
 
                 //db
-                //var flag = await WriteToDatabase(data);
+                var flag = await WriteToDatabase(data);
                 //await Console.Out.WriteLineAsync(flag.Item2);
-                await _dbContext.TemperatureTable.AddAsync(data);
-                await _dbContext.SaveChangesAsync();
+                //await _dbContext.TemperatureTable.AddAsync(data);
+                //await _dbContext.SaveChangesAsync();
 
             }
             else if (resultArr[0] == "OK" && resultArr[1] == "CON")
@@ -105,29 +110,35 @@ namespace Services
 
         public async Task<(bool, string)> WriteToDatabase(Data data)
         {
-            if (_dbContext.TemperatureTable == null)
+            var dbContextOptions = new DbContextOptionsBuilder<RTDSensorDBContext>()
+                                   .UseSqlServer("Data Source='TJ16AA044-PC,49955';User ID=sa;Password=sa@1234;Connect Timeout=30;Encrypt=False;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Initial Catalog=RTD_Sensor;MultipleActiveResultSets=true;")
+                                   .Options;
+            using (var _dbContext = new RTDSensorDBContext(dbContextOptions))
             {
-                return (false, "Entity set 'RTDSensorDBContext.TemperatureTable'  is null.");
-            }
-            await _dbContext.TemperatureTable.AddAsync(data);
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                var d = await _dbContext.TemperatureTable.Where(d => d.Time == data.Time).ToListAsync();
-                if (d.Count > 0)
+                if (_dbContext.TemperatureTable == null)
                 {
-                    return (false, "Data already exist");
+                    return (false, "Entity set 'RTDSensorDBContext.TemperatureTable'  is null.");
                 }
-                else
+                await _dbContext.TemperatureTable.AddAsync(data);
+                try
                 {
-                    throw;
+                    await _dbContext.SaveChangesAsync();
                 }
-            }
+                catch (DbUpdateException)
+                {
+                    var d = await _dbContext.TemperatureTable.Where(d => d.Time == data.Time).ToListAsync();
+                    if (d.Count > 0)
+                    {
+                        return (false, "Data already exist");
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
 
-            return (true, "Successfully added to database");
+                return (true, "Successfully added to database");
+            }
         }
 
         private int GetColorCode(char c)

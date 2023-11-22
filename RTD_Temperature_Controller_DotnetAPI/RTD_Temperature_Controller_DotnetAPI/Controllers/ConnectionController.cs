@@ -159,8 +159,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         {
             try
             {
-                _serialPort.DataReceived -= _dataService.ReadDataFromHardware;
                 _serialPort.Close();
+                _serialPort.DataReceived -= _dataService.ReadDataFromHardware;
                 _status = false;
                 //_thread.Abort();
                 return true;

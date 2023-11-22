@@ -92,47 +92,6 @@ export class HomeComponent implements OnDestroy {
     clearTimeout(this.timeout);
     this.hubService.hubConnection.off('UpdateTemperature')
   }
- 
-  // updateData = () => { 
-  //   let temperatureData: number[] = [];
-  //   this.hubService.temperatureFromSensor.forEach(d => {
-  //     temperatureData.push(d)
-  //   })  
-  //   this.addData(temperatureData)
-  //     this.hubService.temperatureFromSensor = []
-  // }
-  
-  // addData = (data:any[]) => {
-
-  //   if(data.length > 1) {
-  //     data.forEach( (val:any) => {
-        
-  //       this.dataPoints.push({x: new Date(val.time), y: parseInt(val.temperature),  lineColor: this.getColor(parseInt(val.temperature))});
-        
-  //       var formattedTime = this.datePipe.transform(val.time, 'HH:mm:ss')
-  //       //  console.log("Recur: "+formattedTime+":"+val.temperature+":"+this.getColor(parseInt(data[0].temperature)))
-        
-  //     })
-  //     data = []
-
-  //   } 
-  //   else {
-  //     var formattedTime = this.datePipe.transform(data[0].time, 'HH:mm:ss')
-  //     // console.log("normal: "+formattedTime+":"+data[0].temperature)
-        
-  //     this.dataPoints.push({x: new Date(data[0].time), y: parseInt(data[0].temperature), lineColor: this.getColor(parseInt(data[0].temperature))});
-  //     this.current_selection = this.getColor(parseInt(data[0].temperature))
-      
-  //   }
-  //   this.chart.render();
-  //   if (this.dataPoints.length>4){
-  //     while (this.dataPoints.length>=4)
-  //       this.dataPoints.shift();
-  //   }
-  //   this.timeout = setTimeout(this.updateData, this.settings.dataAcquisitionRate*1000);  //data acquisition rate
-
-  // }
-
 
   getColor(temperature: number): string {
     
