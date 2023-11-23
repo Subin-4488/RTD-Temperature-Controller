@@ -23,9 +23,9 @@ export class SettingsComponent {
       c2:[,Validators.required],
       c3:[,Validators.required]
     })
+    this.resetSettings()
   }
   onSubmit(value:string){
-    //console.log(value)
     let newSettings = new Settings(this.settingsForm.value.threshold,this.settingsForm.value.dar,
       this.settingsForm.value.current4,this.settingsForm.value.current20,
       this.settingsForm.value.c1,this.settingsForm.value.c2,
@@ -34,14 +34,12 @@ export class SettingsComponent {
       this.settingsService.updateSettings(newSettings).subscribe(data=>{
 
       })
-    console.log(newSettings)
   }
 
   resetSettings(){
     let newSettings =new Settings(0,0,0,0,'','','')
     this.settingsService.resetSettings().subscribe(data=>{
-      console.log(data)
-      
+      //console.log(data)
       //data.color_0_15 = Colors[data.color_0_15 as keyof typeof Colors];
       newSettings = data
       newSettings.color_0_15 = Colors[Number(data.color_0_15)]

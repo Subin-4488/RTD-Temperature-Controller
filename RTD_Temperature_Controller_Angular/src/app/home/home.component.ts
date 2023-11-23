@@ -1,41 +1,68 @@
-import { HttpClient } from '@angular/common/http';
+
 import { Component, OnDestroy } from '@angular/core';
+import { Command } from '../models/Command';
+import { Colors, Settings } from '../models/Settings';
+import { HomeService } from '../services/home.service';
+import { HubService } from '../services/hub.service';
+import { SettingsService } from '../services/settings.service';
+
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
+
 export class HomeComponent implements OnDestroy {
 
-  color_0_15: string = "green";
-  color_16_30: string = "blue";
-  color_31_45: string = "red";
+  settings: Settings = new Settings(0,0,0,0,'','','');
   current_selection = "green";
+  dar=0
 
-  constructor(private http : HttpClient) {  
+
+  constructor(private hubService:HubService
+    ,private settings_service: SettingsService,
+    private home_service: HomeService) {
+
+      if (this.settings.threshold == 0)
+
+      this.settings_service.resetSettings().subscribe(data=>{
+        
+        this.settings = data
+        this.settings.color_0_15 = Colors[Number(data.color_0_15)]
+        this.settings.color_16_30 = Colors[Number(data.color_16_30)]
+        this.settings.color_31_45 = Colors[Number(data.color_31_45)]
+      })  
+      
   }
+
  
   dataPoints:any[] = [];
   timeout:any = null;
-  xValue:number = 0;
-  yValue:number = 10;
-  newDataCount:number = 6;
   chart: any;
   
   danger: boolean = false;
- 
+  sensor_status: boolean = false;
+
+
   chartOptions = {
+    zoomEnabled: true,
+    backgroundColor: "#edf5fc",
     theme: "light2",
     title: {
-      text: "RTD Sensed Data"
+      text: "RTD Sensed Data",
+    },
+    toolTip:{             
+      content: "{x}: {y}"
     },
     axisX: {
+      type: Date,
       title: "Time (seconds)",
       valueFormatString: "HH:mm:ss",
-      interval: 1,  //data acquisition rate
-      intervalType: "second",
-      type: 'dateTime',
+      // interval: 1,  //data acquisition rate
+      // intervalType: "second",
+     
+
     },
     axisY: {
       title: "Temperature (°C)"
@@ -44,71 +71,78 @@ export class HomeComponent implements OnDestroy {
       type: "line",
       lineThickness: 2,
       dataPoints: this.dataPoints,
-      markerColor: "red",
-      lineColor:this.current_selection,
+      markerColor: "black",
+      //lineColor:this.current_selection,
     }]
   }
+
+  
  
   getChartInstance(chart: object) {
     this.chart = chart;
-    this.updateData();
+    this.settings_service.resetSettings().subscribe(data=>{
+      this.settings = data
+      this.settings.color_0_15 = Colors[Number(data.color_0_15)]
+      this.settings.color_16_30 = Colors[Number(data.color_16_30)]
+      this.settings.color_31_45 = Colors[Number(data.color_31_45)]
+    })     
   }
- 
+  
   ngOnDestroy() {
     clearTimeout(this.timeout);
-  }
- 
-  updateData = () => {
-    this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="
-    +this.xValue
-    +"&ystart="
-    +this.yValue
-    +"&length="
-    +this.newDataCount
-    +"type=json", { responseType: 'json' })
-    .subscribe(this.addData);
-    
-  }
- 
-  addData = (data:any) => {
-    
-    let time = new Date()
-    console.log("time: "+time)
-
-    if(this.newDataCount != 1) {
-      data.forEach( (val:any[]) => {
-        console.log("1, VAL:"+val+" xVal:"+ this.xValue+" yVal:"+this.yValue)
-        this.dataPoints.push({x: time, y: parseInt(val[1])});
-        this.yValue = parseInt(val[1]);  
-        this.xValue++;
-      })
-    } else {
-      console.log("1, VAL:"+data[0]+" xVal:"+ this.xValue+" yVal:"+this.yValue)
-      this.dataPoints.shift();
-      this.dataPoints.push({x: time, y: parseInt(data[0][1]), lineColor: this.getColor(parseInt(data[0][1]))});
-      this.current_selection = this.getColor(parseInt(data[0][1 ]))
-      this.yValue = parseInt(data[0][1]);  
-      this.xValue++;
-      
-    }
-    this.newDataCount = 1;
-    this.chart.render();
-    this.timeout = setTimeout(this.updateData, 1000);  //data acquisition rate
+    this.hubService.closeAutomatic()
   }
 
   getColor(temperature: number): string {
-    if (temperature >= 0 && temperature <= 15) {
-      this.danger = false;
-      return this.color_0_15;
-    } else if (temperature >= 16 && temperature <= 30) {
-      this.danger = false;
-      return this.color_16_30;
-    } else if (temperature >= 31 && temperature <= 45) {
+    //console.log(temperature)
+    //console.log(this.settings.threshold)
+    if (temperature > (this.settings.threshold)){
+      //console.log(this.danger)
       this.danger = true;
-      return this.color_31_45;
+    }
+    else{
+      this.danger = false;
+    }
+
+    if (temperature >= 0 && temperature <= 15) {
+      return this.settings.color_0_15; 
+    } else if (temperature >= 16 && temperature <= 30) {
+      return this.settings.color_16_30;
+    } else if (temperature >= 31 && temperature <= 45) {
+      return this.settings.color_31_45;
     } else {
       // Default color for values outside the specified ranges
       return "black";
     }
   }
-}                              
+
+  graphInitializer(){
+
+    this.sensor_status = !this.sensor_status
+    if(this.sensor_status){
+      //console.log("hello")
+      this.home_service.sendCommand(new Command("GET","GET TMPA\r")).subscribe(d=>{
+        if(d==true){
+          this.hubService.hubConnection.on('UpdateTemperature',(temperatureData) =>{
+            //console.log(this.getColor(parseInt(temperatureData.temperature)))
+            //console.log(this.dataPoints)
+            if(this.dar == 0){
+              var pointColor = this.getColor(parseFloat(temperatureData.temperature))
+              this.dataPoints.push({x: new Date(temperatureData.time), y: parseFloat(temperatureData.temperature),markerColor: pointColor,  lineColor: pointColor});
+            }
+            this.dar = (this.dar+1)%this.settings.dataAcquisitionRate
+            
+            //this.dataPoints.push({x: new Date(temperatureData.time), y: parseInt(temperatureData.temperature)});
+
+            if(this.dataPoints.length>20)
+              this.dataPoints.shift()
+            this.chart.render()
+          })
+        }
+      })
+    }
+    else{
+      this.hubService.closeAutomatic()
+    }
+  }
+}                               

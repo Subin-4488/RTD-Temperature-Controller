@@ -28,13 +28,12 @@ export class ManualmodeService {
     else{
       msg='Error Code: ${error.status}\n Message: ${error.message}';
     }
-    console.log(msg)
     return throwError(msg)
 
   }
 
   sendCommand(val:Command):Observable<boolean>{
-    console.log(val)
+    console.log(val.Value)
     return this.httpClient.post<boolean>(this.baseurl+'/manualmode',JSON.stringify(val),this.httpHeader)
     .pipe(
       catchError(this.httpError)

@@ -8,12 +8,17 @@ import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ConnectionComponent } from './connection/connection.component';
 
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { SettingsComponent } from './settings/settings.component';
 import { ManualmodeComponent } from './manualmode/manualmode.component';
 
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { DatePipe } from '@angular/common';
+
+import {MatButtonModule} from '@angular/material/button';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -31,9 +36,14 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    CanvasJSAngularChartsModule
+    CanvasJSAngularChartsModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MatButtonModule
   ],
-  providers: [],
+  providers: [
+    DatePipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

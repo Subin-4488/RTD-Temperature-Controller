@@ -1,7 +1,7 @@
 export enum Colors {
-    'red'=0,
-    'green'=1,
-    'blue'=2
+    'red'=82,
+    'green'=71,
+    'blue'=66
   }
 export class Settings{
     threshold:number

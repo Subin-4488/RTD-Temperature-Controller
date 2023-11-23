@@ -1,12 +1,12 @@
-import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
-import { Settings } from '../models/Settings';
+import { Command } from '../models/Command';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SettingsService {
+export class HomeService {
 
   baseurl="https://localhost:3000";
 
@@ -32,18 +32,7 @@ export class SettingsService {
 
   }
 
-  updateSettings(s:Settings):Observable<Settings>{
-    return this.httpClient.post<Settings>(this.baseurl+'/settings',JSON.stringify(s),this.httpHeader)
-    .pipe(
-      catchError(this.httpError)
-    );
+  sendCommand(val:Command):Observable<boolean>{
+    return this.httpClient.post<boolean>(this.baseurl+'/home',JSON.stringify(val),this.httpHeader).pipe(catchError(this.httpError));
   }
-
-  resetSettings():Observable<Settings>{
-    return this.httpClient.get<Settings>(this.baseurl+'/settings')
-    .pipe(
-      catchError(this.httpError)
-    );
-  }
-
 }

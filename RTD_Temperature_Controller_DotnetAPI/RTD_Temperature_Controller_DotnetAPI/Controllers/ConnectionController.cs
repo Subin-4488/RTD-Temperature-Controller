@@ -1,5 +1,9 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using RTD_Temperature_Controller_DotnetAPI.DBContext;
+using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
 using System.IO.Ports;
 using System.Text;
@@ -16,12 +20,27 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     {
         private readonly SerialPort _serialPort;
         private IDataService _dataService;
+        private readonly IHubContext<TemperatureHub> _hubContext;
 
-        public ConnectionController(ISerialPortService serialPortService, IDataService dataService)
+        //delete this line
+        //private readonly RTDSensorDBContext _dbContext;
+
+        Thread _thread;
+        private static Boolean _status = false;
+
+        public ConnectionController(IHubContext<TemperatureHub> hubContext, 
+            ISerialPortService serialPortService, 
+            IDataService dataService
+            //RTDSensorDBContext dbContext
+            )
         {
             this._serialPort = serialPortService.SerialPort;
             this._dataService = dataService;
-            
+            _hubContext = hubContext;
+
+            //delete this line
+            //_dbContext = dbContext;
+
             if (this._serialPort.IsOpen) this._serialPort.Close();
 
         }
@@ -41,13 +60,13 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             {
                 this._serialPort.PortName = Convert.ToString(value["PortName"]);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
                 return false;
             }
             this._serialPort.BaudRate = int.Parse(value["BitsPerSecond"]!.ToString());
-            
+
             switch (value["Parity"]!.ToString())
             {
                 case "Even":
@@ -87,16 +106,53 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                     throw new Exception("BAD Parity format");
             }
 
+            //_serialPort.DataReceived += _dataService.ReadDataFromHardware;
             _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
-
             try
             {
                 _serialPort.Open();
+                //byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
+                //_serialPort.Write(bytes, 0, bytes.Length);
+                byte[] bytes = Encoding.UTF8.GetBytes("GET CON\r");
+                _serialPort.Write(bytes, 0, bytes.Length);
+                _status = true;
+                //_thread = new Thread(sendRandom);
+                //_thread.Start();
                 return true;
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex);
                 return false;
+            }
+        }
+
+        private async Task sendRandom()
+        {
+            Console.WriteLine("In thread");
+            Random rnd = new Random();
+
+            while (_status == true)
+            {
+                try
+                {
+                    int num = rnd.Next(1, 45);
+                    var data = new Data();
+                    data.Time = DateTime.Now;
+                    data.Temperature = num;
+
+                    //delete following 2 lines
+                    //await _dbContext.TemperatureTable.AddAsync(data);
+                    //await _dbContext.SaveChangesAsync();
+
+                    await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
+                    Console.WriteLine(data.Time + " : " + data.Temperature);
+                    Thread.Sleep(1000);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
         }
 
@@ -105,11 +161,13 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         {
             try
             {
-                _serialPort.DataReceived -= _dataService.ReadDataFromHardware;
                 _serialPort.Close();
+                _serialPort.DataReceived -= _dataService.ReadDataFromHardware;
+                _status = false;
+                //_thread.Abort();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 return false;
