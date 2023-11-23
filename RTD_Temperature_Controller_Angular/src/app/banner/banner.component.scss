@@ -6,7 +6,7 @@
 
 .nav-title{
     text-decoration: none;
-    color: yellow;
+    color: white;
     font-weight:200; 
     font-family:'Kdam Thmor Pro';
     font-size: 28px;
@@ -29,7 +29,7 @@
 .nav-item :hover{
     color: yellow;
     transition: all .2s linear;
-    transform: translateY(-5px);
+    transform: translateY(-2px);
 }
 
 .nav-item :focus{
