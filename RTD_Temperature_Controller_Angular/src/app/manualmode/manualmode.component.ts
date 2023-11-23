@@ -47,10 +47,10 @@ export class ManualmodeComponent implements OnDestroy {
   setLed1(){
     const ele = document.getElementById('led1') as HTMLInputElement
     if(ele.checked){
-      this.newCommand.Value="SET LEDR ON\r"
+      this.newCommand.Value="SET LED ON R\r"
     }
     else{
-      this.newCommand.Value="SET LEDR OFF\r"
+      this.newCommand.Value="SET LED OFF R\r"
     }
     this.newCommand.Command="Set"
     //this.newCommand.Value="SET LED ON 1\r"
@@ -60,10 +60,10 @@ export class ManualmodeComponent implements OnDestroy {
   setLed2(){
     const ele = document.getElementById('led2') as HTMLInputElement
     if(ele.checked){
-      this.newCommand.Value="SET LEDG ON\r"
+      this.newCommand.Value="SET LED ON G\r"
     }
     else{
-      this.newCommand.Value="SET LEDG OFF\r"
+      this.newCommand.Value="SET LED OFF G\r"
     }
     this.newCommand.Command="Set"
     //this.newCommand.Value="SET LED ON 2\r"
@@ -73,10 +73,10 @@ export class ManualmodeComponent implements OnDestroy {
   setLed3(){
     const ele = document.getElementById('led3') as HTMLInputElement
     if(ele.checked){
-      this.newCommand.Value="SET LEDB ON\r"
+      this.newCommand.Value="SET LED ON B\r"
     }
     else{
-      this.newCommand.Value="SET LEDB OFF\r"
+      this.newCommand.Value="SET LED OFF B\r"
     }
     this.newCommand.Command="Set"
     //this.newCommand.Value="SET LED ON 3\r"
