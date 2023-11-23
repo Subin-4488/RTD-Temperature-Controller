@@ -16,11 +16,14 @@ export class HubService {
 
   }
 
-  close(){
+  closeAutomatic(){
     this.hubConnection.off('UpdateTemperature')
   }
   closeManualMode(){
     this.hubConnection.off('manualmodedata')
+  }
+  end(){
+    this.hubConnection.stop()
   }
 
 }

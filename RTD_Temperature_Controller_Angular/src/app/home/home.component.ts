@@ -47,9 +47,10 @@ export class HomeComponent implements OnDestroy {
 
   chartOptions = {
     zoomEnabled: true,
+    backgroundColor: "#edf5fc",
     theme: "light2",
     title: {
-      text: "RTD Sensed Data"
+      text: "RTD Sensed Data",
     },
     toolTip:{             
       content: "{x}: {y}"
@@ -84,65 +85,30 @@ export class HomeComponent implements OnDestroy {
       this.settings.color_0_15 = Colors[Number(data.color_0_15)]
       this.settings.color_16_30 = Colors[Number(data.color_16_30)]
       this.settings.color_31_45 = Colors[Number(data.color_31_45)]
-      //this.updateData();
     })     
   }
   
   ngOnDestroy() {
     clearTimeout(this.timeout);
-    this.hubService.hubConnection.off('UpdateTemperature')
+    this.hubService.closeAutomatic()
   }
- 
-  // updateData = () => { 
-  //   let temperatureData: number[] = [];
-  //   this.hubService.temperatureFromSensor.forEach(d => {
-  //     temperatureData.push(d)
-  //   })  
-  //   this.addData(temperatureData)
-  //     this.hubService.temperatureFromSensor = []
-  // }
-  
-  // addData = (data:any[]) => {
-
-  //   if(data.length > 1) {
-  //     data.forEach( (val:any) => {
-        
-  //       this.dataPoints.push({x: new Date(val.time), y: parseInt(val.temperature),  lineColor: this.getColor(parseInt(val.temperature))});
-        
-  //       var formattedTime = this.datePipe.transform(val.time, 'HH:mm:ss')
-  //       //  console.log("Recur: "+formattedTime+":"+val.temperature+":"+this.getColor(parseInt(data[0].temperature)))
-        
-  //     })
-  //     data = []
-
-  //   } 
-  //   else {
-  //     var formattedTime = this.datePipe.transform(data[0].time, 'HH:mm:ss')
-  //     // console.log("normal: "+formattedTime+":"+data[0].temperature)
-        
-  //     this.dataPoints.push({x: new Date(data[0].time), y: parseInt(data[0].temperature), lineColor: this.getColor(parseInt(data[0].temperature))});
-  //     this.current_selection = this.getColor(parseInt(data[0].temperature))
-      
-  //   }
-  //   this.chart.render();
-  //   if (this.dataPoints.length>4){
-  //     while (this.dataPoints.length>=4)
-  //       this.dataPoints.shift();
-  //   }
-  //   this.timeout = setTimeout(this.updateData, this.settings.dataAcquisitionRate*1000);  //data acquisition rate
-
-  // }
-
 
   getColor(temperature: number): string {
-    if (temperature >= 0 && temperature <= 15) {
+    //console.log(temperature)
+    //console.log(this.settings.threshold)
+    if (temperature > (this.settings.threshold)){
+      //console.log(this.danger)
+      this.danger = true;
+    }
+    else{
       this.danger = false;
+    }
+
+    if (temperature >= 0 && temperature <= 15) {
       return this.settings.color_0_15; 
     } else if (temperature >= 16 && temperature <= 30) {
-      this.danger = false;
       return this.settings.color_16_30;
     } else if (temperature >= 31 && temperature <= 45) {
-      this.danger = true;
       return this.settings.color_31_45;
     } else {
       // Default color for values outside the specified ranges
@@ -155,13 +121,15 @@ export class HomeComponent implements OnDestroy {
     this.sensor_status = !this.sensor_status
     if(this.sensor_status){
       //console.log("hello")
-      this.home_service.sendCommand(new Command("GET","GET TMP\r")).subscribe(d=>{
+      this.home_service.sendCommand(new Command("GET","GET TMPA\r")).subscribe(d=>{
         if(d==true){
           this.hubService.hubConnection.on('UpdateTemperature',(temperatureData) =>{
-            console.log(this.getColor(parseInt(temperatureData.temperature)))
+            //console.log(this.getColor(parseInt(temperatureData.temperature)))
             //console.log(this.dataPoints)
-            if(this.dar == 0)
-              this.dataPoints.push({x: new Date(temperatureData.time), y: parseInt(temperatureData.temperature),markerColor:this.getColor(parseInt(temperatureData.temperature)),  lineColor: this.getColor(parseInt(temperatureData.temperature))});
+            if(this.dar == 0){
+              var pointColor = this.getColor(parseFloat(temperatureData.temperature))
+              this.dataPoints.push({x: new Date(temperatureData.time), y: parseFloat(temperatureData.temperature),markerColor: pointColor,  lineColor: pointColor});
+            }
             this.dar = (this.dar+1)%this.settings.dataAcquisitionRate
             
             //this.dataPoints.push({x: new Date(temperatureData.time), y: parseInt(temperatureData.temperature)});
@@ -174,16 +142,7 @@ export class HomeComponent implements OnDestroy {
       })
     }
     else{
-      this.hubService.hubConnection.off('UpdateTemperature')
+      this.hubService.closeAutomatic()
     }
-
-    // if (!this.sensor_status){
-    //   this.sensor_status=true;
-      
-    //   this.home_service.sendCommand(new Command("GET","GET TMP")).subscribe(d =>{
-
-    //   })
-
-    // }
   }
 }                               

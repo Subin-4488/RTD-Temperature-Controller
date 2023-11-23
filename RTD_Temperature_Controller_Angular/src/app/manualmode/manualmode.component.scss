@@ -1,7 +1,16 @@
+#main-div{
+    min-height: 89vh;
+    margin: 0;
+}
+
 .btn{
     transition: all .2s;
 }
 
 .btn:hover{
     transform: scale(1.15);
+}
+
+.crd{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }

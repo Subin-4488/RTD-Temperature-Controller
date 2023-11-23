@@ -16,6 +16,10 @@ import { ManualmodeComponent } from './manualmode/manualmode.component';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { DatePipe } from '@angular/common';
 
+import {MatButtonModule} from '@angular/material/button';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -33,7 +37,9 @@ import { DatePipe } from '@angular/common';
     ReactiveFormsModule,
     HttpClientModule,
     CanvasJSAngularChartsModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    MatButtonModule
   ],
   providers: [
     DatePipe

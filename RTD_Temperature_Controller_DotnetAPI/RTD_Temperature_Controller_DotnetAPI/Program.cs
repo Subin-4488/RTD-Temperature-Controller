@@ -23,11 +23,11 @@ namespace RTD_Temperature_Controller_DotnetAPI
             builder.Services.AddSignalR();
 
             //database
-            builder.Services.AddDbContext<RTDSensorDBContext>(
-                options =>
-                {
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-                }, ServiceLifetime.Singleton);
+            //builder.Services.AddDbContext<RTDSensorDBContext>(
+            //options =>
+            //{
+            //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            //});
 
             //dependency injection (IOC Service) for Serial port
             builder.Services.AddSingleton<ISerialPortService, SerialPortService>();
