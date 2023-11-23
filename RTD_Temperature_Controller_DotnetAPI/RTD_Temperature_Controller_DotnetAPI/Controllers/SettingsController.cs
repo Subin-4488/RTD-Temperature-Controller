@@ -45,10 +45,10 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         public void Post([FromBody] JsonObject s)
         {
             var newSettings= new Settings();
-            newSettings.Threshold = Convert.ToInt32(s["Threshold"].ToString());
+            newSettings.Threshold = Convert.ToDouble(s["Threshold"].ToString());
             newSettings.DataAcquisitionRate = Convert.ToInt32(s["DataAcquisitionRate"].ToString());
-            newSettings.Temperature_4mA = Convert.ToInt32(s["Temperature_4mA"].ToString());
-            newSettings.Temperature_20mA = Convert.ToInt32(s["Temperature_20mA"].ToString());
+            newSettings.Temperature_4mA = Convert.ToDouble(s["Temperature_4mA"].ToString());
+            newSettings.Temperature_20mA = Convert.ToDouble(s["Temperature_20mA"].ToString());
             newSettings.Color_0_15 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_0_15"]));
             newSettings.Color_16_30 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_16_30"]));
             newSettings.Color_31_45 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_31_45"]));

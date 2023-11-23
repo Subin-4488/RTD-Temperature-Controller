@@ -8,11 +8,11 @@
 
     public class Settings
     {
-        public int Threshold { get; set; }
+        public double Threshold { get; set; }
         public int DataAcquisitionRate { get; set; }
 
-        public int Temperature_4mA { get; set; }
-        public int Temperature_20mA { get; set; }
+        public double Temperature_4mA { get; set; }
+        public double Temperature_20mA { get; set; }
 
         public Colors Color_0_15 { get; set; }
         public Colors Color_16_30 { get; set; }

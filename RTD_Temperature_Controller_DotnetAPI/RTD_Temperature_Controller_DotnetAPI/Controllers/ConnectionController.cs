@@ -106,12 +106,14 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                     throw new Exception("BAD Parity format");
             }
 
+            //_serialPort.DataReceived += _dataService.ReadDataFromHardware;
             _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
-
             try
             {
                 _serialPort.Open();
-                byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
+                //byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
+                //_serialPort.Write(bytes, 0, bytes.Length);
+                byte[] bytes = Encoding.UTF8.GetBytes("GET CON\r");
                 _serialPort.Write(bytes, 0, bytes.Length);
                 _status = true;
                 //_thread = new Thread(sendRandom);
