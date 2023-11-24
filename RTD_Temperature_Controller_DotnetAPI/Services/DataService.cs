@@ -29,6 +29,7 @@ namespace Services
             }
             try
             {
+
                 string result = spL.ReadTo("\r");
                 string[] resultArr = result.Split(' ');
                 Console.WriteLine(result);
