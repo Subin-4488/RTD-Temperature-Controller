@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using RTD_Temperature_Controller_DotnetAPI.DBContext;
 using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
@@ -11,18 +12,13 @@ namespace Services
 {
     public class DataService : IDataService
     {
-        //private readonly RTDSensorDBContext _dbContext;
         private readonly IHubContext<TemperatureHub> _hubContext;
+        private readonly IConfiguration _configuration;
 
-        //public DataService(RTDSensorDBContext dBContext, IHubContext<TemperatureHub> hubContext)
-        //{
-        //    _hubContext = hubContext;
-        //    _dbContext = dBContext;
-        //}
-        public DataService(IHubContext<TemperatureHub> hubContext)
+        public DataService(IHubContext<TemperatureHub> hubContext, IConfiguration configuration)
         {
             _hubContext = hubContext;
-            //_dbContext = dBContext;
+            _configuration = configuration;
         }
         public async void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e)
         {
@@ -33,6 +29,7 @@ namespace Services
             }
             try
             {
+
                 string result = spL.ReadTo("\r");
                 string[] resultArr = result.Split(' ');
                 Console.WriteLine(result);
@@ -111,7 +108,7 @@ namespace Services
                         await _hubContext.Clients.All.SendAsync("manualmodedata", data);
                     }
                 }
-            }
+            } 
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
@@ -122,7 +119,7 @@ namespace Services
         public async Task<(bool, string)> WriteToDatabase(Data data)
         {
             var dbContextOptions = new DbContextOptionsBuilder<RTDSensorDBContext>()
-                                   .UseSqlServer("Data Source='TJ16AA044-PC,49955';User ID=sa;Password=sa@1234;Connect Timeout=30;Encrypt=False;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Initial Catalog=RTD_Sensor;MultipleActiveResultSets=true;")
+                                   .UseSqlServer(_configuration["ConnectionStrings:DefaultConnection"])
                                    .Options;
             using (var _dbContext = new RTDSensorDBContext(dbContextOptions))
             {
