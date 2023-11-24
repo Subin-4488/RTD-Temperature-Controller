@@ -10,7 +10,7 @@
       class="crd"
       style="background-color: aliceblue; padding: 2%; width: 75%"
     >
-      <div>
+      <div class="mb-4">
         <h4 style="text-align: center; font-weight: bold">LED Control</h4>
       </div>
       <div class="row" style="margin: 0">
@@ -68,17 +68,21 @@
       class="crd"
       style="background-color: aliceblue; padding: 2%; width: 75%"
     >
+    <div class="mb-4">
+      <h4 style="text-align: center; font-weight: bold">PWM Duty Cycle</h4>
+    </div>
       <form [formGroup]="pwmFormGroup" (ngSubmit)="setPWMDutyCycle()">
         <div class="row" style="text-align: center; margin: 0">
-          <div class="col-md-4 col-sm-12"></div>
-          <h5
+          <!-- <div class="col-md-4 col-sm-12"></div> -->
+          <!-- <h4
             class="col-md-2 col-sm-12"
             style="font-weight: bold"
             for="input_pwm"
           >
             PWM Duty Cycle
-          </h5>
-          <div class="col-md-2 col-sm-12">
+          </h4> -->
+          <div class="col-md-4"></div>
+          <div class="col-md-4 col-sm-12">
             <input
               [ngStyle]="{
                 border:
@@ -102,13 +106,14 @@
               Enter valid value between 0 to 100
             </div>
           </div>
-          <div class="col-md-4 col-sm-12"></div>
+          <div class="col-md-4"></div>
+          <!-- <div class="col-md-4 col-sm-12"></div> -->
         </div>
         <div style="text-align: center; padding: 1%">
           <button
             type="submit"
             class="btn btn-primary"
-            style="background-color: blue; min-width: 10%"
+            style=" min-width: 10%"
           >
             SET
           </button>
@@ -126,7 +131,7 @@
       style="background-color: aliceblue; padding: 2%; width: 75%"
     >
       <div>
-        <h4 style="text-align: center; font-weight: bold">
+        <h4 class="mb-4" style="text-align: center; font-weight: bold">
           Sensor Data Control
         </h4>
       </div>
@@ -134,7 +139,7 @@
         <div class="col-md col-sm-12"></div>
         <div style="text-align: center" class="col-md-3 col-sm-12">
           <button
-            style="min-width: 50%; background-color: green"
+            style="min-width: 50%; margin-bottom: 2%;"
             class="btn btn-primary"
             type="submit"
             (click)="getTemperature()"
@@ -144,7 +149,7 @@
         </div>
         <div style="text-align: center" class="col-md-3 col-sm-12">
           <button
-            style="min-width: 50%; background-color: green"
+            style="min-width: 50%; margin-bottom: 2%;"
             class="btn btn-primary"
             type="submit"
             (click)="getResistance()"
@@ -154,7 +159,7 @@
         </div>
         <div style="text-align: center" class="col-md-3 col-sm-12">
           <button
-            style="min-width: 50%; background-color: green"
+            style="min-width: 50%; margin-bottom: 2%;"
             class="btn btn-primary"
             type="submit"
             (click)="getEPROM()"
@@ -167,9 +172,9 @@
       </div>
       <div
         class="section 4"
-        style="margin-top: 2.5%; display: flex; justify-content: center"
+        style="margin-top: 1%; display: flex; justify-content: center"
       >
-        <div style="text-align: center; width: 20%">
+        <div class= "col-md-3 col-sm-12" style="text-align: center;">
           <input [(ngModel)]="input" class="form-control" disabled value="0" />
         </div>
       </div>

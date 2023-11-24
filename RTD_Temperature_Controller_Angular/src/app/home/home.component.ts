@@ -47,6 +47,7 @@ export class HomeComponent implements OnDestroy {
 
   chartOptions = {
     zoomEnabled: true,
+    showInLegend: true, 
     backgroundColor: "#edf5fc",
     theme: "light2",
     title: {
@@ -124,7 +125,7 @@ export class HomeComponent implements OnDestroy {
       this.home_service.sendCommand(new Command("GET","GET TMPA\r")).subscribe(d=>{
         if(d==true){
           this.hubService.hubConnection.on('UpdateTemperature',(temperatureData) =>{
-            console.log("inside hubsocket")
+            //console.log("inside hubsocket")
             //console.log(this.getColor(parseInt(temperatureData.temperature)))
             //console.log(this.dataPoints)
             if(this.dar == 0){
