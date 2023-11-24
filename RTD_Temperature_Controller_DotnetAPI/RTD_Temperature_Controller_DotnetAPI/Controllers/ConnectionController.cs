@@ -107,14 +107,29 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
 
             //_serialPort.DataReceived += _dataService.ReadDataFromHardware;
-            _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
+            
             try
             {
                 _serialPort.Open();
                 //byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
                 //_serialPort.Write(bytes, 0, bytes.Length);
-                byte[] bytes = Encoding.UTF8.GetBytes("GET CON\r");
+                byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
                 _serialPort.Write(bytes, 0, bytes.Length);
+                Console.WriteLine(_serialPort.ReadTo("\r"));
+                
+                //bytes = Encoding.UTF8.GetBytes("GET CON\r");
+                //_serialPort.Write(bytes, 0, bytes.Length);
+                //Console.WriteLine(_serialPort.ReadTo("\r"));
+
+
+                bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
+                _serialPort.Write(bytes, 0, bytes.Length);
+                Console.WriteLine(_serialPort.ReadTo("\r"));
+
+                _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
+                bytes = Encoding.UTF8.GetBytes("GET CON\r");
+                _serialPort.Write(bytes, 0, bytes.Length);
+                
                 _status = true;
                 //_thread = new Thread(sendRandom);
                 //_thread.Start();
@@ -161,17 +176,37 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         {
             try
             {
-                _serialPort.Close();
+                
+                //byte[] bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
+                //_serialPort.Write(bytes, 0, bytes.Length);
                 _serialPort.DataReceived -= _dataService.ReadDataFromHardware;
+                //Thread.Sleep(1500);
+                _serialPort.Close();
                 _status = false;
                 //_thread.Abort();
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine("disconnect"+ex);
                 return false;
             }
         }
+        //[HttpPost("setatm")]
+        //public bool SetMode()
+        //{
+        //    try
+        //    {
+
+        //        byte[] bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
+        //        _serialPort.Write(bytes, 0, bytes.Length);
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("disconnect" + ex);
+        //        return false;
+        //    }
+        //}
     }
 }

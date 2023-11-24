@@ -48,6 +48,14 @@ export class ConnectionService {
     );
   }
 
+  setMode():Observable<boolean>{
+    //this.hubService.close();
+    return this.httpClient.post<boolean>(this.baseurl+'/connection/setatm/','',this.httpHeader)
+    .pipe(
+      catchError(this.httpError)
+    );
+  }
+
   getportNames():Observable<string[]>{
     return this.httpClient.get<string[]>(this.baseurl+'/connection/ports/')
     .pipe(

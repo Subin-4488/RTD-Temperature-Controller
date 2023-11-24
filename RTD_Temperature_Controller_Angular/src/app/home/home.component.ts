@@ -124,6 +124,7 @@ export class HomeComponent implements OnDestroy {
       this.home_service.sendCommand(new Command("GET","GET TMPA\r")).subscribe(d=>{
         if(d==true){
           this.hubService.hubConnection.on('UpdateTemperature',(temperatureData) =>{
+            console.log("inside hubsocket")
             //console.log(this.getColor(parseInt(temperatureData.temperature)))
             //console.log(this.dataPoints)
             if(this.dar == 0){
