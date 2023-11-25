@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ConnectionService } from '../services/connection.service';
 import { HubService } from '../services/hub.service';
 
+
 @Component({
   selector: 'app-banner',
   templateUrl: './banner.component.html',
@@ -18,6 +19,10 @@ export class BannerComponent {
   disconnect(){
     //write the disconnecting code
     let ifDisconnected
+    this.hub_service.end()
+    // this.connectionService.setMode().subscribe(d=>{
+      
+    // })
     this.connectionService.disconnectConnection().subscribe(data=>{
       
       ifDisconnected = data
@@ -28,7 +33,7 @@ export class BannerComponent {
       }
     })
 
-    this.hub_service.close()
+    
   
   }
 }

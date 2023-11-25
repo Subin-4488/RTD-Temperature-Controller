@@ -1,5 +1,5 @@
 <div id="main-div" class="row justify-content-center align-items-center">
-  <form id="settings-form" [formGroup]="settingsForm"
+  <form class="crd" id="settings-form" [formGroup]="settingsForm"
   (ngSubmit)="onSubmit(settingsForm.value)">
     <div class="field">
       <label for="threshold" class="form-label">Threshold</label>
@@ -94,8 +94,8 @@
       </div>
     </div>
     <div class="button-container">
-      <button type="button" class="btn btn-primary m-1" (click)="resetSettings()">Reset</button>
-      <button type="submit" [disabled]="settingsForm.invalid" class="btn btn-secondary m-1">Submit</button>
+      <button type="button" class="btn btn-secondary m-1" (click)="resetSettings()">Reset</button>
+      <button type="submit" [disabled]="settingsForm.invalid" class="btn btn-primary m-1" >Submit</button>
     </div>
   </form>
 </div>

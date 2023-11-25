@@ -41,8 +41,16 @@ export class ConnectionService {
   }
 
   disconnectConnection():Observable<boolean>{
-    this.hubService.close();
+    //this.hubService.close();
     return this.httpClient.post<boolean>(this.baseurl+'/connection/disconnect/','',this.httpHeader)
+    .pipe(
+      catchError(this.httpError)
+    );
+  }
+
+  setMode():Observable<boolean>{
+    //this.hubService.close();
+    return this.httpClient.post<boolean>(this.baseurl+'/connection/setatm/','',this.httpHeader)
     .pipe(
       catchError(this.httpError)
     );

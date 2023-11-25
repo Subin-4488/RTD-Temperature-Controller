@@ -1,6 +1,8 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using RTD_Temperature_Controller_DotnetAPI.DBContext;
 using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
 using System.IO.Ports;
@@ -19,14 +21,25 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         private readonly SerialPort _serialPort;
         private IDataService _dataService;
         private readonly IHubContext<TemperatureHub> _hubContext;
+
+        //delete this line
+        //private readonly RTDSensorDBContext _dbContext;
+
         Thread _thread;
         private static Boolean _status = false;
 
-        public ConnectionController(IHubContext<TemperatureHub> hubContext, ISerialPortService serialPortService, IDataService dataService)
+        public ConnectionController(IHubContext<TemperatureHub> hubContext, 
+            ISerialPortService serialPortService, 
+            IDataService dataService
+            //RTDSensorDBContext dbContext
+            )
         {
             this._serialPort = serialPortService.SerialPort;
             this._dataService = dataService;
             _hubContext = hubContext;
+
+            //delete this line
+            //_dbContext = dbContext;
 
             if (this._serialPort.IsOpen) this._serialPort.Close();
 
@@ -93,13 +106,30 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                     throw new Exception("BAD Parity format");
             }
 
-            _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
-
+            //_serialPort.DataReceived += _dataService.ReadDataFromHardware;
+            
             try
             {
                 _serialPort.Open();
+                //byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
+                //_serialPort.Write(bytes, 0, bytes.Length);
                 byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
                 _serialPort.Write(bytes, 0, bytes.Length);
+                Console.WriteLine(_serialPort.ReadTo("\r"));
+                
+                //bytes = Encoding.UTF8.GetBytes("GET CON\r");
+                //_serialPort.Write(bytes, 0, bytes.Length);
+                //Console.WriteLine(_serialPort.ReadTo("\r"));
+
+
+                bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
+                _serialPort.Write(bytes, 0, bytes.Length);
+                Console.WriteLine(_serialPort.ReadTo("\r"));
+
+                _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
+                bytes = Encoding.UTF8.GetBytes("GET CON\r");
+                _serialPort.Write(bytes, 0, bytes.Length);
+                
                 _status = true;
                 //_thread = new Thread(sendRandom);
                 //_thread.Start();
@@ -112,20 +142,32 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
         }
 
-        private async void sendRandom()
+        private async Task sendRandom()
         {
             Console.WriteLine("In thread");
             Random rnd = new Random();
 
             while (_status == true)
             {
-                int num = rnd.Next(1, 45);
-                var data = new Data();
-                data.Time = DateTime.Now;
-                data.Temperature = num;
-                await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
-                Console.WriteLine(data.Time + " : " + data.Temperature);
-                Thread.Sleep(1000);
+                try
+                {
+                    int num = rnd.Next(1, 45);
+                    var data = new Data();
+                    data.Time = DateTime.Now;
+                    data.Temperature = num;
+
+                    //delete following 2 lines
+                    //await _dbContext.TemperatureTable.AddAsync(data);
+                    //await _dbContext.SaveChangesAsync();
+
+                    await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
+                    Console.WriteLine(data.Time + " : " + data.Temperature);
+                    Thread.Sleep(1000);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
         }
 
@@ -134,7 +176,11 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         {
             try
             {
+                
+                //byte[] bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
+                //_serialPort.Write(bytes, 0, bytes.Length);
                 _serialPort.DataReceived -= _dataService.ReadDataFromHardware;
+                //Thread.Sleep(1500);
                 _serialPort.Close();
                 _status = false;
                 //_thread.Abort();
@@ -142,9 +188,25 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine("disconnect"+ex);
                 return false;
             }
         }
+        //[HttpPost("setatm")]
+        //public bool SetMode()
+        //{
+        //    try
+        //    {
+
+        //        byte[] bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
+        //        _serialPort.Write(bytes, 0, bytes.Length);
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("disconnect" + ex);
+        //        return false;
+        //    }
+        //}
     }
 }

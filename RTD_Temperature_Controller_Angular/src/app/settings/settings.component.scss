@@ -1,7 +1,6 @@
 #main-div{
     min-height: 89vh;
     margin: 0;
-    
 }
 .container{
     height: 100%;
@@ -10,7 +9,13 @@
 #settings-form{
     align-items: center;
     width: 50%;
-    background-color: antiquewhite;
+    padding: 3%;
+    background-color: #edf5fc;
+    border-radius: 30px;
+}
+
+.crd{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 .button-container {

@@ -1,15 +1,11 @@
-<div class="sensor_btn">
-    <h4 style=" font-weight: bold; font-family: cursive; color: black; ">
-        Sensor status: 
-        <span *ngIf="sensor_status" style="color: green;">ON</span>
-        <span *ngIf="!sensor_status" style="color: red;">OFF</span>
-    </h4>
-  <label class="switch">
-    <input type="checkbox" (click)="graphInitializer()"/>
-    <span class="slider"></span>
-  </label>
-</div>
-<div class="card" style="padding: 3%; margin: 1%; background-color: aliceblue;">
+<div id="main-div">
+  <div class="sensor_btn d-flex w-100 justify-content-end">
+    <div>
+      <button *ngIf="!sensor_status" class="btn btn-primary" (click)="graphInitializer()">Start</button>
+      <button *ngIf="sensor_status" class="btn btn-danger" (click)="graphInitializer()">Stop</button>
+    </div>
+  </div>
+<div class="crd" style="padding: 3%; border-radius: 30px; margin: 1%; background-color: aliceblue;">
     <div style="width: 100%;" class="row">
         <div class="col-sm-12 col-md-10">
           <canvasjs-chart
@@ -20,7 +16,7 @@
         </div>
       
         <div class="col-sm-12 col-md-2">
-          <h4 style="font-weight: bold; text-align: center">
+          <h4 style="font-weight: bold; text-align: center; ">
             Threshold:
             <span>{{ settings.threshold }}</span>
           </h4>
@@ -30,6 +26,9 @@
             <span id="danger" *ngIf="danger">DANGER!!</span>
           </h4>
         </div>
-        <div></div>
+
+        
       </div>
 </div>
+</div>
+
