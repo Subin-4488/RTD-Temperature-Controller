@@ -1,21 +1,8 @@
 <div id="main-div">
   <div class="sensor_btn d-flex w-100 justify-content-end">
-    <!-- <div class="">
-        <h4 style="font-family: Roboto; color: black; ">
-          Sensor status: 
-          <span *ngIf="sensor_status" style="color: green;">ON</span>
-          <span *ngIf="!sensor_status" style="color: red;">OFF</span>
-        </h4>
-    </div>
-    <div class="">
-      <label class="switch">
-        <input type="checkbox" (click)="graphInitializer()"/>
-        <span class="slider">ASDF</span>
-      </label>
-    </div> -->
-    <div style="width: 10%;">
-      <button *ngIf="!sensor_status" class="btn btn-primary w-100" (click)="graphInitializer()">Start</button>
-      <button *ngIf="sensor_status" class="btn btn-danger w-100" (click)="graphInitializer()">Stop</button>
+    <div>
+      <button *ngIf="!sensor_status" class="btn btn-primary" (click)="graphInitializer()">Start</button>
+      <button *ngIf="sensor_status" class="btn btn-danger" (click)="graphInitializer()">Stop</button>
     </div>
   </div>
 <div class="crd" style="padding: 3%; border-radius: 30px; margin: 1%; background-color: aliceblue;">
@@ -39,7 +26,8 @@
             <span id="danger" *ngIf="danger">DANGER!!</span>
           </h4>
         </div>
-        <div></div>
+
+        
       </div>
 </div>
 </div>

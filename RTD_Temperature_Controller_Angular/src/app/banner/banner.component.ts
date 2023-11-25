@@ -20,6 +20,9 @@ export class BannerComponent {
     //write the disconnecting code
     let ifDisconnected
     this.hub_service.end()
+    // this.connectionService.setMode().subscribe(d=>{
+      
+    // })
     this.connectionService.disconnectConnection().subscribe(data=>{
       
       ifDisconnected = data
