@@ -23,15 +23,15 @@ namespace RTD_Temperature_Controller_DotnetAPI
             builder.Services.AddSignalR();
 
             //database
-            builder.Services.AddDbContext<RTDSensorDBContext>(
-                options =>
-                {
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-                });
+            //builder.Services.AddDbContext<RTDSensorDBContext>(
+            //options =>
+            //{
+            //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            //});
 
             //dependency injection (IOC Service) for Serial port
             builder.Services.AddSingleton<ISerialPortService, SerialPortService>();
-            builder.Services.AddScoped<IDataService, DataService>();
+            builder.Services.AddSingleton<IDataService, DataService>();
 
             var app = builder.Build();
 
@@ -57,7 +57,7 @@ namespace RTD_Temperature_Controller_DotnetAPI
 
             app.MapControllers();
 
-            
+
 
             //app.MapGet("/config", () => app.Configuration["ConnectionStrings:ConStr"] + " " + app.Configuration["Credentials:password"]);
 

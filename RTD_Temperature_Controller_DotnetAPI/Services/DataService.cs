@@ -1,90 +1,171 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using RTD_Temperature_Controller_DotnetAPI.DBContext;
 using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
-using System;
-using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Services
 {
     public class DataService : IDataService
     {
-        private readonly RTDSensorDBContext _dbContext;
         private readonly IHubContext<TemperatureHub> _hubContext;
+        private readonly IConfiguration _configuration;
 
-        public DataService(RTDSensorDBContext dBContext, IHubContext<TemperatureHub> hubContext)
+        public DataService(IHubContext<TemperatureHub> hubContext, IConfiguration configuration)
         {
             _hubContext = hubContext;
-            _dbContext = dBContext;
+            _configuration = configuration;
         }
         public async void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort spL = (SerialPort)sender;
-            //Do the parsing and write to database
-            //await WriteToDatabase(new Data() { Temperature = 0, Time = DateTime.Now });
-
-            string result = spL.ReadExisting();
-            result = result.Substring(0, result.Length - 1);
-            string[] resultArr  = result.Split(' ');
-            Console.WriteLine(spL.ReadExisting());
-
-            if (resultArr[0]=="OK" && resultArr[1]=="TMP")
+            if (!spL.IsOpen)
             {
-                var data = new Data { Temperature = Convert.ToDouble(resultArr[2]), Time = DateTime.Now };
-                await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
-               
+                return;
             }
-            else if (resultArr[0] == "OK" && resultArr[1]=="MAN")
+            try
             {
-                if (resultArr[2] == "TMP")
+
+                string result = spL.ReadTo("\r");
+                string[] resultArr = result.Split(' ');
+                Console.WriteLine(result);
+
+                if (resultArr[0] == "OK" && resultArr[1] == "TMPA")
                 {
-                    var data = new ManualModeData { Response = "OK MAN TMP", value = resultArr[3] };
-                    await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                    var data = new Data { Temperature = Convert.ToDouble(resultArr[2]), Time = DateTime.Now };
+                    await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
+
+                    //db
+                    var flag = await WriteToDatabase(data);
+                    //await Console.Out.WriteLineAsync(flag.Item2);
+                    //await _dbContext.TemperatureTable.AddAsync(data);
+                    //await _dbContext.SaveChangesAsync();
+
                 }
-                else if (resultArr[2] == "RES")
+                else if (resultArr[0] == "OK" && resultArr[1] == "CON")
                 {
-                    var data = new ManualModeData { Response = "OK MAN RES", value = resultArr[3] };
-                    await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                    string[] properties = resultArr[2].Split(',');
+
+                    Settings? settingsValue;
+                    string fileName = @"..\..\settingsFile.json";
+                    
+                    using (FileStream openStream = System.IO.File.OpenRead(fileName))
+                    {
+                        settingsValue = await JsonSerializer.DeserializeAsync<Settings>(openStream);
+                    }
+
+                    var newSettings = new Settings();
+                    newSettings.Threshold = settingsValue.Threshold;
+                    newSettings.DataAcquisitionRate = settingsValue.DataAcquisitionRate;
+
+                    foreach (var item in properties)
+                    {
+                        var d = item.Split(':');
+
+                        if (d[0] == "LED")
+                        {
+                            string s = d[1];
+                            newSettings.Color_0_15 = (Colors)Enum.Parse(typeof(Colors), GetColorCode(s[0]));
+                            newSettings.Color_16_30 = (Colors)Enum.Parse(typeof(Colors), GetColorCode(s[1]));
+                            newSettings.Color_31_45 = (Colors)Enum.Parse(typeof(Colors), GetColorCode(s[2]));
+                        }
+                        else if (d[0] == "OL")
+                        {
+                            newSettings.Temperature_4mA = Convert.ToDouble(d[1]);
+                        }
+                        else if (d[0] == "OH")
+                        {
+                            newSettings.Temperature_20mA = Convert.ToDouble(d[1]);
+                        }
+                    }
+                    string jsonString = JsonSerializer.Serialize<Settings>(newSettings);
+                    System.IO.File.WriteAllText(@"..\..\settingsFile.json", jsonString);
                 }
-                else //for EEPROM and SET PWM
+                else //manual mode
                 {
-                    var data = new ManualModeData { Response = resultArr[0]+" " + resultArr[1], value = resultArr[0] + " " + resultArr[1] };
-                    await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                    if (resultArr[0] == "OK" && resultArr[1] == "TMPM")
+                    {
+                        var data = new ManualModeData { Response = "OK TMPM", value = resultArr[2] };
+                        await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                    }
+                    else if (resultArr[0] == "OK" && resultArr[1] == "RES")
+                    {
+                        var data = new ManualModeData { Response = "OK RES", value = resultArr[2] };
+                        await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                    }
+                    else if (resultArr[0] == "OK" && resultArr[1] == "EPR")
+                    {
+                        var data = new ManualModeData { Response = "OK EPR", value = "OK EPR" };
+                        await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                    }
+                    else if (resultArr[0] == "OK" && resultArr[1] == "MOD")
+                    {
+                        var data = new ManualModeData { Response = "OK MOD", value = "OK MOD" };
+                        await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                    }
                 }
+            }
+            catch (OperationCanceledException ex)
+            {
+                // Log or handle the cancellation exception
+                Console.WriteLine($"Operation canceled: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("bala"+ex.ToString());
+            }
 
         }
 
         public async Task<(bool, string)> WriteToDatabase(Data data)
         {
-            if (_dbContext.TemperatureTable == null)
+            var dbContextOptions = new DbContextOptionsBuilder<RTDSensorDBContext>()
+                                        .UseSqlServer(_configuration["ConnectionStrings:DefaultConnection"])
+                                        .Options;
+            using (var _dbContext = new RTDSensorDBContext(dbContextOptions))
             {
-                return (false, "Entity set 'RTDSensorDBContext.TemperatureTable'  is null.");
-            }
-            _dbContext.TemperatureTable.Add(data);
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                var d = await _dbContext.TemperatureTable.Where(d => d.Time == data.Time).ToListAsync();
-                if (d.Count > 0)
+                if (_dbContext.TemperatureTable == null)
                 {
-                    return (false, "Data already exist");
+                    return (false, "Entity set 'RTDSensorDBContext.TemperatureTable'  is null.");
                 }
-                else
+                await _dbContext.TemperatureTable.AddAsync(data);
+                try
                 {
-                    throw;
+                    await _dbContext.SaveChangesAsync();
                 }
-            }
+                catch (DbUpdateException)
+                {
+                    var d = await _dbContext.TemperatureTable.Where(d => d.Time == data.Time).ToListAsync();
+                    if (d.Count > 0)
+                    {
+                        return (false, "Data already exist");
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
 
-            return (true, "Successfully added to database");
+                return (true, "Successfully added to database");
+            }
+        }
+
+        private string GetColorCode(char c)
+        {
+            switch (c)
+            {
+                case 'R':
+                    return "red";
+                case 'G':
+                    return "green";
+                case 'B':
+                    return "blue";
+            }
+            return "";
         }
     }
 }

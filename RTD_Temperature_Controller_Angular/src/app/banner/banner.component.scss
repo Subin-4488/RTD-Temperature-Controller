@@ -1,42 +1,38 @@
 
 *{
     font-size: 19px;
-    font-family: cursive;
+    font-family: 'Roboto';
 }
 
 .nav-title{
     text-decoration: none;
-    color: #000;
-    font-weight: bold; 
-    font-style: italic; 
-    text-shadow: 5px 2px 9px rgb(177, 175, 178);
+    color: white;
+    font-weight:200; 
+    font-family:'Kdam Thmor Pro';
+    font-size: 28px;
     transition: all .1s;
 }
 
 .nav-title:hover{
     font-weight: bold; 
-    font-size: 20px; 
-    text-shadow: 5px 2px 9px rgb(255, 0, 0);
+    font-size: 29px; 
 }
 
-
+.nav-link{
+    color: white;
+}
 .nav-item{
     display: inline-block;
-    color: black;
+    color: white;
 }
 
 .nav-item :hover{
-    color: white;
+    color: yellow;
     transition: all .2s linear;
-    transform: translateY(-5px);
+    transform: translateY(-2px);
 }
 
-.disconnectbtn{
-    display: inline-block;
-}
-
-.disconnectbtn :hover{
-    color: rgb(185, 0, 0);
-    transition: all .1s linear;
-    transform: translateY(-5px);
+.nav-item :focus{
+    color:  yellow;
+    transition: all .2s linear;
 }
