@@ -34,6 +34,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             //RTDSensorDBContext dbContext
             )
         {
+            serialPortService.deleteMethod();
             this._serialPort = serialPortService.SerialPort;
             this._dataService = dataService;
             _hubContext = hubContext;
@@ -105,31 +106,51 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 default:
                     throw new Exception("BAD Parity format");
             }
-
-            //_serialPort.DataReceived += _dataService.ReadDataFromHardware;
             
+            //_serialPort.ReadTimeout=500;
+            //_serialPort.DataReceived += _dataService.ReadDataFromHardware;
+
             try
             {
+
+                if (!_serialPort.IsOpen)
                 _serialPort.Open();
-                //byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
+
+                //_serialPort.DiscardInBuffer();
+
+                //byte[] bytes = Encoding.UTF8.GetBytes("SET MOD MAN\r");
                 //_serialPort.Write(bytes, 0, bytes.Length);
-                byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
+
+                //string manMod = _serialPort.ReadTo("\r");
+
+                //Console.WriteLine(manMod);
+                //_serialPort.DiscardInBuffer();
+
+                byte[]  bytes = Encoding.UTF8.GetBytes("GET VER\r");
                 _serialPort.Write(bytes, 0, bytes.Length);
-                Console.WriteLine(_serialPort.ReadTo("\r"));
-                
-                //bytes = Encoding.UTF8.GetBytes("GET CON\r");
-                //_serialPort.Write(bytes, 0, bytes.Length);
-                //Console.WriteLine(_serialPort.ReadTo("\r"));
+                string version = _serialPort.ReadTo("\r");
+                Console.WriteLine(version);
+                string[] temp = version.Split(" ");
+                if (temp.Length < 2 || temp[0] != "OK" || temp[1] != "VER")
+                    return false;
+
 
 
                 bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
                 _serialPort.Write(bytes, 0, bytes.Length);
-                Console.WriteLine(_serialPort.ReadTo("\r"));
+                string mod = _serialPort.ReadTo("\r");
+                Console.WriteLine(mod);
+                temp = mod.Split(" ");
+                if (mod.Length < 2 || temp[0] != "OK" || temp[1] != "MOD")
+                    return false;
 
                 _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
                 bytes = Encoding.UTF8.GetBytes("GET CON\r");
                 _serialPort.Write(bytes, 0, bytes.Length);
+
+
                 
+
                 _status = true;
                 //_thread = new Thread(sendRandom);
                 //_thread.Start();
