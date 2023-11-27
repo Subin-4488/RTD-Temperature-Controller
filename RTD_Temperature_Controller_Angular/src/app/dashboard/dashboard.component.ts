@@ -15,7 +15,7 @@ export class DashboardComponent {
     private router_service:Router){  //Initializing error hub
 
     hub_service.hubConnection.on('DeviceError', (data)=>{
-      if (data!=null && data.Error  == "Device disconnected"){
+      if (data!=null && data.error  == "Device disconnected"){
         alert("Connection Interupted!!\nExiting...")
       console.log("NOWWWW")
         connection_service.disconnectConnection().subscribe(d=>{

@@ -109,13 +109,10 @@ export class HomeComponent implements OnDestroy {
 
     if (temperature >= 0 && temperature <= 15) {
       return this.settings.color_0_15; 
-    } else if (temperature >= 16 && temperature <= 30) {
+    } else if (temperature > 15 && temperature <= 30) {
       return this.settings.color_16_30;
-    } else if (temperature >= 31 && temperature <= 45) {
-      return this.settings.color_31_45;
     } else {
-      // Default color for values outside the specified ranges
-      return "black";
+      return this.settings.color_31_45;
     }
   }
 
@@ -127,8 +124,8 @@ export class HomeComponent implements OnDestroy {
       this.home_service.sendCommand(new Command("GET","GET TMPA\r")).subscribe(d=>{
         if(d==true){
           this.hubService.hubConnection.on('UpdateTemperature',(temperatureData) =>{
-            console.log("inside hubsocket "+parseInt(temperatureData.temperature))
-            console.log(this.getColor(parseInt(temperatureData.temperature)))
+            // console.log("inside hubsocket "+parseInt(temperatureData.temperature))
+            // console.log(this.getColor(parseInt(temperatureData.temperature)))
             //console.log(this.dataPoints)
             if(this.dar == 0){
               var pointColor = this.getColor(parseFloat(temperatureData.temperature))
