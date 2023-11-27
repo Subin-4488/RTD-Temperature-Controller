@@ -7,6 +7,7 @@ using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
 using System.IO.Ports;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Services
 {
@@ -29,10 +30,24 @@ namespace Services
             }
             try
             {
-
-                string result = spL.ReadTo("\r");
-                string[] resultArr = result.Split(' ');
-                Console.WriteLine(result);
+                string[] resultArr = new string[6];
+                try
+                {
+                    string result = spL.ReadTo("\r");
+                    resultArr = result.Split(' ');
+                    Console.WriteLine(result);
+                }
+                catch (OperationCanceledException ex)
+                {
+                    // Log or handle the cancellation exception
+                    await _hubContext.Clients.All.SendAsync("DeviceError",new { Error = "Device disconnected"});
+                    Console.WriteLine($"Operation canceled: {ex.Message}");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    await _hubContext.Clients.All.SendAsync("DeviceError", new { Error = "Device disconnected" });
+                    Console.WriteLine($"Invalid operation: {ex.Message}");
+                }
 
                 if (resultArr[0] == "OK" && resultArr[1] == "TMPA")
                 {
@@ -109,14 +124,9 @@ namespace Services
                     }
                 }
             }
-            catch (OperationCanceledException ex)
-            {
-                // Log or handle the cancellation exception
-                Console.WriteLine($"Operation canceled: {ex.Message}");
-            }
             catch (Exception ex)
             {
-                Console.WriteLine("bala"+ex.ToString());
+                Console.WriteLine(ex.Message);
             }
 
         }
