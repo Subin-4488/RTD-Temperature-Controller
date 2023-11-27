@@ -5,6 +5,8 @@ import { Colors, Settings } from '../models/Settings';
 import { HomeService } from '../services/home.service';
 import { HubService } from '../services/hub.service';
 import { SettingsService } from '../services/settings.service';
+import { ConnectionService } from '../services/connection.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -125,8 +127,8 @@ export class HomeComponent implements OnDestroy {
       this.home_service.sendCommand(new Command("GET","GET TMPA\r")).subscribe(d=>{
         if(d==true){
           this.hubService.hubConnection.on('UpdateTemperature',(temperatureData) =>{
-            //console.log("inside hubsocket")
-            //console.log(this.getColor(parseInt(temperatureData.temperature)))
+            console.log("inside hubsocket "+parseInt(temperatureData.temperature))
+            console.log(this.getColor(parseInt(temperatureData.temperature)))
             //console.log(this.dataPoints)
             if(this.dar == 0){
               var pointColor = this.getColor(parseFloat(temperatureData.temperature))

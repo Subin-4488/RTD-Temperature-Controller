@@ -22,8 +22,11 @@ export class HubService {
   closeManualMode(){
     this.hubConnection.off('manualmodedata')
   }
+  closeError(){
+    this.hubConnection.off('DeviceError') 
+  }
   end(){
+    this.closeError()
     this.hubConnection.stop()
   }
-
 }
