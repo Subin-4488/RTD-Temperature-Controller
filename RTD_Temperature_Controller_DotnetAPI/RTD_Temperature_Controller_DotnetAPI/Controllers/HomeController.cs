@@ -1,5 +1,7 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
 using System.IO.Ports;
 using System.Text;
@@ -15,9 +17,11 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     public class HomeController : ControllerBase
     {
         private readonly SerialPort _serialPort;
-        public HomeController(ISerialPortService serialPortService)
+        private readonly IHubContext<TemperatureHub> _hubContext;
+        public HomeController(ISerialPortService serialPortService, IHubContext<TemperatureHub> hubcontext)
         {
             _serialPort = serialPortService.SerialPort;
+            _hubContext = hubcontext;
         }
         // GET: api/<HomeController>
         [HttpGet]
@@ -35,7 +39,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 
         // POST api/<HomeController>
         [HttpPost]
-        public bool Post([FromBody] JsonObject value)
+        public async Task<bool> Post([FromBody] JsonObject value)
         {
             Console.WriteLine(value);
             byte[] bytes = Encoding.UTF8.GetBytes(value["Value"].ToString());
@@ -46,9 +50,20 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             {
                 _serialPort.Write(bytes, 0, bytes.Length);
             }
+            catch (OperationCanceledException ex)
+            {
+                // Log or handle the cancellation exception
+                await _hubContext.Clients.All.SendAsync("DeviceError", new { Error = "Device disconnected" });
+                Console.WriteLine($"Operation canceled: {ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                await _hubContext.Clients.All.SendAsync("DeviceError", new { Error = "Device disconnected" });
+                Console.WriteLine($"Invalid operation: {ex.Message}");
+            }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
+                Console.WriteLine(ex.Message);
             }
             return true;
         }

@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ManualmodeService } from '../services/manualmode.service';
 import { Command } from '../models/Command';
 import { HubService } from '../services/hub.service';
+import { ConnectionService } from '../services/connection.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-manualmode',
@@ -16,7 +18,7 @@ export class ManualmodeComponent implements OnDestroy {
   newCommand:Command = new Command('','')
   input: string = ""
 
-  constructor(fb: FormBuilder,private manualmodeService:ManualmodeService, private hub_service: HubService){
+  constructor(fb: FormBuilder,private router_service: Router,private connection_service: ConnectionService,private manualmodeService:ManualmodeService, private hub_service: HubService){
     this.newCommand.Command="Set"
     this.newCommand.Value = "SET MOD MAN\r"
     this.manualmodeService.sendCommand(this.newCommand).subscribe(data=>{
@@ -29,6 +31,7 @@ export class ManualmodeComponent implements OnDestroy {
       console.log(manualmodedata)
       this.input = manualmodedata.value
     });
+
   }
   ngOnDestroy(): void {
     this.hub_service.closeManualMode()
