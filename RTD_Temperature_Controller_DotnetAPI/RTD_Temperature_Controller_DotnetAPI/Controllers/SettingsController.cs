@@ -16,10 +16,12 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     [ApiController]
     public class SettingsController : ControllerBase
     {
+        private readonly IHubContext<TemperatureHub> _hubContext;
         private readonly SerialPort _serialPort;
-        public SettingsController(ISerialPortService serialPortService)
+        public SettingsController(IHubContext<TemperatureHub> hubContext, ISerialPortService serialPortService)
         {
             this._serialPort = serialPortService.SerialPort;
+            this._hubContext = hubContext;
         }
         // GET: api/<SettingsController>
         [HttpGet]
@@ -42,7 +44,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 
         // POST api/<SettingsController>
         [HttpPost]
-        public void Post([FromBody] JsonObject s)
+        public async void Post([FromBody] JsonObject s)
         {
             var newSettings= new Settings();
             newSettings.Threshold = Convert.ToDouble(s["Threshold"].ToString());
@@ -58,8 +60,27 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             sendString.Append($",OL:{s["Temperature_4mA"]},OH:{s["Temperature_20mA"]}\r");
             Console.WriteLine(sendString);
 
-            byte[] bytes = Encoding.UTF8.GetBytes(sendString.ToString());
-            _serialPort.Write(bytes, 0, bytes.Length);
+            try
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(sendString.ToString());
+                _serialPort.Write(bytes, 0, bytes.Length);
+            }
+            catch (OperationCanceledException ex)
+            {
+                // Log or handle the cancellation exception
+                await _hubContext.Clients.All.SendAsync("DeviceError", new { Error = "Device disconnected" });
+                Console.WriteLine($"Operation canceled: {ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                await _hubContext.Clients.All.SendAsync("DeviceError", new { Error = "Device disconnected" });
+                Console.WriteLine($"Invalid operation: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
             string jsonString = JsonSerializer.Serialize<Settings>(newSettings);
             System.IO.File.WriteAllText(@"..\..\settingsFile.json", jsonString);
         }
