@@ -3,7 +3,7 @@
   <form
     id="connection-form"
     [formGroup]="ConnectionForm"
-    (ngSubmit)="OnSubmit(ConnectionForm.value)"
+    (ngSubmit)="onSubmit(ConnectionForm.value)"
   >
     <div class="mb-3">
       <label for="portname" class="form-label">Port name</label>
@@ -67,7 +67,7 @@
       <button
         type="button"
         class="btn btn-secondary m-1"
-        (click)="ResetValues()"
+        (click)="resetValues()"
       >
         Reset
       </button>

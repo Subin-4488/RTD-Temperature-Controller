@@ -96,6 +96,7 @@ export class SettingsComponent {
       newSettings.color_0_15 = Colors[Number(data.color_0_15)];
       newSettings.color_16_30 = Colors[Number(data.color_16_30)];
       newSettings.color_31_45 = Colors[Number(data.color_31_45)];
+
       this.settingsForm.patchValue({
         threshold: newSettings.threshold,
         dar: newSettings.dataAcquisitionRate,

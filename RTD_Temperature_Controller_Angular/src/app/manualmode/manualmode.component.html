@@ -53,14 +53,14 @@
       <div class="mb-4">
         <h4 style="text-align: center; font-weight: bold">PWM Duty Cycle</h4>
       </div>
-      <form [formGroup]="pwmFormGroup" (ngSubmit)="setPWMDutyCycle()">
+      <form [formGroup]="PwmFormGroup" (ngSubmit)="setPWMDutyCycle()">
         <div class="row" style="text-align: center; margin: 0">
           <div class="col-md-4"></div>
           <div class="col-md-4 col-sm-12">
             <input
               [ngStyle]="{
                 border:
-                  submitted && getPWMFormControls['pwmCycleControl'].errors
+                  Submitted && getPWMFormControls['pwmCycleControl'].errors
                     ? '1px solid red'
                     : '1px solid black'
               }"
@@ -75,7 +75,7 @@
                             'color': 'red', 
                             
                         }"
-              *ngIf="submitted && getPWMFormControls['pwmCycleControl'].errors"
+              *ngIf="Submitted && getPWMFormControls['pwmCycleControl'].errors"
             >
               Enter valid value between 0 to 100
             </div>
@@ -99,13 +99,13 @@
     >
       <div>
         <h4 class="mb-4" style="text-align: center; font-weight: bold">
-          Sensor Data Control
+          Device Status
         </h4>
       </div>
       <div class="row" style="margin: 0">
-        <div class="col-md col-sm-12"></div>
-        <div style="text-align: center" class="col-md-3 col-sm-12">
-          <button
+        <div class="col-md-1 col-sm-12"></div>
+        <div style="text-align: center" class="col-md col-sm-12">
+          <button id="sensor-data-btn"
             class="btn btn-primary"
             type="submit"
             (click)="getTemperature()"
@@ -113,8 +113,9 @@
             Temperature
           </button>
         </div>
-        <div style="text-align: center" class="col-md-3 col-sm-12">
+        <div style="text-align: center" class="col-md col-sm-12">
           <button
+          id="sensor-data-btn"
             class="btn btn-primary"
             type="submit"
             (click)="getResistance()"
@@ -122,8 +123,9 @@
             Resistance
           </button>
         </div>
-        <div style="text-align: center" class="col-md-3 col-sm-12">
+        <div style="text-align: center" class="col-md col-sm-12">
           <button
+          id="sensor-data-btn"
             class="btn btn-primary"
             type="submit"
             (click)="getEPROM()"
@@ -131,14 +133,34 @@
             EPROM
           </button>
         </div>
+        <div style="text-align: center" class="col-md col-sm-12">
+          <button
+          id="sensor-data-btn"
+            class="btn btn-primary"
+            type="submit"
+            (click)="getStartButtonStatus()"
+          >
+            Start Button
+          </button>
+        </div>
+        <div style="text-align: center" class="col-md col-sm-12">
+          <button
+          id="sensor-data-btn"
+            class="btn btn-primary"
+            type="submit"
+            (click)="getStopButtonStatus()"
+          >
+            Stop Button
+          </button>
+        </div>
 
-        <div class="col-md col-sm-12"></div>
+        <div class="col-md-1 col-sm-12"></div>
       </div>
       <div
         class="section-4"
       >
         <div class="col-md-3 col-sm-12" style="text-align: center">
-          <input [(ngModel)]="input" class="form-control" disabled value="0" />
+          <input [(ngModel)]="Input" class="form-control" disabled value="0" />
         </div>
       </div>
     </div>

@@ -105,22 +105,27 @@ namespace Services
                     if (resultArr[0] == "OK" && resultArr[1] == "TMPM")
                     {
                         var data = new ManualModeData { Response = "OK TMPM", value = resultArr[2] };
-                        await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                        await _hubContext.Clients.All.SendAsync("ManualModeData", data);
                     }
                     else if (resultArr[0] == "OK" && resultArr[1] == "RES")
                     {
                         var data = new ManualModeData { Response = "OK RES", value = resultArr[2] };
-                        await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                        await _hubContext.Clients.All.SendAsync("ManualModeData", data);
                     }
                     else if (resultArr[0] == "OK" && resultArr[1] == "EPR")
                     {
                         var data = new ManualModeData { Response = "OK EPR", value = "OK EPR" };
-                        await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                        await _hubContext.Clients.All.SendAsync("ManualModeData", data);
                     }
                     else if (resultArr[0] == "OK" && resultArr[1] == "MOD")
                     {
                         var data = new ManualModeData { Response = "OK MOD", value = "OK MOD" };
-                        await _hubContext.Clients.All.SendAsync("manualmodedata", data);
+                        await _hubContext.Clients.All.SendAsync("ManualModeData", data);
+                    }
+                    else if (resultArr[0] == "OK" && resultArr[1] == "BTN")
+                    {
+                        var data = new ManualModeData { Response = "OK BTN", value = $"{resultArr[0]} {resultArr[1]} {resultArr[2]} {resultArr[3]}" };
+                        await _hubContext.Clients.All.SendAsync("ManualModeData", data);
                     }
                 }
             }

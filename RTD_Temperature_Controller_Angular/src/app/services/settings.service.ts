@@ -36,6 +36,7 @@ export class SettingsService {
   /// Returns an observable with error message
   /// </returns>
   /// <param name="error">This is of type HttpErrorResponse</param>
+  
   private handleHttpError(error: HttpErrorResponse) {
     let msg = '';
     if (error.error instanceof ErrorEvent) {

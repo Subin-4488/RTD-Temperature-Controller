@@ -35,12 +35,14 @@ export class ManualmodeService {
   /// Returns an observable with error message
   /// </returns>
   /// <param name="error">This is of type HttpErrorResponse</param>
-  httpError(error: HttpErrorResponse) {
-    let msg = '';
-    if (error.error instanceof ErrorEvent) {
-      msg = error.error.message;
-    } else {
-      msg = 'Error Code: ${error.status}\n Message: ${error.message}';
+
+  private httpError(error:HttpErrorResponse){
+    let msg=''
+    if(error.error instanceof ErrorEvent){
+      msg=error.error.message
+    }
+    else{
+      msg='Error Code: ${error.status}\n Message: ${error.message}';
     }
     return throwError(() => msg);
   }
