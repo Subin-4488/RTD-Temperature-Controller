@@ -25,6 +25,7 @@ export class ConnectionComponent {
     private router: Router,
     private connectionService: ConnectionService
   ) {
+    localStorage.setItem("connected","false")
     this.ConnectionForm = fb.group({
       portname: [],
       bps: [9600],
@@ -55,8 +56,10 @@ export class ConnectionComponent {
     );
     this.connectionService.createConnection(newConnection).subscribe((data) => {
       this.ConnectionStatus = data;
-      if (this.ConnectionStatus == true)
+      if (this.ConnectionStatus == true){
+        localStorage.setItem("connected","true")
         this.router.navigateByUrl('dashboard/(navRoute:home)');
+      }
       else {
         alert('Connection error. Try changing the values.');
       }
