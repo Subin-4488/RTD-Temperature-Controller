@@ -126,6 +126,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 //Console.WriteLine(manMod);
                 //_serialPort.DiscardInBuffer();
 
+
                 _serialPort.WriteTimeout = 3000;
                 _serialPort.ReadTimeout = 3000;
                 string[] temp;

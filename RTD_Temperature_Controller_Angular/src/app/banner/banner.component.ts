@@ -1,39 +1,40 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConnectionService } from '../services/connection.service';
-import { HubService } from '../services/hub.service';
 
+//////////////////////////////////////////////////////////////////////////
+/// <summary>
+/// The component shall serve as the placeholder for the Home, Settings, ManualMode pages and Disconnect button
+/// </summary>
+//////////////////////////////////////////////////////////////////////////
 
 @Component({
   selector: 'app-banner',
   templateUrl: './banner.component.html',
-  styleUrls: ['./banner.component.scss']
+  styleUrls: ['./banner.component.scss'],
 })
 export class BannerComponent {
+  constructor(
+    private routerService: Router,
+    private connectionService: ConnectionService
+  ) {}
 
-  constructor(private router_service: Router
-    ,private connectionService:ConnectionService
-    ,private hub_service: HubService){
-  }
+  /// <summary>
+  /// The Disconnect method used to trigger the disconnection between software and hardware through “ConnectionService” and navigates to the homepage if it is successful.
+  /// </summary>
+  /// <returns>
+  /// NIL
+  /// </returns
 
-  disconnect(){
-    //write the disconnecting code
-    let ifDisconnected
-    //this.hub_service.end()
-    // this.connectionService.setMode().subscribe(d=>{
-      
-    // })
-    this.connectionService.disconnectConnection().subscribe(data=>{
-      
-      ifDisconnected = data
-      if(ifDisconnected==true){
-        this.router_service.navigate(["/"]).then(() => {
-          window.location.reload()
-        })
+  Disconnect() {
+    let ifDisconnected;
+    this.connectionService.disconnectConnection().subscribe((data) => {
+      ifDisconnected = data;
+      if (ifDisconnected == true) {
+        this.routerService.navigate(['/']).then(() => {
+          window.location.reload();
+        });
       }
-    })
-
-    
-  
+    });
   }
 }
