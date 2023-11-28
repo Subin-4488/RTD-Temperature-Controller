@@ -1,6 +1,10 @@
 <div id="main-div" class="row justify-content-center align-items-center">
+  
   <form class="crd" id="settings-form" [formGroup]="settingsForm"
   (ngSubmit)="onSubmit(settingsForm.value)">
+  <div class="row justify-content-center mt-1 mb-2 main-heading">
+    SETTINGS
+  </div>
     <div class="field">
       <label for="threshold" class="form-label">Threshold</label>
       <input
@@ -8,6 +12,7 @@
         type="text"
         id="threshold"
         formControlName="threshold"
+        placeholder="45 &deg;C"
       />
       <div *ngIf="!getsettingsFormControls['threshold'].valid&&getsettingsFormControls['threshold'].touched" style="color: red;" class="form_error">
         Enter a numeric value</div>
@@ -27,7 +32,7 @@
         <option value="10">10</option>
       </select>
     </div>
-    <div class="row justify-content-center mt-3 mb-2">
+    <div class="row justify-content-center mt-3 mb-2 sub-heading">
       Current Control
     </div>
     <div class="row controls">
@@ -38,6 +43,7 @@
           type="text"
           id="current4"
           formControlName="current4"
+          placeholder="15 &deg;C"
         />
         <div *ngIf="getsettingsFormControls['current4'].errors&&getsettingsFormControls['current4'].touched" style="color: red;" class="form_error">
           Enter a numeric value</div>
@@ -49,6 +55,7 @@
           type="text"
           id="current20"
           formControlName="current20"
+          placeholder="30 &deg;C"
         />
         <div *ngIf="getsettingsFormControls['current20'].errors&&getsettingsFormControls['current20'].touched&&!getsettingsFormControls['current20'].hasError('temperatureGreater')" style="color: red;" class="form_error">
           Enter a numeric value</div>
@@ -56,7 +63,7 @@
     </div>
     <div *ngIf="getsettingsFormControls['current20'].hasError('temperatureGreater')&&getsettingsFormControls['current20'].touched" style="color: red;" class="row form_error">
       Temperature for 20mA should be greater than temperature for 4mA</div>
-    <div class="row justify-content-center mt-3 mb-2">
+    <div class="row justify-content-center mt-3 mb-2 sub-heading">
       Color Control
     </div>
     <div class="row controls">

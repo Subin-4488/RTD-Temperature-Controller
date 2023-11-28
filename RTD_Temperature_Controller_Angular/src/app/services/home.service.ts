@@ -6,6 +6,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Command } from '../models/Command';
+import { environment } from 'src/environments/environment';
 
 //////////////////////////////////////////////////////////////////////////
 /// <summary>
@@ -17,15 +18,16 @@ import { Command } from '../models/Command';
   providedIn: 'root',
 })
 export class HomeService {
-  baseurl = 'https://localhost:3000';
+  private baseurl = environment.baseURL;
 
-  httpHeader = {
+  private httpHeader = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
     }),
   };
 
   constructor(private httpClient: HttpClient) {}
+
 
   /// <summary>
   /// Handles HTTP errors

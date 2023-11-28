@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 import { Connection } from '../models/Connection';
 import { Observable, catchError, throwError } from 'rxjs';
 import { HubService } from './hub.service';
+import { environment } from 'src/environments/environment';
 
 //////////////////////////////////////////////////////////////////////////
 /// <summary>
@@ -18,15 +19,17 @@ import { HubService } from './hub.service';
   providedIn: 'root',
 })
 export class ConnectionService {
-  baseurl = 'https://localhost:3000';
+  
+  private baseurl = environment.baseURL;
 
-  httpHeader = {
+  private  httpHeader = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
     }),
   };
 
   constructor(private httpClient: HttpClient, private hubService: HubService) {}
+
 
   /// <summary>
   /// Handles HTTP errors
