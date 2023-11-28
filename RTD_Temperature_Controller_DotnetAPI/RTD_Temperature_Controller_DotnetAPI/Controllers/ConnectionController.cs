@@ -126,6 +126,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 //Console.WriteLine(manMod);
                 //_serialPort.DiscardInBuffer();
 
+                //_serialPort.ReadTimeout = 3000;
                 byte[]  bytes = Encoding.UTF8.GetBytes("GET VER\r");
                 _serialPort.Write(bytes, 0, bytes.Length);
                 string version = _serialPort.ReadTo("\r");
@@ -133,7 +134,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 string[] temp = version.Split(" ");
                 if (temp.Length < 2 || temp[0] != "OK" || temp[1] != "VER")
                     return false;
-
+                //_serialPort.ReadTimeout = Timeout.Infinite;
 
 
                 bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");

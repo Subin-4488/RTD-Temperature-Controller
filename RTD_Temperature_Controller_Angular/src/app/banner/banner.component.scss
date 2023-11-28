@@ -1,38 +1,38 @@
-
-*{
+* {
     font-size: 19px;
     font-family: 'Roboto';
 }
 
-.nav-title{
+.nav-title {
     text-decoration: none;
     color: white;
-    font-weight:200; 
-    font-family:'Kdam Thmor Pro';
+    font-weight: 200;
+    font-family: 'Kdam Thmor Pro';
     font-size: 28px;
     transition: all .1s;
 }
 
-.nav-title:hover{
-    font-weight: bold; 
-    font-size: 29px; 
+.nav-title:hover {
+    font-weight: bold;
+    font-size: 29px;
 }
 
-.nav-link{
+.nav-link {
     color: white;
 }
-.nav-item{
+
+.nav-item {
     display: inline-block;
     color: white;
 }
 
-.nav-item :hover{
+.nav-item :hover {
     color: yellow;
     transition: all .2s linear;
     transform: translateY(-2px);
 }
 
-.nav-item :focus{
-    color:  yellow;
+.nav-item :focus {
+    color: yellow;
     transition: all .2s linear;
 }

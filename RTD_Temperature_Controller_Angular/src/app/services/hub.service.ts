@@ -5,8 +5,8 @@ import * as signalR from '@microsoft/signalr';
   providedIn: 'root'
 })
 export class HubService {
-
-  public hubConnection: signalR.HubConnection;
+  //write about varoius  event names as a way for the server to broadcast specific information to all connected clients or to target messages to specific groups of clients.
+  hubConnection: signalR.HubConnection;
   constructor() {
     console.log("hi")
     this.hubConnection = new signalR.HubConnectionBuilder()

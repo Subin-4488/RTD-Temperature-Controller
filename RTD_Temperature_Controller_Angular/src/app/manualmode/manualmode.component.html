@@ -1,14 +1,9 @@
-<!-- <div class="row my-3 mx-5">
-  <button class="btn btn-primary">Start</button>
-</div> -->
 <div id="main-div" class="row justify-content-center align-items-center">
   <div
     class="section-1"
-    style="margin-top: 1%; display: flex; justify-content: center"
   >
     <div
       class="crd"
-      style="background-color: aliceblue; padding: 2%; width: 75%"
     >
       <div class="mb-4">
         <h4 style="text-align: center; font-weight: bold">LED Control</h4>
@@ -16,9 +11,6 @@
       <div class="row" style="margin: 0">
         <div class="col-md col-sm-12"></div>
         <div style="text-align: center" class="col-md-2 col-sm-12">
-          <!-- <button style="min-width: 50%; background-color: red;" class="btn btn-primary" type="submit" (click)="setLed1()">LED
-                            1
-                        </button> -->
           <input
             type="checkbox"
             class="btn-check"
@@ -29,10 +21,6 @@
           <label class="btn btn-outline-danger" for="led1">LED 1</label>
         </div>
         <div style="text-align: center" class="col-md-2 col-sm-12">
-          <!-- <button style="min-width: 50%; background-color: green;"
-                        class="btn btn-primary" type="submit" (click)="setLed2()">LED
-                        2
-                    </button> -->
           <input
             type="checkbox"
             class="btn-check"
@@ -43,10 +31,6 @@
           <label class="btn btn-outline-success" for="led2">LED 2</label>
         </div>
         <div style="text-align: center" class="col-md-2 col-sm-12">
-          <!-- <button style="min-width: 50%; background-color: blue;"
-                        class="btn btn-primary" type="submit" (click)="setLed3()">LED
-                        3
-                    </button> -->
           <input
             type="checkbox"
             class="btn-check"
@@ -62,25 +46,15 @@
   </div>
   <div
     class="section-2"
-    style="margin-top: 3%; display: flex; justify-content: center"
   >
     <div
       class="crd"
-      style="background-color: aliceblue; padding: 2%; width: 75%"
     >
-    <div class="mb-4">
-      <h4 style="text-align: center; font-weight: bold">PWM Duty Cycle</h4>
-    </div>
+      <div class="mb-4">
+        <h4 style="text-align: center; font-weight: bold">PWM Duty Cycle</h4>
+      </div>
       <form [formGroup]="pwmFormGroup" (ngSubmit)="setPWMDutyCycle()">
         <div class="row" style="text-align: center; margin: 0">
-          <!-- <div class="col-md-4 col-sm-12"></div> -->
-          <!-- <h4
-            class="col-md-2 col-sm-12"
-            style="font-weight: bold"
-            for="input_pwm"
-          >
-            PWM Duty Cycle
-          </h4> -->
           <div class="col-md-4"></div>
           <div class="col-md-4 col-sm-12">
             <input
@@ -107,14 +81,9 @@
             </div>
           </div>
           <div class="col-md-4"></div>
-          <!-- <div class="col-md-4 col-sm-12"></div> -->
         </div>
         <div style="text-align: center; padding: 1%">
-          <button
-            type="submit"
-            class="btn btn-primary"
-            style=" min-width: 10%"
-          >
+          <button type="submit" class="btn btn-primary" style="min-width: 10%">
             SET
           </button>
         </div>
@@ -124,11 +93,9 @@
 
   <div
     class="section-3"
-    style="margin-top: 3%; display: flex; justify-content: center"
   >
     <div
       class="crd"
-      style="background-color: aliceblue; padding: 2%; width: 75%"
     >
       <div>
         <h4 class="mb-4" style="text-align: center; font-weight: bold">
@@ -139,7 +106,6 @@
         <div class="col-md col-sm-12"></div>
         <div style="text-align: center" class="col-md-3 col-sm-12">
           <button
-            style="min-width: 50%; margin-bottom: 2%;"
             class="btn btn-primary"
             type="submit"
             (click)="getTemperature()"
@@ -149,7 +115,6 @@
         </div>
         <div style="text-align: center" class="col-md-3 col-sm-12">
           <button
-            style="min-width: 50%; margin-bottom: 2%;"
             class="btn btn-primary"
             type="submit"
             (click)="getResistance()"
@@ -159,7 +124,6 @@
         </div>
         <div style="text-align: center" class="col-md-3 col-sm-12">
           <button
-            style="min-width: 50%; margin-bottom: 2%;"
             class="btn btn-primary"
             type="submit"
             (click)="getEPROM()"
@@ -171,10 +135,9 @@
         <div class="col-md col-sm-12"></div>
       </div>
       <div
-        class="section 4"
-        style="margin-top: 1%; display: flex; justify-content: center"
+        class="section-4"
       >
-        <div class= "col-md-3 col-sm-12" style="text-align: center;">
+        <div class="col-md-3 col-sm-12" style="text-align: center">
           <input [(ngModel)]="input" class="form-control" disabled value="0" />
         </div>
       </div>

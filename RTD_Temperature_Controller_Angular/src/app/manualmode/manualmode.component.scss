@@ -1,16 +1,45 @@
-#main-div{
+#main-div {
     min-height: 89vh;
     margin: 0;
 }
 
-.btn{
+.btn {
     transition: all .2s;
 }
 
-.btn:hover{
+.btn:hover {
     transform: scale(1.15);
 }
 
-.crd{
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+.crd {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background-color: aliceblue;
+    padding: 2%;
+    width: 75%;
+}
+
+.section-1 {
+    margin-top: 1%;
+    display: flex;
+    justify-content: center;
+}
+
+.section-2 {
+    margin-top: 3%;
+    display: flex;
+    justify-content: center;
+}
+
+.section-3 {
+    margin-top: 3%;
+    display: flex;
+    justify-content: center;
+}
+
+.section-4{
+    margin-top: 1%; display: flex; justify-content: center;
+}
+
+.btn.btn-primary{
+    min-width: 50%; margin-bottom: 2%
 }
