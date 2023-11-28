@@ -33,7 +33,6 @@ export class ManualmodeService {
   }
 
   sendCommand(val:Command):Observable<boolean>{
-    console.log(val.Value)
     return this.httpClient.post<boolean>(this.baseurl+'/manualmode',JSON.stringify(val),this.httpHeader)
     .pipe(
       catchError(this.httpError)

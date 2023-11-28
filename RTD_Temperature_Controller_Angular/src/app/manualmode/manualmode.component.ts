@@ -28,13 +28,11 @@ export class ManualmodeComponent implements OnDestroy {
     this.NewCommand.Command="Set"
     this.NewCommand.Value = "SET MOD MAN\r"
     this.manualmodeService.sendCommand(this.NewCommand).subscribe(data=>{
-      console.log("manual mode done")
     })
     this.PwmFormGroup = fb.group({
       pwmCycleControl: ['', [Validators.required, Validators.pattern("^0*(?:[0-9][0-9]?|100)$")]]  
     })
-    hub_service.hubConnection.on('manualmodedata', (manualmodedata: any) => {
-      console.log(manualmodedata)
+    hub_service.hubConnection.on('ManualModeData', (manualmodedata: any) => {
       this.Input = manualmodedata.value
     });
 
@@ -52,7 +50,6 @@ export class ManualmodeComponent implements OnDestroy {
     this.NewCommand.Command="Set"
     this.NewCommand.Value = "SET MOD ATM\r"
     this.manualmodeService.sendCommand(this.NewCommand).subscribe(data=>{
-      console.log("manual mode done")
     })
   }
 
@@ -172,5 +169,27 @@ export class ManualmodeComponent implements OnDestroy {
 
   getEPROM(){
     this.manualmodeService.sendCommand(new Command("GET", "GET EPR\r")).subscribe(d =>{})
+  }
+
+  /// <summary>
+  /// Method for retrieving "start button" status.
+  /// </summary>
+  /// <returns>
+  /// NIL
+  /// </returns>
+
+  getStartButtonStatus(){
+    this.manualmodeService.sendCommand(new Command("GET", "GET BTN START\r")).subscribe(d =>{})
+  }
+
+  /// <summary>
+  /// Method for retrieving "stop button" status.
+  /// </summary>
+  /// <returns>
+  /// NIL
+  /// </returns>
+
+  getStopButtonStatus(){
+    this.manualmodeService.sendCommand(new Command("GET", "GET BTN STOP\r")).subscribe(d =>{})
   }
 }

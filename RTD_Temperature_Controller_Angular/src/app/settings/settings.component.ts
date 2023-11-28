@@ -50,11 +50,8 @@ export class SettingsComponent {
   }
 
   resetSettings(){
-    console.log(this.getsettingsFormControls['current20'].hasError('temperatureGreater'))
     let newSettings =new Settings(0,0,0,0,'','','')
     this.settingsService.resetSettings().subscribe(data=>{
-      //console.log(data)
-      //data.color_0_15 = Colors[data.color_0_15 as keyof typeof Colors];
       newSettings = data
       newSettings.color_0_15 = Colors[Number(data.color_0_15)]
       newSettings.color_16_30 = Colors[Number(data.color_16_30)]
