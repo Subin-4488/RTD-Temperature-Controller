@@ -8,7 +8,6 @@ export class HubService {
   //write about varoius  event names as a way for the server to broadcast specific information to all connected clients or to target messages to specific groups of clients.
   hubConnection: signalR.HubConnection;
   constructor() {
-    console.log("hi")
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl('https://localhost:3000/temperatureHub',{ withCredentials: false })
       .build();

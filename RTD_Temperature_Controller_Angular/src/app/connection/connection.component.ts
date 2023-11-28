@@ -45,7 +45,7 @@ export class ConnectionComponent {
   /// </returns>
   /// <param name="value">It represents a string object containing the current values of the controls within the form group(ConnectionForm).</param>
 
-  OnSubmit(value: string) {
+  onSubmit(value: string) {
     let newConnection = new Connection(
       this.ConnectionForm.value.portname,
       this.ConnectionForm.value.bps,
@@ -70,7 +70,7 @@ export class ConnectionComponent {
   /// NIL
   /// </returns>
 
-  ResetValues() {
+  resetValues() {
     this.ConnectionForm.patchValue({
       bps: 9600,
       databits: 8,

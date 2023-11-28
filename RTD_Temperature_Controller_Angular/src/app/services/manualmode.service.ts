@@ -20,7 +20,7 @@ export class ManualmodeService {
   }
 
 
-  httpError(error:HttpErrorResponse){
+  private httpError(error:HttpErrorResponse){
     let msg=''
     if(error.error instanceof ErrorEvent){
       msg=error.error.message
@@ -33,7 +33,6 @@ export class ManualmodeService {
   }
 
   sendCommand(val:Command):Observable<boolean>{
-    console.log(val.Value)
     return this.httpClient.post<boolean>(this.baseurl+'/manualmode',JSON.stringify(val),this.httpHeader)
     .pipe(
       catchError(this.httpError)

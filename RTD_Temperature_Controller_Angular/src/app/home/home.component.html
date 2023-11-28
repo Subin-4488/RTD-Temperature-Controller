@@ -4,14 +4,14 @@
       <button
         *ngIf="!SensorStatus"
         class="btn btn-primary"
-        (click)="GraphInitializer()"
+        (click)="graphInitializer()"
       >
         Start
       </button>
       <button
         *ngIf="SensorStatus"
         class="btn btn-danger"
-        (click)="GraphInitializer()"
+        (click)="graphInitializer()"
       >
         Stop
       </button>
@@ -23,7 +23,7 @@
         <canvasjs-chart
           [options]="ChartOptions"
           [styles]="{ width: '100%', height: '460px' }"
-          (chartInstance)="GetChartInstance($event)"
+          (chartInstance)="getChartInstance($event)"
         ></canvasjs-chart>
       </div>
 

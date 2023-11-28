@@ -1,9 +1,5 @@
 import {
-  AbstractControl,
-  Form,
   FormGroup,
-  ValidationErrors,
-  ValidatorFn,
 } from '@angular/forms';
 
 export function sameColor(color1: string, color2: string, color3: string) {
@@ -50,11 +46,9 @@ export function temperatureValidation(current4:string,current20:string){
         if(parseInt(current20Control.value) <= parseInt(current4Control.value)){
             current20Control.setErrors({temperatureGreater:true})
             flag = 1
-            //console.log(current20Control.value)
         }
         else if(flag == 0){
             current20Control.setErrors(null)
-            console.log(parseInt(current20Control.value))
         }
         
     }
