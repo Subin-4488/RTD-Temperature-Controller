@@ -53,14 +53,14 @@
       <div class="mb-4">
         <h4 style="text-align: center; font-weight: bold">PWM Duty Cycle</h4>
       </div>
-      <form [formGroup]="pwmFormGroup" (ngSubmit)="setPWMDutyCycle()">
+      <form [formGroup]="PwmFormGroup" (ngSubmit)="setPWMDutyCycle()">
         <div class="row" style="text-align: center; margin: 0">
           <div class="col-md-4"></div>
           <div class="col-md-4 col-sm-12">
             <input
               [ngStyle]="{
                 border:
-                  submitted && getPWMFormControls['pwmCycleControl'].errors
+                  Submitted && getPWMFormControls['pwmCycleControl'].errors
                     ? '1px solid red'
                     : '1px solid black'
               }"
@@ -75,7 +75,7 @@
                             'color': 'red', 
                             
                         }"
-              *ngIf="submitted && getPWMFormControls['pwmCycleControl'].errors"
+              *ngIf="Submitted && getPWMFormControls['pwmCycleControl'].errors"
             >
               Enter valid value between 0 to 100
             </div>
@@ -138,7 +138,7 @@
         class="section-4"
       >
         <div class="col-md-3 col-sm-12" style="text-align: center">
-          <input [(ngModel)]="input" class="form-control" disabled value="0" />
+          <input [(ngModel)]="Input" class="form-control" disabled value="0" />
         </div>
       </div>
     </div>

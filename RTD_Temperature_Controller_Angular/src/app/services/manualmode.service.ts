@@ -20,7 +20,7 @@ export class ManualmodeService {
   }
 
 
-  httpError(error:HttpErrorResponse){
+  private httpError(error:HttpErrorResponse){
     let msg=''
     if(error.error instanceof ErrorEvent){
       msg=error.error.message

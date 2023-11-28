@@ -80,7 +80,7 @@ export class HomeComponent implements OnDestroy {
   /// </returns>
   /// <param name="chart">It is the chart instance passed when the (chartInstance) event occurs on the <canvasjs-chart> component</param>
 
-  GetChartInstance(chart: object) {
+  getChartInstance(chart: object) {
     this.Chart = chart;
     this.settingsService.resetSettings().subscribe((data) => {
       this.Settings = data;
@@ -110,7 +110,7 @@ export class HomeComponent implements OnDestroy {
   /// </returns>
   /// <param name="temperature">It is the latest temperature sensed by hardware</param>
 
-  GetColor(temperature: number): string {
+  getColor(temperature: number): string {
     if (temperature > this.Settings.threshold) {
       this.DangerAlarm = true;
     } else {
@@ -143,7 +143,7 @@ export class HomeComponent implements OnDestroy {
   /// the points are pushed into a list to inorder get plotted on the graph
   /// </remarks>
 
-  GraphInitializer() {
+  graphInitializer() {
     this.SensorStatus = !this.SensorStatus;
     if (this.SensorStatus) {
       this.homeService
@@ -154,7 +154,7 @@ export class HomeComponent implements OnDestroy {
               'UpdateTemperature',
               (temperatureData) => {
                 if (this.DataAcquisitionRate == 0) {
-                  var pointColor = this.GetColor(
+                  var pointColor = this.getColor(
                     parseFloat(temperatureData.temperature)
                   );
                   this.DataPoints.push({

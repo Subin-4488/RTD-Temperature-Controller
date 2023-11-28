@@ -1,9 +1,5 @@
 import {
-  AbstractControl,
-  Form,
   FormGroup,
-  ValidationErrors,
-  ValidatorFn,
 } from '@angular/forms';
 
 export function sameColor(color1: string, color2: string, color3: string) {
