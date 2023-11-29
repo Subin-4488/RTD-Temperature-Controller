@@ -20,7 +20,6 @@ export class HomeComponent implements OnDestroy {
   CurrentSelection = 'green';
   DataAcquisitionRate = 0;
   DataPoints: any[] = [];
-  Timeout: any = null;
   DangerAlarm: boolean = false;
   SensorStatus: boolean = false;
   Chart: any;
@@ -90,7 +89,6 @@ export class HomeComponent implements OnDestroy {
    */
 
   ngOnDestroy() {
-    clearTimeout(this.Timeout);
     this.hubService.closeAutomatic();
   }
 
