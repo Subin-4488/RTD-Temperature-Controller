@@ -92,7 +92,7 @@ namespace Services
         /// <param name="resultArr">An array containing parsed data from the hardware.</param>
         private void ProcessSettingsData(string[] resultArr)
         {
-            if (resultArr[0] == "OK" && resultArr[1] == "CON")
+            if (resultArr[0] == "OK" && resultArr[1] == "CON" && resultArr.Length>2)
             {
                 var newSettings = ParseSettingsData(resultArr[2]);
                 SaveSettingsToFile(newSettings);
@@ -105,12 +105,12 @@ namespace Services
         /// <param name="resultArr">An array containing parsed data from the hardware.</param>
         private async void ProcessManualModeData(string[] resultArr)
         {
-            if (resultArr[0] == "OK" && resultArr[1] == "TMPM")
+            if (resultArr[0] == "OK" && (resultArr[1] == "TMPM" || resultArr[1] == "RES"))
             {
-                var data = new ManualModeData { Response = "OK TMPM", value = resultArr[2] };
+                var data = new ManualModeData { Response = $"OK {resultArr[1]}", value = resultArr[2] };
                 await SendManualModeData(data);
             }
-            else if (resultArr[0] == "OK" && (resultArr[1] == "RES" || resultArr[1] == "EPR" || resultArr[1] == "MOD"))
+            else if (resultArr[0] == "OK" && (resultArr[1] == "EPR" || resultArr[1] == "MOD"))
             {
                 var data = new ManualModeData { Response = $"OK {resultArr[1]}", value = $"OK {resultArr[1]}" };
                 await SendManualModeData(data);
