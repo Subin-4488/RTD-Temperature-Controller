@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConnectionService } from '../services/connection.service';
 import { Connection } from '../models/Connection';
@@ -25,7 +25,7 @@ export class ConnectionComponent {
   ) {
     localStorage.setItem("connected","false")
     this.ConnectionForm = fb.group({
-      portname: [],
+      portname: [,Validators.required],
       bps: [9600],
       databits: [8],
       parity: ['None'],

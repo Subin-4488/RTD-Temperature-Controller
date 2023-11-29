@@ -1,16 +1,17 @@
 <div id="main-div" class="row justify-content-center align-items-center">
-  <div
-    class="section-1"
-  >
-    <div
-      class="crd"
-    >
+  <div class="section-1">
+    <div class="crd">
       <div class="mb-4">
         <h4 style="text-align: center; font-weight: bold">LED Control</h4>
       </div>
       <div class="row" style="margin: 0">
         <div class="col-md col-sm-12"></div>
-        <div style="text-align: center" class="col-md-2 col-sm-12">
+        <div
+          style="text-align: center"
+          class="col-md-2 col-sm-12"
+          data-toggle="tooltip"
+          title="Turn Red LED ON/OFF"
+        >
           <input
             type="checkbox"
             class="btn-check"
@@ -20,7 +21,12 @@
           />
           <label class="btn btn-outline-danger" for="led1">LED 1</label>
         </div>
-        <div style="text-align: center" class="col-md-2 col-sm-12">
+        <div
+          style="text-align: center"
+          class="col-md-2 col-sm-12"
+          data-toggle="tooltip"
+          title="Turn Green LED ON/OFF"
+        >
           <input
             type="checkbox"
             class="btn-check"
@@ -30,7 +36,12 @@
           />
           <label class="btn btn-outline-success" for="led2">LED 2</label>
         </div>
-        <div style="text-align: center" class="col-md-2 col-sm-12">
+        <div
+          style="text-align: center"
+          class="col-md-2 col-sm-12"
+          data-toggle="tooltip"
+          title="Turn Blue LED ON/OFF"
+        >
           <input
             type="checkbox"
             class="btn-check"
@@ -44,12 +55,8 @@
       </div>
     </div>
   </div>
-  <div
-    class="section-2"
-  >
-    <div
-      class="crd"
-    >
+  <div class="section-2">
+    <div class="crd">
       <div class="mb-4">
         <h4 style="text-align: center; font-weight: bold">PWM Duty Cycle</h4>
       </div>
@@ -91,12 +98,8 @@
     </div>
   </div>
 
-  <div
-    class="section-3"
-  >
-    <div
-      class="crd"
-    >
+  <div class="section-3">
+    <div class="crd">
       <div>
         <h4 class="mb-4" style="text-align: center; font-weight: bold">
           Device Status
@@ -105,50 +108,61 @@
       <div class="row" style="margin: 0">
         <div class="col-md-1 col-sm-12"></div>
         <div style="text-align: center" class="col-md col-sm-12">
-          <button id="sensor-data-btn"
+          <button
+            id="sensor-data-btn"
             class="btn btn-primary"
             type="submit"
             (click)="getTemperature()"
+            data-toggle="tooltip"
+            title="Gets current temperature"
           >
             Temperature
           </button>
         </div>
         <div style="text-align: center" class="col-md col-sm-12">
           <button
-          id="sensor-data-btn"
+            id="sensor-data-btn"
             class="btn btn-primary"
             type="submit"
             (click)="getResistance()"
+            data-toggle="tooltip"
+            title="Gets current resistance"
           >
             Resistance
           </button>
         </div>
         <div style="text-align: center" class="col-md col-sm-12">
           <button
-          id="sensor-data-btn"
+            id="sensor-data-btn"
             class="btn btn-primary"
             type="submit"
             (click)="getEEPROM()"
+            data-toggle="tooltip"
+            title="Gets EEPROM status"
           >
             EEPROM
           </button>
         </div>
         <div style="text-align: center" class="col-md col-sm-12">
           <button
-          id="sensor-data-btn"
+            id="sensor-data-btn"
             class="btn btn-primary"
             type="submit"
             (click)="getStartButtonStatus()"
+            data-toggle="tooltip"
+            title="Gets Start button status"
           >
             Start Button
           </button>
         </div>
         <div style="text-align: center" class="col-md col-sm-12">
           <button
-          id="sensor-data-btn"
+            id="sensor-data-btn"
             class="btn btn-primary"
             type="submit"
             (click)="getStopButtonStatus()"
+            data-toggle="tooltip"
+            title="Gets Stop button status"
           >
             Stop Button
           </button>
@@ -156,9 +170,7 @@
 
         <div class="col-md-1 col-sm-12"></div>
       </div>
-      <div
-        class="section-4"
-      >
+      <div class="section-4">
         <div class="col-md-3 col-sm-12" style="text-align: center">
           <input [(ngModel)]="Input" class="form-control" disabled value="0" />
         </div>

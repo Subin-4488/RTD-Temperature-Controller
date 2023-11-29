@@ -5,6 +5,7 @@
         *ngIf="!SensorStatus"
         class="btn btn-primary"
         (click)="graphInitializer()"
+        data-toggle="tooltip" title="Start plotting"
       >
         Start
       </button>
@@ -12,6 +13,7 @@
         *ngIf="SensorStatus"
         class="btn btn-danger"
         (click)="graphInitializer()"
+        data-toggle="tooltip" title="Stop plotting"
       >
         Stop
       </button>
