@@ -4,11 +4,9 @@ import { Router } from '@angular/router';
 import { ConnectionService } from '../services/connection.service';
 import { Connection } from '../models/Connection';
 
-//////////////////////////////////////////////////////////////////////////
-/// <summary>
-/// The component shall deal with the connection and disconnection between the software and hardware.
-/// </summary>
-//////////////////////////////////////////////////////////////////////////
+/**
+ * The component shall deal with the connection and disconnection between the software and hardware.
+ */
 
 @Component({
   selector: 'app-connection',
@@ -38,15 +36,12 @@ export class ConnectionComponent {
     });
   }
 
-  /// <summary>
-  /// The OnSubmit method used to accept the connection parameter values submitted by the user. The method tries to create a connection with hardware if successful, the user is navigated to dashboard screen otherwise an error message is displayed.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
-  /// <param name="value">It represents a string object containing the current values of the controls within the form group(ConnectionForm).</param>
+  /**
+   * The OnSubmit method tries to create a connection with hardware if successful, the user is navigated to dashboard screen otherwise an error message is displayed.
+   * @param value It represents a string object containing the current values of the controls within the form group(ConnectionForm)
+   */
 
-  onSubmit(value: string) {
+  onSubmit(val: string) {
     let newConnection = new Connection(
       this.ConnectionForm.value.portname,
       this.ConnectionForm.value.bps,
@@ -66,12 +61,9 @@ export class ConnectionComponent {
     });
   }
 
-  /// <summary>
-  /// The ResetValues method used to reset the connection parameters in the screen to its default values.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * The ResetValues method used to reset the connection parameters in the screen to its default values.
+   */
 
   resetValues() {
     this.ConnectionForm.patchValue({

@@ -8,11 +8,9 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { Command } from '../models/Command';
 import { environment } from 'src/environments/environment';
 
-//////////////////////////////////////////////////////////////////////////
-/// <summary>
-/// Service responsible for handling communication with the server related to home functionality.
-/// </summary>
-//////////////////////////////////////////////////////////////////////////
+/**
+ * Service responsible for handling communication with the server related to home functionality.
+ */
 
 @Injectable({
   providedIn: 'root',
@@ -28,14 +26,11 @@ export class HomeService {
 
   constructor(private httpClient: HttpClient) {}
 
-
-  /// <summary>
-  /// Handles HTTP errors
-  /// </summary>
-  /// <returns>
-  /// An observable with an error message.
-  /// </returns>
-  /// <param name="error">The HTTP error response.</param>
+  /**
+   * Handles HTTP errors
+   * @param error The HTTP error response
+   * @returns An observable with an error message
+   */
 
   private httpError(error: HttpErrorResponse) {
     let msg = '';
@@ -47,16 +42,11 @@ export class HomeService {
     return throwError(msg);
   }
 
-  /// <summary>
-  /// Sends a command to the server.
-  /// </summary>
-  /// <returns>
-  /// An observable that emits a boolean indicating the success of the operation.
-  /// </returns>
-  /// <param name="val">The command to be sent.</param>
-  ///<Exceptions>
-  /// Network-related errors, HTTP errors are likely to be arised
-  ///</Exceptions
+  /**
+   * Sends a command to the server
+   * @param val The command to be sent
+   * @returns An observable that emits a boolean indicating the success of the operation
+   */
 
   sendCommand(val: Command): Observable<boolean> {
     return this.httpClient

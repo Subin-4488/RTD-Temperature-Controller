@@ -6,13 +6,11 @@ import {
   sameColor,
   temperatureValidation,
 } from '../customValidators/customValidators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-//////////////////////////////////////////////////////////////////////////
-/// <summary>
-/// This component gives the user ability to change the configuration of the device like colors for
-/// different temperature range, temperature value for 4mA and 20mA current, and change thethreshold value.
-/// </summary>
-//////////////////////////////////////////////////////////////////////////
+/**
+ * This component gives the user ability to change the configuration of the device like colors for different temperature range, temperature value for 4mA and 20mA current, and change thethreshold value.
+ */
 
 @Component({
   selector: 'app-settings',
@@ -23,7 +21,7 @@ export class SettingsComponent {
   settingsForm: FormGroup;
   submitted: boolean = false;
 
-  constructor(fb: FormBuilder, private settingsService: SettingsService) {
+  constructor(fb: FormBuilder, private settingsService: SettingsService, private _snackBar: MatSnackBar) {
     this.settingsForm = fb.group(
       {
         threshold: [, [Validators.required, Validators.pattern('[0-9]*')]],
@@ -44,25 +42,20 @@ export class SettingsComponent {
     this.resetSettings();
   }
 
-  /// <summary>
-  /// This is a getter used for getting all the settingsForm controls
-  /// </summary>
-  /// <returns>
-  /// Settings form controls
-  /// </returns>
+  /**
+   * This is a getter used for settingsForm controls
+   */
+
   get getsettingsFormControls() {
     return this.settingsForm.controls;
   }
+  
+  /**
+   * This functions is triggered when user submits the settings form. 
+   * This in turn call the updateSettings function from the settingsService to post the changes to the backend
+   * @param value Holds all the values for the form controls
+   */
 
-  /// <summary>
-  /// This functions is triggered when user submits the settings form.
-  /// This in turn call the updateSettings function from the settingsService to post the changes
-  /// to the backend
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
-  /// <param name="value">Holds all the values for the form controls</param>
   onSubmit(value: string) {
     console.log(value);
     this.submitted = true;
@@ -75,17 +68,19 @@ export class SettingsComponent {
       this.settingsForm.value.c2,
       this.settingsForm.value.c3
     );
-    this.settingsService.updateSettings(newSettings).subscribe((data) => {});
+    this.settingsService.updateSettings(newSettings).subscribe((data) => {
+      this._snackBar.open(data.message,'Got it', {
+        duration: 4000
+      });
+    });
   }
 
-  /// <summary>
-  /// This functions is triggered when user presses the reset button in the UI.
-  /// This in turn call the resetSettings function from the settingsService to get the
-  /// last stored settings values from the JSON file to update the form in the UI.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * This functions is triggered when user presses the reset button in the UI.
+   * 
+   * This in turn call the resetSettings function from the settingsService to get the last stored settings values from the JSON file to update the form in the UI.
+   */
+
   resetSettings() {
     console.log(
       this.getsettingsFormControls['current20'].hasError('temperatureGreater')

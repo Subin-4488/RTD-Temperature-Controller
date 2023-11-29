@@ -37,7 +37,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         /// Retrieves the current temperature control settings.
         /// </summary>
         /// <returns>The current temperature control settings.</returns>
-        // GET: api/<SettingsController>
         [HttpGet]
         public async Task<Settings> Get()
         {
@@ -56,9 +55,9 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         /// <param name="s">The JSON object containing updated settings from the frontend</param>
         // POST api/<SettingsController>
         [HttpPost]
-        public async void Post([FromBody] JsonObject s)
+        public async Task<IActionResult> Post([FromBody] JsonObject s)
         {
-            var newSettings= new Settings();
+            var newSettings = new Settings();
             newSettings.Threshold = Convert.ToDouble(s["Threshold"]?.ToString());
             newSettings.DataAcquisitionRate = Convert.ToInt32(s["DataAcquisitionRate"]?.ToString());
             newSettings.Temperature_4mA = Convert.ToDouble(s["Temperature_4mA"]?.ToString());
@@ -69,12 +68,15 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             StringBuilder sendString = new StringBuilder("SET CON LED:");
             sendString.Append($"{(char)newSettings.Color_0_15}{(char)newSettings.Color_16_30}{(char)newSettings.Color_31_45}");
             sendString.Append($",OL:{s["Temperature_4mA"]},OH:{s["Temperature_20mA"]}\r");
+
             string jsonString = JsonSerializer.Serialize<Settings>(newSettings);
             System.IO.File.WriteAllText(@"..\..\settingsFile.json", jsonString);
+
             try
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(sendString.ToString());
                 _serialPort.Write(bytes, 0, bytes.Length);
+                return Ok(new{ message = "Settings updated successfully"});
             }
             catch (OperationCanceledException ex)
             {
@@ -90,6 +92,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             {
                 Console.WriteLine(ex.Message);
             }
+
+            return Ok(new {message= "Settings updation failed!! please retry" });
         }
     }
 }

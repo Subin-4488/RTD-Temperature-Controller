@@ -25,6 +25,12 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         private readonly SerialPort _serialPort;
         private readonly IDataService _dataService;
 
+        /// <summary>
+        /// Constructor for the ConnectionController class.
+        /// </summary>
+        /// <param name="serialPortService">The serial port service for managing the connection</param>
+        /// <param name="dataService">The data service for handling data from the RTD temperature controller</param>
+
         public ConnectionController(
             ISerialPortService serialPortService,
             IDataService dataService

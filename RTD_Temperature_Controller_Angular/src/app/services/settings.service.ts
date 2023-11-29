@@ -8,13 +8,11 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { Settings } from '../models/Settings';
 import { environment } from 'src/environments/environment';
 
-//////////////////////////////////////////////////////////////////////////
-/// <summary>
-/// This service handles all the requests from the settingsComponent.
-/// It includes getting the configuration from the backend as well as
-/// to set new configuration.
-/// </summary>
-//////////////////////////////////////////////////////////////////////////
+/**
+ * This service handles all the requests from the settingsComponent.
+ * 
+ * It includes getting the configuration from the backend as well as to set new configuration.
+ */
 
 @Injectable({
   providedIn: 'root',
@@ -29,14 +27,12 @@ export class SettingsService {
 
   constructor(private httpClient: HttpClient) {}
 
-  /// <summary>
-  /// Function to handle HTTP errors
-  /// </summary>
-  /// <returns>
-  /// Returns an observable with error message
-  /// </returns>
-  /// <param name="error">This is of type HttpErrorResponse</param>
-
+  /**
+   * Function to handle HTTP errors
+   * @param error This is of type HttpErrorResponse
+   * @returns Returns an observable with error message
+   */
+  
   private handleHttpError(error: HttpErrorResponse) {
     let msg = '';
     if (error.error instanceof ErrorEvent) {
@@ -47,29 +43,25 @@ export class SettingsService {
     return throwError(() => msg);
   }
 
-  /// <summary>
-  /// Function to update the settings configuration
-  /// </summary>
-  /// <returns>
-  /// An observable with the updated settings.
-  /// </returns>
-  /// <param name="s">This is of type Settings. Holds the new Settings values</param>
-  updateSettings(s: Settings): Observable<Settings> {
+  /**
+   * Function to update the settings configuration
+   * @param s This is of type Settings. Holds the new Settings values
+   * @returns An observable with the updated settings
+   */
+
+  updateSettings(s: Settings): Observable<any> {
     return this.httpClient
       .post<Settings>(
         this.baseUrl + '/settings',
         JSON.stringify(s),
         this.httpHeader
-      )
-      .pipe(catchError(this.handleHttpError));
+      ).pipe(catchError(this.handleHttpError));
   }
-
-  /// <summary>
-  /// Function to retrieve the stored settings value
-  /// </summary>
-  /// <returns>
-  /// An observable with the stored settings.
-  /// </returns>
+  
+  /**
+   * Function to retrieve the stored settings value
+   * @returns An observable with the stored settings
+   */
   resetSettings(): Observable<Settings> {
     return this.httpClient
       .get<Settings>(this.baseUrl + '/settings')

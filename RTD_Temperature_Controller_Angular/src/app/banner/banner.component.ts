@@ -2,11 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConnectionService } from '../services/connection.service';
 
-//////////////////////////////////////////////////////////////////////////
-/// <summary>
-/// The component shall serve as the placeholder for the Home, Settings, ManualMode pages and Disconnect button
-/// </summary>
-//////////////////////////////////////////////////////////////////////////
+/**
+ * The component shall serve as the placeholder for the Home, Settings, ManualMode pages and Disconnect button
+ */
 
 @Component({
   selector: 'app-banner',
@@ -19,13 +17,10 @@ export class BannerComponent {
     private connectionService: ConnectionService
   ) {}
 
-  /// <summary>
-  /// The Disconnect method used to trigger the disconnection between software and hardware through “ConnectionService” and navigates to the homepage if it is successful.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns
-  
+  /**
+   * The Disconnect method used to trigger the disconnection between software and hardware through “ConnectionService” and navigates to the homepage on success.
+   */
+
   disconnect() {
     let ifDisconnected;
     this.connectionService.disconnectConnection().subscribe((data) => {

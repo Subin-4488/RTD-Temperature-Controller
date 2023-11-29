@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 
-//////////////////////////////////////////////////////////////////////////
-/// <summary>
-/// This service is used for creating and disposing
-/// a new hub connection.
-/// </summary>
-/// <remarks>
-/// This service listens to 3 events: 
-///   UpdateTemperature: All the temperature reading in the automatic mode will be coming here
-///   ManualModeData: All the return messages in the manual mode will be coming here
-///   DeviceError: Any device errors will be coming here from the backend
-/// </remarks>
-//////////////////////////////////////////////////////////////////////////
+
+/**
+ * This service is used for creating and disposing a new hub connection.
+ * 
+ * This service listens to 3 events: 
+ * 
+ * UpdateTemperature: All the temperature reading in the automatic mode will be coming here
+ * 
+ * ManualModeData: All the return messages in the manual mode will be coming here
+ * 
+ * DeviceError: Any device errors will be coming here from the backend
+ */
 
 @Injectable({
   providedIn: 'root'
@@ -26,30 +26,30 @@ export class HubService {
     this.hubConnection.start()
   }
 
-  /// <summary>
-  /// Function to stop listening to evnet UpdateTemperature
-  /// </summary>
+  /**
+   * Function to stop listening to evnet UpdateTemperature
+   */
   closeAutomatic(){
     this.hubConnection.off('UpdateTemperature')
   }
 
-  /// <summary>
-  /// Function to stop listening to evnet ManualModeData
-  /// </summary>
+  /**
+   * Function to stop listening to evnet ManualModeData
+   */
   closeManualMode(){
     this.hubConnection.off('ManualModeData')
   }
 
-  /// <summary>
-  /// Function to stop listening to evnet DeviceError
-  /// </summary>
+  /**
+   * Function to stop listening to evnet DeviceError
+   */
   closeError(){
     this.hubConnection.off('DeviceError') 
   }
 
-  /// <summary>
-  /// Function to stop the hub connection
-  /// </summary>
+  /**
+   * Function to stop the hub connection
+   */
   end(){
     this.closeError()
     this.hubConnection.stop()

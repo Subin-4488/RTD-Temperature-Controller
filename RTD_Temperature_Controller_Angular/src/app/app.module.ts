@@ -13,6 +13,7 @@ import { ManualmodeComponent } from './manualmode/manualmode.component';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import {MatButtonModule} from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 
@@ -35,7 +36,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     CanvasJSAngularChartsModule,
     FormsModule,
     BrowserAnimationsModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSnackBarModule
   ],
   providers: [
   ],

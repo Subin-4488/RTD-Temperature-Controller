@@ -2,6 +2,16 @@ import {
   FormGroup,
 } from '@angular/forms';
 
+/**
+ * Custom validator function to check if three form control values representing colors are the same.
+ * 
+ * If any two colors are the same, it sets the 'sameColor' error on those controls.
+ * @param color1 - The key of the first color form control.
+ * @param color2 - The key of the second color form control.
+ * @param color3 - The key of the third color form control.
+ * @returns A validation function to be used with Angular reactive forms.
+ */
+
 export function sameColor(color1: string, color2: string, color3: string) {
   return (form: FormGroup) => {
     const c1 = form.controls[color1];
@@ -34,6 +44,15 @@ export function sameColor(color1: string, color2: string, color3: string) {
     }
   };
 }
+
+/**
+ * Custom validator function to check if the value of a temperature at 20°C is greater than the value at 4°C.
+ * 
+ * If not, it sets the 'temperatureGreater' error on the control representing the temperature at 20°C.
+ * @param current4 - The key of the form control representing the temperature at 4°C.
+ * @param current20 - The key of the form control representing the temperature at 20°C.
+ * @returns A validation function to be used with Angular reactive forms.
+ */
 
 export function temperatureValidation(current4:string,current20:string){
     return (form:FormGroup) =>{

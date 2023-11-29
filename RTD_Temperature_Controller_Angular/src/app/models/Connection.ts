@@ -1,9 +1,7 @@
 
-//////////////////////////////////////////////////////////////////////////
-/// <summary>
-/// "Connection" represents a model for communication connection
-/// </summary>
-//////////////////////////////////////////////////////////////////////////
+/**
+ * "Connection" represents a model for communication connection
+ */
 
 export class Connection{
     PortName:string
