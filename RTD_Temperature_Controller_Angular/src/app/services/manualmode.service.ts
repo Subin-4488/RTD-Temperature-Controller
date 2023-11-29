@@ -8,12 +8,10 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { Command } from '../models/Command';
 import { environment } from 'src/environments/environment';
 
-//////////////////////////////////////////////////////////////////////////
-/// <summary>
-/// This service handles all the requests from the the ManualMode Component
-/// It includes sending the commands for manual mode to the backend
-/// </summary>
-//////////////////////////////////////////////////////////////////////////
+/**
+ * This service handles all the requests from the the ManualMode Component
+ * It includes sending the commands for manual mode to the backend
+ */
 
 @Injectable({
   providedIn: 'root',
@@ -28,13 +26,11 @@ export class ManualmodeService {
 
   constructor(private httpClient: HttpClient) {}
 
-  /// <summary>
-  /// Function to handle HTTP errors
-  /// </summary>
-  /// <returns>
-  /// Returns an observable with error message
-  /// </returns>
-  /// <param name="error">This is of type HttpErrorResponse</param>
+  /**
+   * Function to handle HTTP errors
+   * @param error This is of type HttpErrorResponse
+   * @returns Returns an observable with error message
+   */
 
   private httpError(error:HttpErrorResponse){
     let msg=''
@@ -47,16 +43,12 @@ export class ManualmodeService {
     return throwError(() => msg);
   }
 
-  /// <summary>
-  /// Function to send the manual mode commands
-  /// </summary>
-  ///  <returns>
-  /// An observable with a boolean indicating success.
-  /// </returns>
-  /// <param name="val">This is of type Command. Holds the new command</param>
-  ///<Exceptions>
-  /// Network-related errors, HTTP errors are likely to be arised
-  ///</Exceptions>
+  /**
+   * Function to send the manual mode commands
+   * @param val This is of type Command. Holds the new command
+   * @returns An observable with a boolean indicating success.
+   */
+
   sendCommand(val: Command): Observable<boolean> {
     console.log(val.Value);
     return this.httpClient

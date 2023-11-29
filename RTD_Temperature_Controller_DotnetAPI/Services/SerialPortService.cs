@@ -9,8 +9,8 @@ namespace Services
     /// </summary>
     public class SerialPortService : ISerialPortService
     {
-        private  SerialPort _serialPort;
-        public SerialPort SerialPort { get => _serialPort;  }
+        private SerialPort _serialPort;
+        public SerialPort SerialPort { get => _serialPort; }
 
         /// <summary>
         /// Creates a new serial port instance

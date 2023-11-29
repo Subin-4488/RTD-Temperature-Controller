@@ -76,7 +76,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(sendString.ToString());
                 _serialPort.Write(bytes, 0, bytes.Length);
-                return Ok(new{ message = "Settings updated successfully"});
+                return Ok(new { message = "Settings updated successfully" });
             }
             catch (OperationCanceledException ex)
             {
@@ -93,7 +93,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 Console.WriteLine(ex.Message);
             }
 
-            return Ok(new {message= "Settings updation failed!! please retry" });
+            return Ok(new { message = "Settings updation failed!! please retry" });
         }
     }
 }

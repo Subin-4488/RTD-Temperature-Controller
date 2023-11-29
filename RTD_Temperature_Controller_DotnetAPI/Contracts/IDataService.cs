@@ -7,7 +7,7 @@ namespace Contracts
     /// This interface defines the contract for interacting with data services.
     /// </summary>
     //////////////////////////////////////////////////////////////////////////
-    
+
     public interface IDataService
     {
         public void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e);

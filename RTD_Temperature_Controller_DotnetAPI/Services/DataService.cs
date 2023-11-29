@@ -65,7 +65,7 @@ namespace Services
                 processTemperatureData(resultArr);
                 processSettingsData(resultArr);
                 processManualModeData(resultArr);
-        
+
             }
             catch (Exception ex)
             {
@@ -93,7 +93,7 @@ namespace Services
         /// <param name="resultArr">An array containing parsed data from the hardware.</param>
         private void processSettingsData(string[] resultArr)
         {
-            if (resultArr[0] == "OK" && resultArr[1] == "CON" && resultArr.Length>2)
+            if (resultArr[0] == "OK" && resultArr[1] == "CON" && resultArr.Length > 2)
             {
                 var newSettings = parseSettingsData(resultArr[2]);
                 saveSettingsToFile(newSettings);

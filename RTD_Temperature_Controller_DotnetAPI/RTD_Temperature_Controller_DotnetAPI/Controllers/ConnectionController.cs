@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.IO.Ports;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json.Nodes;
 
@@ -162,7 +161,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
             catch (Exception ex)
             {
-                Log.Information("Connection Failed "+ex.ToString());
+                Log.Information("Connection Failed " + ex.ToString());
                 return false;
             }
         }
@@ -183,7 +182,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
             catch (Exception ex)
             {
-                Log.Information("Disconnect Failed "+ex.ToString());
+                Log.Information("Disconnect Failed " + ex.ToString());
                 return false;
             }
         }

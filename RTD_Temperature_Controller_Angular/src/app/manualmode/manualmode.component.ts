@@ -141,7 +141,7 @@ export class ManualmodeComponent implements OnDestroy {
    * Method for retrieving EEPROM data.
    */
 
-  getEPROM(){
+  getEEPROM(){
     this.manualmodeService.sendCommand(new Command("GET", "GET EPR\r")).subscribe(d =>{})
   }
 
