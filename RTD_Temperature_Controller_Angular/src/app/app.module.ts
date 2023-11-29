@@ -13,6 +13,7 @@ import { ManualmodeComponent } from './manualmode/manualmode.component';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import {MatButtonModule} from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HomeComponent,
     DashboardComponent,
     SettingsComponent,
-    ManualmodeComponent
+    ManualmodeComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

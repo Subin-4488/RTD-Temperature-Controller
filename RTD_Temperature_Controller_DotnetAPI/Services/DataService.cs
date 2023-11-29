@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using RTD_Temperature_Controller_DotnetAPI.DBContext;
 using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
+using Serilog;
 using System.IO.Ports;
 using System.Text.Json;
 
@@ -54,12 +55,12 @@ namespace Services
                 catch (OperationCanceledException ex)
                 {
                     await SendDeviceError("Device disconnected");
-                    Console.WriteLine($"Operation canceled: {ex.Message}");
+                    Log.Information($"Operation canceled: {ex.Message}");
                 }
                 catch (InvalidOperationException ex)
                 {
                     await SendDeviceError("Device disconnected");
-                    Console.WriteLine($"Invalid operation: {ex.Message}");
+                    Log.Information($"Invalid operation: {ex.Message}");
                 }
                 ProcessTemperatureData(resultArr);
                 ProcessSettingsData(resultArr);
@@ -68,7 +69,7 @@ namespace Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Information($"{ex.Message}");
             }
 
         }
@@ -238,6 +239,7 @@ namespace Services
                     var d = await _dbContext.TemperatureTable.Where(d => d.Time == data.Time).ToListAsync();
                     if (d.Count > 0)
                     {
+                        Log.Information($"Data already exist");
                         return (false, "Data already exist");
                     }
                     else

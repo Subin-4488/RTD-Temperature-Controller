@@ -1,6 +1,7 @@
 
 using Contracts;
 using RTD_Temperature_Controller_DotnetAPI.Hubs;
+using Serilog;
 using Services;
 
 namespace RTD_Temperature_Controller_DotnetAPI
@@ -47,6 +48,13 @@ namespace RTD_Temperature_Controller_DotnetAPI
             app.MapHub<TemperatureHub>("/temperatureHub");
 
             app.MapControllers();
+
+            Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+           .WriteTo.Console()
+           .WriteTo.File("logs/Logs.txt", rollingInterval: RollingInterval.Day)
+           .CreateLogger();
+
             app.Run();
         }
     }

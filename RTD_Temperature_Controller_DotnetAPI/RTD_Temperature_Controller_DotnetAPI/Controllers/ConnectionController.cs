@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using System.IO.Ports;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -143,6 +144,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 }
                 catch (TimeoutException ex)
                 {
+                    Log.Information("Connection Failed because of ReadTimeOut.");
                     return false;
                 }
                 finally
@@ -154,7 +156,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Log.Information("Connection Failed "+ex.ToString());
                 return false;
             }
         }
@@ -175,7 +177,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("disconnect" + ex);
+                Log.Information("Disconnect Failed "+ex.ToString());
                 return false;
             }
         }

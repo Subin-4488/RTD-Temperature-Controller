@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using RTD_Temperature_Controller_DotnetAPI.Hubs;
+using Serilog;
 using System.IO.Ports;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -43,23 +44,23 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             try
             {
                 _serialPort.Write(bytes, 0, bytes.Length);
+                return true;
             }
             catch (OperationCanceledException ex)
             {
-                // Log or handle the cancellation exception
                 await _hubContext.Clients.All.SendAsync("DeviceError", new { Error = "Device disconnected" });
-                Console.WriteLine($"Operation canceled: {ex.Message}");
+                Log.Information($"Operation canceled: {ex.Message}");
             }
             catch (InvalidOperationException ex)
             {
                 await _hubContext.Clients.All.SendAsync("DeviceError", new { Error = "Device disconnected" });
-                Console.WriteLine($"Invalid operation: {ex.Message}");
+                Log.Information($"Invalid operation: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Information($"{ex.Message}");
             }
-            return true;
+            return false;
         }
     }
 }

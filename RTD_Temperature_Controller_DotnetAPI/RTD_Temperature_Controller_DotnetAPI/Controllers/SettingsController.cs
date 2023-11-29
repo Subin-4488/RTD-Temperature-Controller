@@ -69,7 +69,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             StringBuilder sendString = new StringBuilder("SET CON LED:");
             sendString.Append($"{(char)newSettings.Color_0_15}{(char)newSettings.Color_16_30}{(char)newSettings.Color_31_45}");
             sendString.Append($",OL:{s["Temperature_4mA"]},OH:{s["Temperature_20mA"]}\r");
-
+            string jsonString = JsonSerializer.Serialize<Settings>(newSettings);
+            System.IO.File.WriteAllText(@"..\..\settingsFile.json", jsonString);
             try
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(sendString.ToString());
@@ -89,9 +90,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             {
                 Console.WriteLine(ex.Message);
             }
-
-            string jsonString = JsonSerializer.Serialize<Settings>(newSettings);
-            System.IO.File.WriteAllText(@"..\..\settingsFile.json", jsonString);
         }
     }
 }
