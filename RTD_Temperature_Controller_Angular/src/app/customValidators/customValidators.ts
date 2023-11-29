@@ -7,7 +7,7 @@ export function sameColor(color1: string, color2: string, color3: string) {
     const c1 = form.controls[color1];
     const c2 = form.controls[color2];
     const c3 = form.controls[color3];
-    //const passwdc=form.controls[passwdcname]
+
     let flag = 0;
     if (c1.value ==null || c2.value == null || c3.value==null){
         flag = 1;
@@ -40,17 +40,15 @@ export function temperatureValidation(current4:string,current20:string){
         const current4Control = form.controls[current4]
         const current20Control = form.controls[current20]
         let flag = 0
-        console.log(current20Control.value)
-        if (isNaN(parseInt(current20Control.value))){
+        if (isNaN(Number(current20Control.value)) || isNaN(parseInt(current20Control.value))){
             flag = 1;
         }
-        if(parseInt(current20Control.value) <= parseInt(current4Control.value)){
+        else if(parseInt(current20Control.value) <= parseInt(current4Control.value)){
             current20Control.setErrors({temperatureGreater:true})
             flag = 1
         }
-        else if(flag == 0){
+        if(flag == 0){
             current20Control.setErrors(null)
         }
-        
     }
 }

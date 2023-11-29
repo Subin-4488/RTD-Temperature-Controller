@@ -34,6 +34,12 @@
         public const int StopBits_3 = 2;
     }
 
+    //////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Represents a connection configuration for communication settings.
+    /// </summary>
+    //////////////////////////////////////////////////////////////////////////
+
     public class Connection
     {
         public Bps BitsPerSecond { get; set; }
