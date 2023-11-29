@@ -1,8 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RTD_Temperature_Controller_DotnetAPI.Models
 {
+
+    //////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Represents a data class for storing time and temperature information.
+    /// </summary>
+    //////////////////////////////////////////////////////////////////////////
+
     public class Data
     {
         [Key]

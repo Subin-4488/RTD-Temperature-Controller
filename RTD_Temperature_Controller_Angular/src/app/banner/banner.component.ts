@@ -25,7 +25,7 @@ export class BannerComponent {
   /// <returns>
   /// NIL
   /// </returns
-
+  
   disconnect() {
     let ifDisconnected;
     this.connectionService.disconnectConnection().subscribe((data) => {

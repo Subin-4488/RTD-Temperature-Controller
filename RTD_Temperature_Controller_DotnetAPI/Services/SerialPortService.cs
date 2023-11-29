@@ -13,7 +13,7 @@ namespace Services
             _serialPort = new SerialPort();
         }
 
-        public void deleteMethod()
+        public void ResetPort()
         {
             if (_serialPort != null && _serialPort.IsOpen)
                 _serialPort.Close();

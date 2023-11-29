@@ -7,7 +7,6 @@ using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
 using System.IO.Ports;
 using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Services
 {
@@ -40,7 +39,7 @@ namespace Services
                 catch (OperationCanceledException ex)
                 {
                     // Log or handle the cancellation exception
-                    await _hubContext.Clients.All.SendAsync("DeviceError",new { Error = "Device disconnected"});
+                    await _hubContext.Clients.All.SendAsync("DeviceError", new { Error = "Device disconnected" });
                     Console.WriteLine($"Operation canceled: {ex.Message}");
                 }
                 catch (InvalidOperationException ex)
@@ -56,9 +55,13 @@ namespace Services
 
                     //db
                     var flag = await WriteToDatabase(data);
-                    //await Console.Out.WriteLineAsync(flag.Item2);
-                    //await _dbContext.TemperatureTable.AddAsync(data);
-                    //await _dbContext.SaveChangesAsync();
+                    //Either use different dbContexts as done here or use different tasks:
+                    /*
+                     * Task.Run(()=>
+                     * {
+                     *    await WriteToDatabase(data);
+                     * })
+                     */
 
                 }
                 else if (resultArr[0] == "OK" && resultArr[1] == "CON")
@@ -67,7 +70,7 @@ namespace Services
 
                     Settings? settingsValue;
                     string fileName = @"..\..\settingsFile.json";
-                    
+
                     using (FileStream openStream = System.IO.File.OpenRead(fileName))
                     {
                         settingsValue = await JsonSerializer.DeserializeAsync<Settings>(openStream);

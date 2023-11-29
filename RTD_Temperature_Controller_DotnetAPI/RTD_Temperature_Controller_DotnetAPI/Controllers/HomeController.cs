@@ -2,16 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using RTD_Temperature_Controller_DotnetAPI.Hubs;
-using RTD_Temperature_Controller_DotnetAPI.Models;
 using System.IO.Ports;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 {
+
+    /// <summary>
+    /// Controller responsible for requesting the temperature data from hardware
+    /// </summary>
+
     [Route("home")]
     [ApiController]
     public class HomeController : ControllerBase
@@ -23,21 +25,13 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             _serialPort = serialPortService.SerialPort;
             _hubContext = hubcontext;
         }
-        // GET: api/<HomeController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
 
-        // GET api/<HomeController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        /// <summary>
+        /// Sends command to hardware
+        /// </summary>
+        /// <param name="value">>JSON object containing the command to be sent</param>
+        /// <returns>NIL</returns>
 
-        // POST api/<HomeController>
         [HttpPost]
         public async Task<bool> Post([FromBody] JsonObject value)
         {
@@ -66,18 +60,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 Console.WriteLine(ex.Message);
             }
             return true;
-        }
-
-        // PUT api/<HomeController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<HomeController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
