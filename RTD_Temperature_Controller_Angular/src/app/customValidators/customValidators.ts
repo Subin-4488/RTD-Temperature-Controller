@@ -40,6 +40,7 @@ export function temperatureValidation(current4:string,current20:string){
         const current4Control = form.controls[current4]
         const current20Control = form.controls[current20]
         let flag = 0
+        console.log(current20Control.value)
         if (isNaN(parseInt(current20Control.value))){
             flag = 1;
         }

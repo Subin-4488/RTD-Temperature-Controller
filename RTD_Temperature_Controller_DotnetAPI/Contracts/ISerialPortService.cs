@@ -6,6 +6,6 @@ namespace Contracts
     {
         public SerialPort SerialPort { get; }
 
-        public void deleteMethod();
+        public void ResetPort();
     }
 }

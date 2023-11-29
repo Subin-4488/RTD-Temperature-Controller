@@ -34,7 +34,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             //RTDSensorDBContext dbContext
             )
         {
-            serialPortService.deleteMethod();
+            serialPortService.ResetPort();
             this._serialPort = serialPortService.SerialPort;
             this._dataService = dataService;
             _hubContext = hubContext;
