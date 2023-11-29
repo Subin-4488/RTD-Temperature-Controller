@@ -6,23 +6,36 @@ using System.IO.Ports;
 using System.Text;
 using System.Text.Json.Nodes;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 {
+    /// <summary>
+    /// Controller for handling manual mode operations. 
+    /// </summary>
+
     [Route("manualmode")]
     [ApiController]
     public class ManualModeController : ControllerBase
     {
         private readonly SerialPort _serialPort;
         private readonly IHubContext<TemperatureHub> _hubContext;
+
+        /// <summary>
+        /// Constructor for ManualModeController.
+        /// </summary>
+        /// <param name="serialPortService">The service providing the SerialPort instance</param>
+        /// <param name="hubContext">The SignalR hub context for TemperatureHub</param>
+
         public ManualModeController(ISerialPortService serialPortService, IHubContext<TemperatureHub> hubContext)
         {
             _serialPort = serialPortService.SerialPort;
             _hubContext = hubContext;
         }
 
-        // POST api/<ManualModeController>
+        /// <summary>
+        /// Handles HTTP POST requests for manual mode control.
+        /// </summary>
+        /// <param name="value"></param>
+
         [HttpPost]
         public async void Post([FromBody] JsonObject value)
         {
@@ -37,7 +50,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
             catch (OperationCanceledException ex)
             {
-                // Log or handle the cancellation exception
                 await _hubContext.Clients.All.SendAsync("DeviceError", new { Error = "Device disconnected" });
                 Console.WriteLine($"Operation canceled: {ex.Message}");
             }
@@ -50,7 +62,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             {
                 Console.WriteLine(ex.Message);
             }
-            //return true;
         }
     }
 }

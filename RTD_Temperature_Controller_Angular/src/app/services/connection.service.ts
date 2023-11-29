@@ -9,11 +9,9 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { HubService } from './hub.service';
 import { environment } from 'src/environments/environment';
 
-//////////////////////////////////////////////////////////////////////////
-/// <summary>
-/// Service for managing connections.
-/// </summary>
-//////////////////////////////////////////////////////////////////////////
+/**
+ * Service for managing connections
+ */
 
 @Injectable({
   providedIn: 'root',
@@ -30,14 +28,11 @@ export class ConnectionService {
 
   constructor(private httpClient: HttpClient, private hubService: HubService) {}
 
-
-  /// <summary>
-  /// Handles HTTP errors
-  /// </summary>
-  /// <returns>
-  /// An observable with an error message.
-  /// </returns>
-  /// <param name="error">The HTTP error response.</param>
+  /**
+   * Handles HTTP errors
+   * @param error The HTTP error response
+   * @returns An observable with an error message
+   */
 
   private httpError(error: HttpErrorResponse) {
     let msg = '';
@@ -49,16 +44,11 @@ export class ConnectionService {
     return throwError(msg);
   }
 
-  /// <summary>
-  /// Creates a new connection.
-  /// </summary>
-  /// <returns>
-  /// Return results are described through the returns tag.
-  /// </returns>
-  /// <param name="connection"> The connection details required to start the connection</param>
-  ///<Exceptions>
-  /// Network-related errors, HTTP errors are likely to be arised
-  ///</Exceptions>
+  /**
+   * Creates a new connection
+   * @param connection The connection details required to start the connection
+   * @returns An observable with a boolean indicating success
+   */
 
   createConnection(connection: Connection): Observable<boolean> {
     return this.httpClient
@@ -70,15 +60,10 @@ export class ConnectionService {
       .pipe(catchError(this.httpError));
   }
 
-  /// <summary>
-  /// Disconnects the current connection.
-  /// </summary>
-  /// <returns>
-  /// An observable with a boolean indicating success.
-  /// </returns>
-  ///<Exceptions>
-  /// Network-related errors, HTTP errors are likely to be arised
-  ///</Exceptions>
+  /**
+   * Disconnects the current connection
+   * @returns An observable with a boolean indicating success
+   */
 
   disconnectConnection(): Observable<boolean> {
     this.hubService.end();
@@ -91,31 +76,21 @@ export class ConnectionService {
       .pipe(catchError(this.httpError));
   }
 
-  /// <summary>
-  /// Sets the mode of the connection to 'Automatic'.
-  /// </summary>
-  /// <returns>
-  /// An observable with a boolean indicating success.
-  /// </returns>
-  ///<Exceptions>
-  /// Network-related errors, HTTP errors are likely to be arised
-  ///</Exceptions>
+  /**
+   * Sets the mode of the connection to 'Automatic'
+   * @returns An observable with a boolean indicating success
+   */
 
   setMode(): Observable<boolean> {
     return this.httpClient
       .post<boolean>(this.baseurl + '/connection/setatm/', '', this.httpHeader)
       .pipe(catchError(this.httpError));
   }
-
-  /// <summary>
-  /// Gets the list of port names avaliable in the computer.
-  /// </summary>
-  /// <returns>
-  /// An observable with an array of port names.
-  /// </returns>
-  ///<Exceptions>
-  /// Network-related errors, HTTP errors are likely to be arised
-  ///</Exceptions>
+  
+  /**
+   * Gets the list of port names avaliable in the computer
+   * @returns  An observable with an array of port names
+   */
 
   getportNames(): Observable<string[]> {
     return this.httpClient

@@ -1,13 +1,10 @@
 
-//////////////////////////////////////////////////////////////////////////
-/// <summary>
-/// Settings representing the configuration of the system.
-/// </summary>
-/// <remarks>
-/// 1. color_x_y : Represents the color value for temperature range x to y, where x and y are numerals.
-/// 2. temperature_TmA: Represents the temperature value for TmA current, where T is either 4 or 20
-/// </remarks>
-//////////////////////////////////////////////////////////////////////////
+/**
+ * Settings representing the configuration of the system.
+ * 
+ * 1. color_x_y : Represents the color value for temperature range x to y, where x and y are numerals.
+ * 2. temperature_TmA: Represents the temperature value for TmA current, where T is either 4 or 20
+ */
 
 export class Settings{
     threshold:number

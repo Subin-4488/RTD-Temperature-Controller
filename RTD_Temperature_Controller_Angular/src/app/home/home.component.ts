@@ -5,11 +5,9 @@ import { HomeService } from '../services/home.service';
 import { HubService } from '../services/hub.service';
 import { SettingsService } from '../services/settings.service';
 
-//////////////////////////////////////////////////////////////////////////
-/// <summary>
-/// The component shall render the live plot of Temperature v/s Time and shall display the threshold and system-status indicator data.
-/// </summary>
-//////////////////////////////////////////////////////////////////////////
+/**
+ * The component shall render the live plot of Temperature v/s Time and shall display the threshold and system-status indicator data.
+ */
 
 @Component({
   selector: 'app-home',
@@ -72,13 +70,10 @@ export class HomeComponent implements OnDestroy {
       });
   }
 
-  /// <summary>
-  /// A method used to obtain a reference to the chart instance for further interaction.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
-  /// <param name="chart">It is the chart instance passed when the (chartInstance) event occurs on the <canvasjs-chart> component</param>
+  /**
+   * A method used to obtain a reference to the chart instance for further interaction.
+   * @param chart It is the chart instance passed when the (chartInstance) event occurs on the <canvasjs-chart> component
+   */
 
   getChartInstance(chart: object) {
     this.Chart = chart;
@@ -90,25 +85,20 @@ export class HomeComponent implements OnDestroy {
     });
   }
 
-  /// <summary>
-  /// A callback method that performs custom clean-up, invoked immediately before a directive, pipe, or service instance is destroyed.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * A callback method that performs custom clean-up, invoked immediately before a directive, pipe, or service instance is destroyed.
+   */
 
   ngOnDestroy() {
     clearTimeout(this.Timeout);
     this.hubService.closeAutomatic();
   }
 
-  /// <summary>
-  /// The GetColor method sets the chart color based on temperature ranges and triggers the DangerAlarm indication if the sensed temperature surpasses the threshold.
-  /// </summary>
-  /// <returns>
-  /// A color value
-  /// </returns>
-  /// <param name="temperature">It is the latest temperature sensed by hardware</param>
+  /**
+   * The GetColor method sets the chart color based on temperature ranges and triggers the DangerAlarm indication if the sensed temperature surpasses the threshold
+   * @param temperature It is the latest temperature sensed by hardware
+   * @returns A color value
+   */
 
   getColor(temperature: number): string {
     if (temperature > this.Settings.threshold) {
@@ -126,22 +116,13 @@ export class HomeComponent implements OnDestroy {
     }
   }
 
-  /// <summary>
-  /// Initializes the graph by updating sensor status and subscribing to temperature data.
-  /// </summary>
-  /// <returns>
-  /// Return results are described through the returns tag.
-  /// </returns>
-  /// <param name="a">Parameter description for s goes here.</param>
-  /// <param name="b">Parameter description for s goes here.</param>
-  ///<Exceptions>
-  /// Exception details
-  ///</Exceptions>
-  /// <remarks>
-  /// 'GET TMPA' command is sent to the hardware when the user interact with start button following which a listener for the 
-  /// 'UpdateTemperature' event on the SignalR hub connection is initialized. Based on the data obtained from the server 
-  /// the points are pushed into a list to inorder get plotted on the graph
-  /// </remarks>
+  /**
+   * Initializes the graph by updating sensor status and subscribing to temperature data.
+   * 
+   * 'GET TMPA' command is sent to the hardware when the user interact with start button following which a listener for the 
+   * 
+   * 'UpdateTemperature' event on the SignalR hub connection is initialized. Based on the data obtained from the server the points are pushed into a list to inorder get plotted on the graph
+   */
 
   graphInitializer() {
     this.SensorStatus = !this.SensorStatus;

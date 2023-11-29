@@ -61,9 +61,9 @@ namespace Services
                     await SendDeviceError("Device disconnected");
                     Console.WriteLine($"Invalid operation: {ex.Message}");
                 }
-                ProcessTemperatureData(resultArr);
-                ProcessSettingsData(resultArr);
-                ProcessManualModeData(resultArr);
+                processTemperatureData(resultArr);
+                processSettingsData(resultArr);
+                processManualModeData(resultArr);
         
             }
             catch (Exception ex)
@@ -76,12 +76,12 @@ namespace Services
         /// Processes temperature data and updates connected clients.
         /// </summary>
         /// <param name="resultArr">An array containing parsed data from the hardware.</param>
-        private async void ProcessTemperatureData(string[] resultArr)
+        private async void processTemperatureData(string[] resultArr)
         {
             if (resultArr[0] == "OK" && resultArr[1] == "TMPA")
             {
                 var data = new Data { Temperature = Convert.ToDouble(resultArr[2]), Time = DateTime.Now };
-                await SendTemperature(data);
+                await sendTemperature(data);
                 var flag = await WriteToDatabase(data);
             }
         }
@@ -90,12 +90,12 @@ namespace Services
         /// Processes settings data received from the hardware.
         /// </summary>
         /// <param name="resultArr">An array containing parsed data from the hardware.</param>
-        private void ProcessSettingsData(string[] resultArr)
+        private void processSettingsData(string[] resultArr)
         {
             if (resultArr[0] == "OK" && resultArr[1] == "CON" && resultArr.Length>2)
             {
-                var newSettings = ParseSettingsData(resultArr[2]);
-                SaveSettingsToFile(newSettings);
+                var newSettings = parseSettingsData(resultArr[2]);
+                saveSettingsToFile(newSettings);
             }
         }
 
@@ -103,27 +103,27 @@ namespace Services
         /// Processes manual mode data received from the hardware.
         /// </summary>
         /// <param name="resultArr">An array containing parsed data from the hardware.</param>
-        private async void ProcessManualModeData(string[] resultArr)
+        private async void processManualModeData(string[] resultArr)
         {
             if (resultArr[0] == "OK" && (resultArr[1] == "TMPM" || resultArr[1] == "RES"))
             {
                 var data = new ManualModeData { Response = $"OK {resultArr[1]}", value = resultArr[2] };
-                await SendManualModeData(data);
+                await sendManualModeData(data);
             }
             else if (resultArr[0] == "OK" && (resultArr[1] == "EPR" || resultArr[1] == "MOD"))
             {
                 var data = new ManualModeData { Response = $"OK {resultArr[1]}", value = $"OK {resultArr[1]}" };
-                await SendManualModeData(data);
+                await sendManualModeData(data);
             }
             else if (resultArr[0] == "OK" && resultArr[1] == "BTN")
             {
                 var data = new ManualModeData { Response = "OK BTN", value = $"{resultArr[0]} {resultArr[1]} {resultArr[2]} {resultArr[3]}" };
-                await SendManualModeData(data);
+                await sendManualModeData(data);
             }
             else if (resultArr[0] == "OK" && resultArr[1] == "DTY")
             {
                 var data = new ManualModeData { Response = "OK DTY", value = $"{resultArr[0]} {resultArr[1]}" };
-                await SendManualModeData(data);
+                await sendManualModeData(data);
             }
         }
 
@@ -132,7 +132,7 @@ namespace Services
         /// </summary>
         /// <param name="data">The Data object containing temperature information.</param>
 
-        private async Task SendTemperature(Data data)
+        private async Task sendTemperature(Data data)
         {
             await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
         }
@@ -142,7 +142,7 @@ namespace Services
         /// </summary>
         /// <param name="data">The ManualModeData object containing manual mode information.</param>
 
-        private async Task SendManualModeData(ManualModeData data)
+        private async Task sendManualModeData(ManualModeData data)
         {
             await _hubContext.Clients.All.SendAsync("ManualModeData", data);
         }
@@ -162,7 +162,7 @@ namespace Services
         /// </summary>
         /// <param name="configData">The raw configuration data string.</param>
         /// <returns>A new Settings object based on the parsed configuration data.</returns>
-        private Settings ParseSettingsData(string configData)
+        private Settings parseSettingsData(string configData)
         {
             string[] properties = configData.Split(',');
 
@@ -187,9 +187,9 @@ namespace Services
                 if (d[0] == "LED")
                 {
                     string s = d[1];
-                    newSettings.Color_0_15 = (Colors)Enum.Parse(typeof(Colors), GetColorCode(s[0]));
-                    newSettings.Color_16_30 = (Colors)Enum.Parse(typeof(Colors), GetColorCode(s[1]));
-                    newSettings.Color_31_45 = (Colors)Enum.Parse(typeof(Colors), GetColorCode(s[2]));
+                    newSettings.Color_0_15 = (Colors)Enum.Parse(typeof(Colors), getColorCode(s[0]));
+                    newSettings.Color_16_30 = (Colors)Enum.Parse(typeof(Colors), getColorCode(s[1]));
+                    newSettings.Color_31_45 = (Colors)Enum.Parse(typeof(Colors), getColorCode(s[2]));
                 }
                 else if (d[0] == "OL")
                 {
@@ -207,7 +207,7 @@ namespace Services
         /// Saves updated settings to a JSON file.
         /// </summary>
         /// <param name="settings">The Settings object to be saved.</param>
-        private void SaveSettingsToFile(Settings settings)
+        private void saveSettingsToFile(Settings settings)
         {
             string jsonString = JsonSerializer.Serialize(settings);
             System.IO.File.WriteAllText(@"..\..\settingsFile.json", jsonString);
@@ -257,7 +257,7 @@ namespace Services
         /// <returns>The color code corresponding to the input character.
         /// Returns an empty string if the character is not recognized.
         /// </returns>
-        private string GetColorCode(char c)
+        private string getColorCode(char c)
         {
             switch (c)
             {

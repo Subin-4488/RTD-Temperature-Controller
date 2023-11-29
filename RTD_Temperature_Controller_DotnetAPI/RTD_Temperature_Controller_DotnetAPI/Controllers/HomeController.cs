@@ -20,6 +20,13 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     {
         private readonly SerialPort _serialPort;
         private readonly IHubContext<TemperatureHub> _hubContext;
+
+        /// <summary>
+        /// Constructor for HomeController.
+        /// </summary>
+        /// <param name="serialPortService">Service for managing the serial port</param>
+        /// <param name="hubcontext">SignalR hub context for real-time communication</param>
+
         public HomeController(ISerialPortService serialPortService, IHubContext<TemperatureHub> hubcontext)
         {
             _serialPort = serialPortService.SerialPort;
@@ -30,14 +37,11 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         /// Sends command to hardware
         /// </summary>
         /// <param name="value">>JSON object containing the command to be sent</param>
-        /// <returns>NIL</returns>
 
         [HttpPost]
         public async Task<bool> Post([FromBody] JsonObject value)
         {
-            Console.WriteLine(value);
             byte[] bytes = Encoding.UTF8.GetBytes(value["Value"].ToString());
-            Console.WriteLine(bytes);
             string hexString = Convert.ToHexString(bytes);
             Console.WriteLine(hexString);
             try

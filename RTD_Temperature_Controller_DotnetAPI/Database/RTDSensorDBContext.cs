@@ -18,9 +18,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.DBContext
         /// <summary>
         /// Configures the model of the database.
         /// </summary>
-        /// <returns>
-        /// NIL
-        /// </returns>
         /// <param name="modelBuilder">The builder being used to construct the model for this context.</param>
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

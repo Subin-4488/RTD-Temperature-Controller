@@ -6,11 +6,9 @@ import { HubService } from '../services/hub.service';
 import { ConnectionService } from '../services/connection.service';
 import { Router } from '@angular/router';
 
-//////////////////////////////////////////////////////////////////////////
-/// <summary>
-/// Component for manual mode functionality.
-/// </summary>
-//////////////////////////////////////////////////////////////////////////
+/**
+ * Component for manual mode functionality.
+ */
 
 @Component({
   selector: 'app-manualmode',
@@ -38,12 +36,9 @@ export class ManualmodeComponent implements OnDestroy {
 
   }
 
-  /// <summary>
-  /// Cleanup method executed when the component is destroyed.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * Cleanup method executed when the component is destroyed.
+   */
 
   ngOnDestroy(): void {
     this.hub_service.closeManualMode()
@@ -53,20 +48,17 @@ export class ManualmodeComponent implements OnDestroy {
     })
   }
 
-  /// <summary>
-  ///Getter for accessing PWM form controls.
-  /// </summary>
+  /**
+   * Getter for accessing PWM form controls.
+   */
 
   get getPWMFormControls(){
     return this.PwmFormGroup.controls;
   }
 
-  /// <summary>
-  /// Method for setting LED 1 state.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * Method for setting LED 1 state.
+   */
 
   setLed1(){
     const ele = document.getElementById('led1') as HTMLInputElement
@@ -82,12 +74,9 @@ export class ManualmodeComponent implements OnDestroy {
     })
   }
 
-  /// <summary>
-  /// Method for setting LED 2 state.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * Method for setting LED 2 state.
+   */
 
   setLed2(){
     const ele = document.getElementById('led2') as HTMLInputElement
@@ -103,12 +92,9 @@ export class ManualmodeComponent implements OnDestroy {
     })
   }
 
-  /// <summary>
-  /// Method for setting LED 3 state.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * Method for setting LED 3 state.
+   */
 
   setLed3(){
     const ele = document.getElementById('led3') as HTMLInputElement
@@ -124,12 +110,9 @@ export class ManualmodeComponent implements OnDestroy {
     })
   }
 
-  /// <summary>
-  /// Method for setting PWM duty cycle.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * Method for setting PWM duty cycle.
+   */
 
   setPWMDutyCycle(){
     this.Submitted = true;
@@ -138,56 +121,41 @@ export class ManualmodeComponent implements OnDestroy {
     this.manualmodeService.sendCommand(new Command("SET", "SET DTY "+this.PwmFormGroup.value.pwmCycleControl+"\r")).subscribe(d =>{})
   }
 
-  /// <summary>
-  /// Method for retrieving temperature data.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * Method for retrieving temperature data.
+   */
 
   getTemperature(){
     this.manualmodeService.sendCommand(new Command("GET", "GET TMPM\r")).subscribe(d =>{})
   }
 
-  /// <summary>
-  /// Method for retrieving resistance data.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * Method for retrieving resistance data.
+   */
 
   getResistance(){
     this.manualmodeService.sendCommand(new Command("GET", "GET RES\r")).subscribe(d =>{})
   }
 
-  /// <summary>
-  /// Method for retrieving EEPROM data.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * Method for retrieving EEPROM data.
+   */
 
   getEPROM(){
     this.manualmodeService.sendCommand(new Command("GET", "GET EPR\r")).subscribe(d =>{})
   }
 
-  /// <summary>
-  /// Method for retrieving "start button" status.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * Method for retrieving "start button" status.
+   */
 
   getStartButtonStatus(){
     this.manualmodeService.sendCommand(new Command("GET", "GET BTN START\r")).subscribe(d =>{})
   }
 
-  /// <summary>
-  /// Method for retrieving "stop button" status.
-  /// </summary>
-  /// <returns>
-  /// NIL
-  /// </returns>
+  /**
+   * Method for retrieving "stop button" status.
+   */
 
   getStopButtonStatus(){
     this.manualmodeService.sendCommand(new Command("GET", "GET BTN STOP\r")).subscribe(d =>{})
