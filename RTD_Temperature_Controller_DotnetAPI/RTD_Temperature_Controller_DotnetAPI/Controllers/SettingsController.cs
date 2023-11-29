@@ -8,21 +8,35 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 {
+    /// <summary>
+    /// Controller for storing and retrieving settings data from the JSON file and
+    /// sending the same to the hardware
+    /// </summary>
     [Route("settings")]
     [ApiController]
     public class SettingsController : ControllerBase
     {
         private readonly IHubContext<TemperatureHub> _hubContext;
         private readonly SerialPort _serialPort;
+
+        /// <summary>
+        /// Initializes a new instance of the SettingsController class.
+        /// </summary>
+        /// <param name="hubContext">The SignalR hub context for real-time communication.</param>
+        /// <param name="serialPortService">The service providing access to the serial port.</param>
         public SettingsController(IHubContext<TemperatureHub> hubContext, ISerialPortService serialPortService)
         {
             this._serialPort = serialPortService.SerialPort;
             this._hubContext = hubContext;
         }
+
+        /// <summary>
+        /// Retrieves the current temperature control settings.
+        /// </summary>
+        /// <returns>The current temperature control settings.</returns>
         // GET: api/<SettingsController>
         [HttpGet]
         public async Task<Settings> Get()
@@ -35,30 +49,26 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             return settingsValue;
         }
 
-        // GET api/<SettingsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
+        /// <summary>
+        /// Updates the temperature control settings to the hardware and stores
+        /// it in the JSON file based on the provided JSON data.
+        /// </summary>
+        /// <param name="s">The JSON object containing updated settings from the frontend</param>
         // POST api/<SettingsController>
         [HttpPost]
         public async void Post([FromBody] JsonObject s)
         {
             var newSettings= new Settings();
-            newSettings.Threshold = Convert.ToDouble(s["Threshold"].ToString());
-            newSettings.DataAcquisitionRate = Convert.ToInt32(s["DataAcquisitionRate"].ToString());
-            newSettings.Temperature_4mA = Convert.ToDouble(s["Temperature_4mA"].ToString());
-            newSettings.Temperature_20mA = Convert.ToDouble(s["Temperature_20mA"].ToString());
+            newSettings.Threshold = Convert.ToDouble(s["Threshold"]?.ToString());
+            newSettings.DataAcquisitionRate = Convert.ToInt32(s["DataAcquisitionRate"]?.ToString());
+            newSettings.Temperature_4mA = Convert.ToDouble(s["Temperature_4mA"]?.ToString());
+            newSettings.Temperature_20mA = Convert.ToDouble(s["Temperature_20mA"]?.ToString());
             newSettings.Color_0_15 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_0_15"]));
             newSettings.Color_16_30 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_16_30"]));
             newSettings.Color_31_45 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_31_45"]));
             StringBuilder sendString = new StringBuilder("SET CON LED:");
-            //Console.WriteLine((char)newSettings.Color_0_15);
             sendString.Append($"{(char)newSettings.Color_0_15}{(char)newSettings.Color_16_30}{(char)newSettings.Color_31_45}");
             sendString.Append($",OL:{s["Temperature_4mA"]},OH:{s["Temperature_20mA"]}\r");
-            Console.WriteLine(sendString);
 
             try
             {
@@ -67,7 +77,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             }
             catch (OperationCanceledException ex)
             {
-                // Log or handle the cancellation exception
                 await _hubContext.Clients.All.SendAsync("DeviceError", new { Error = "Device disconnected" });
                 Console.WriteLine($"Operation canceled: {ex.Message}");
             }
@@ -83,36 +92,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 
             string jsonString = JsonSerializer.Serialize<Settings>(newSettings);
             System.IO.File.WriteAllText(@"..\..\settingsFile.json", jsonString);
-        }
-
-        //public string GetColor(string inp)
-        //{
-        //    switch (Convert.ToString(inp))
-        //    {
-        //        case "red":
-        //            return "R";
-        //            break;
-        //        case "green":
-        //            return "G";
-        //            break;
-        //        case "blue":
-        //            return "B";
-        //            break;
-        //        default:
-        //            return "";
-        //    }
-        //}
-
-        // PUT api/<SettingsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<SettingsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

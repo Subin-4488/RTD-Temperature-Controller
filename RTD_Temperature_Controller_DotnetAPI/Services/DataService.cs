@@ -88,15 +88,14 @@ namespace Services
         }
 
         /// <summary>
-        /// Processes configuration data received from the hardware.
+        /// Processes settings data received from the hardware.
         /// </summary>
         /// <param name="resultArr">An array containing parsed data from the hardware.</param>
         private void ProcessSettingsData(string[] resultArr)
         {
             if (resultArr[0] == "OK" && resultArr[1] == "CON")
             {
-                // Process and update configuration settings
-                var newSettings = ParseConfigurationData(resultArr[2]);
+                var newSettings = ParseSettingsData(resultArr[2]);
                 SaveSettingsToFile(newSettings);
             }
         }
@@ -107,7 +106,6 @@ namespace Services
         /// <param name="resultArr">An array containing parsed data from the hardware.</param>
         private async void ProcessManualModeData(string[] resultArr)
         {
-            // Process different types of manual mode data
             if (resultArr[0] == "OK" && resultArr[1] == "TMPM")
             {
                 var data = new ManualModeData { Response = "OK TMPM", value = resultArr[2] };
@@ -165,7 +163,7 @@ namespace Services
         /// </summary>
         /// <param name="configData">The raw configuration data string.</param>
         /// <returns>A new Settings object based on the parsed configuration data.</returns>
-        private Settings ParseConfigurationData(string configData)
+        private Settings ParseSettingsData(string configData)
         {
             string[] properties = configData.Split(',');
 
