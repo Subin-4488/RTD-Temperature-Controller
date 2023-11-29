@@ -42,9 +42,6 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         {
             Console.WriteLine(value);
             byte[] bytes = Encoding.UTF8.GetBytes(value["Value"].ToString());
-            Console.WriteLine(bytes);
-            string hexString = Convert.ToHexString(bytes);
-            Console.WriteLine(hexString);
             try
             {
                 _serialPort.Write(bytes, 0, bytes.Length);
