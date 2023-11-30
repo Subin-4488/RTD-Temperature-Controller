@@ -1,5 +1,7 @@
 
 using Contracts;
+using Microsoft.EntityFrameworkCore;
+using RTD_Temperature_Controller_DotnetAPI.DBContext;
 using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using Serilog;
 using Services;
@@ -23,6 +25,17 @@ namespace RTD_Temperature_Controller_DotnetAPI
             builder.Services.AddSwaggerGen();
             //websocket
             builder.Services.AddSignalR();
+
+            builder.Services.AddDbContext<RTDSensorDBContext>(options =>
+            {
+                string connection = "Data Source = TJ16AA050-PC\\SQLEXPRESS;" +
+                "Initial Catalog=RTD_Sensor;" +
+                "Integrated Security=true;" +
+                "MultipleActiveResultSets=true;" +
+                "TrustServerCertificate=True";
+
+                options.UseSqlServer(connection);
+            });
 
             //dependency injection (IOC Service) for Serial port
             builder.Services.AddSingleton<ISerialPortService, SerialPortService>();

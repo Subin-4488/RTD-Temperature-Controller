@@ -12,6 +12,10 @@ namespace RTD_Temperature_Controller_DotnetAPI.DBContext
 
     public class RTDSensorDBContext : DbContext
     {
+        //public RTDSensorDBContext()
+        //{
+            
+        //}
         public DbSet<Data> TemperatureTable { get; set; }
         public RTDSensorDBContext(DbContextOptions<RTDSensorDBContext> options) : base(options) { }
 

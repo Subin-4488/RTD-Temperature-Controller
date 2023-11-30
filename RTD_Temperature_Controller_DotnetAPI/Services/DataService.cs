@@ -221,7 +221,7 @@ namespace Services
         public async Task<(bool, string)> WriteToDatabase(Data data)
         {
             var dbContextOptions = new DbContextOptionsBuilder<RTDSensorDBContext>()
-                                        .UseSqlServer(_configuration["ConnectionStrings:DefaultConnection"])
+                                        .UseSqlServer(_configuration["ConnectionStrings:LocalConnection"])
                                         .Options;
             using (var _dbContext = new RTDSensorDBContext(dbContextOptions))
             {

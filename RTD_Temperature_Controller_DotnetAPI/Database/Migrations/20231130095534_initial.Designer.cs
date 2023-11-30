@@ -12,8 +12,8 @@ using RTD_Temperature_Controller_DotnetAPI.DBContext;
 namespace Database.Migrations
 {
     [DbContext(typeof(RTDSensorDBContext))]
-    [Migration("20231115061355_Initial")]
-    partial class Initial
+    [Migration("20231130095534_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
