@@ -7,6 +7,7 @@ using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using RTD_Temperature_Controller_DotnetAPI.Models;
 using Serilog;
 using System.IO.Ports;
+using System.Text;
 using System.Text.Json;
 
 namespace Services
@@ -18,6 +19,8 @@ namespace Services
     {
         private readonly IHubContext<TemperatureHub> _hubContext;
         private readonly IConfiguration _configuration;
+        //private readonly SerialPort _serialPort;
+        private readonly ISerialPortService _serialPortService;
 
         /// <summary>
         /// Initializes a new instance of the DataService class.
@@ -25,10 +28,12 @@ namespace Services
         /// <param name="hubContext">The SignalR hub context for temperature updates.</param>
         /// <param name="configuration">The configuration for the application.</param>
 
-        public DataService(IHubContext<TemperatureHub> hubContext, IConfiguration configuration)
+        public DataService(IHubContext<TemperatureHub> hubContext, IConfiguration configuration, ISerialPortService serialPortService)
         {
             _hubContext = hubContext;
             _configuration = configuration;
+            _serialPortService = serialPortService;
+            //_serialPort = serialPortService.SerialPort;
         }
 
         /// <summary>
@@ -50,6 +55,7 @@ namespace Services
                 try
                 {
                     string result = spL.ReadTo("\r");
+                    Console.WriteLine(result);
                     resultArr = result.Split(' ');
                 }
                 catch (OperationCanceledException ex)
@@ -62,6 +68,8 @@ namespace Services
                     await SendDeviceError("Device disconnected");
                     Log.Information($"Invalid operation: {ex.Message}");
                 }
+
+                processInitialState(resultArr);
                 processTemperatureData(resultArr);
                 processSettingsData(resultArr);
                 processManualModeData(resultArr);
@@ -73,6 +81,19 @@ namespace Services
             }
 
         }
+
+
+        private void processInitialState(string[] resultArr)
+        {
+
+            if (resultArr.Length>2 && resultArr[0] == "OK" && resultArr[1] == "RTD" && resultArr[2] == "RDY")
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes("GET TMPA\r");
+                _serialPortService.SerialPort.Write(bytes, 0, bytes.Length);
+            }
+        }
+
+
         /// <summary>
         /// Processes temperature data and updates connected clients.
         /// </summary>
@@ -108,22 +129,22 @@ namespace Services
         {
             if (resultArr[0] == "OK" && (resultArr[1] == "TMPM" || resultArr[1] == "RES"))
             {
-                var data = new ManualModeData { Response = $"OK {resultArr[1]}", value = resultArr[2] };
+                var data = new ManualModeData { Response = $"OK {resultArr[1]}", Value = resultArr[2] };
                 await sendManualModeData(data);
             }
             else if (resultArr[0] == "OK" && (resultArr[1] == "EPR" || resultArr[1] == "MOD"))
             {
-                var data = new ManualModeData { Response = $"OK {resultArr[1]}", value = $"OK {resultArr[1]}" };
+                var data = new ManualModeData { Response = $"OK {resultArr[1]}", Value = $"OK {resultArr[1]}" };
                 await sendManualModeData(data);
             }
             else if (resultArr[0] == "OK" && resultArr[1] == "BTN")
             {
-                var data = new ManualModeData { Response = "OK BTN", value = $"{resultArr[0]} {resultArr[1]} {resultArr[2]} {resultArr[3]}" };
+                var data = new ManualModeData { Response = "OK BTN", Value = $"{resultArr[0]} {resultArr[1]} {resultArr[2]} {resultArr[3]}" };
                 await sendManualModeData(data);
             }
             else if (resultArr[0] == "OK" && resultArr[1] == "DTY")
             {
-                var data = new ManualModeData { Response = "OK DTY", value = $"{resultArr[0]} {resultArr[1]}" };
+                var data = new ManualModeData { Response = "OK DTY", Value = $"{resultArr[0]} {resultArr[1]}" };
                 await sendManualModeData(data);
             }
         }

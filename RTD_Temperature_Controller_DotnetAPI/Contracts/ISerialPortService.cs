@@ -10,7 +10,7 @@ namespace Contracts
 
     public interface ISerialPortService
     {
-        public SerialPort SerialPort { get; }
+         SerialPort SerialPort { get; }
 
         public void ResetPort();
     }

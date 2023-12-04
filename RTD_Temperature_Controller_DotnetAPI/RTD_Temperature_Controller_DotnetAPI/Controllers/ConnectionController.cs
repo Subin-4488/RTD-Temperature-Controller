@@ -143,6 +143,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                     if (temp.Length < 2 || temp[0] != "OK" || temp[1] != "MOD")
                         return false;
 
+                    
                     _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
                     bytes = Encoding.UTF8.GetBytes("GET CON\r");
                     _serialPort.Write(bytes, 0, bytes.Length);

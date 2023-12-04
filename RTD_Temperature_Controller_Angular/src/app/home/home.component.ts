@@ -21,7 +21,7 @@ export class HomeComponent implements OnDestroy {
   DataAcquisitionRate = 0;
   DataPoints: any[] = [];
   DangerAlarm: boolean = false;
-  SensorStatus: boolean = false;
+  SensorStatus: boolean = true;
   Chart: any;
   ChartOptions = {
     zoomEnabled: true,
@@ -43,6 +43,9 @@ export class HomeComponent implements OnDestroy {
     },
     axisY: {
       title: 'Temperature (°C)',
+      minimum:0,
+      maximum:30,
+      interval:3
     },
     data: [
       {
@@ -60,13 +63,13 @@ export class HomeComponent implements OnDestroy {
     private settingsService: SettingsService,
     private homeService: HomeService
   ) {
-    if (this.Settings.threshold == 0)
-      this.settingsService.resetSettings().subscribe((data) => {
-        this.Settings = data;
-        this.Settings.color_0_15 = Colors[Number(data.color_0_15)];
-        this.Settings.color_16_30 = Colors[Number(data.color_16_30)];
-        this.Settings.color_31_45 = Colors[Number(data.color_31_45)];
-      });
+    // if (this.Settings.threshold == 0)
+    //   this.settingsService.resetSettings().subscribe((data) => {
+    //     this.Settings = data;
+    //     this.Settings.color_0_15 = Colors[Number(data.color_0_15)];
+    //     this.Settings.color_16_30 = Colors[Number(data.color_16_30)];
+    //     this.Settings.color_31_45 = Colors[Number(data.color_31_45)];
+    //   });
   }
 
   /**
@@ -81,6 +84,7 @@ export class HomeComponent implements OnDestroy {
       this.Settings.color_0_15 = Colors[Number(data.color_0_15)];
       this.Settings.color_16_30 = Colors[Number(data.color_16_30)];
       this.Settings.color_31_45 = Colors[Number(data.color_31_45)];
+      this.graphInitializer();
     });
   }
 
@@ -123,38 +127,60 @@ export class HomeComponent implements OnDestroy {
    */
 
   graphInitializer() {
-    this.SensorStatus = !this.SensorStatus;
-    if (this.SensorStatus) {
-      this.homeService
-        .sendCommand(new Command('GET', 'GET TMPA\r'))
-        .subscribe((d) => {
-          if (d == true) {
-            this.hubService.hubConnection.on(
-              'UpdateTemperature',
-              (temperatureData) => {
-                if (this.DataAcquisitionRate == 0) {
-                  var pointColor = this.getColor(
-                    parseFloat(temperatureData.temperature)
-                  );
-                  this.DataPoints.push({
-                    x: new Date(temperatureData.time),
-                    y: parseFloat(temperatureData.temperature),
-                    markerColor: pointColor,
-                    lineColor: pointColor,
-                  });
-                }
-                this.DataAcquisitionRate =
-                  (this.DataAcquisitionRate + 1) %
-                  this.Settings.dataAcquisitionRate;
+    //this.SensorStatus = !this.SensorStatus;
+    // if (this.SensorStatus) {
+    //   this.homeService
+    //     .sendCommand(new Command('GET', 'GET TMPA\r'))
+    //     .subscribe((d) => {
+    //       if (d == true) {
+    //         this.hubService.hubConnection.on(
+    //           'UpdateTemperature',
+    //           (temperatureData) => {
+    //             if (this.DataAcquisitionRate == 0) {
+    //               var pointColor = this.getColor(
+    //                 parseFloat(temperatureData.temperature)
+    //               );
+    //               this.DataPoints.push({
+    //                 x: new Date(temperatureData.time),
+    //                 y: parseFloat(temperatureData.temperature),
+    //                 markerColor: pointColor,
+    //                 lineColor: pointColor,
+    //               });
+    //             }
+    //             this.DataAcquisitionRate =
+    //               (this.DataAcquisitionRate + 1) %
+    //               this.Settings.dataAcquisitionRate;
 
-                if (this.DataPoints.length > 20) this.DataPoints.shift();
-                this.Chart.render();
-              }
-            );
-          }
-        });
-    } else {
-      this.hubService.closeAutomatic();
-    }
+    //             if (this.DataPoints.length > 20) this.DataPoints.shift();
+    //             this.Chart.render();
+    //           }
+    //         );
+    //       }
+    //     });
+    // } else {
+    //   this.hubService.closeAutomatic();
+    // }
+    this.hubService.hubConnection.on(
+      'UpdateTemperature',
+      (temperatureData) => {
+        if (this.DataAcquisitionRate == 0) {
+          var pointColor = this.getColor(
+            parseFloat(temperatureData.temperature)
+          );
+          this.DataPoints.push({
+            x: new Date(temperatureData.time),
+            y: parseFloat(temperatureData.temperature),
+            markerColor: pointColor,
+            lineColor: pointColor,
+          });
+        }
+        this.DataAcquisitionRate =
+          (this.DataAcquisitionRate + 1) %
+          this.Settings.dataAcquisitionRate;
+
+        if (this.DataPoints.length > 20) this.DataPoints.shift();
+        this.Chart.render();
+      }
+    );
   }
 }
