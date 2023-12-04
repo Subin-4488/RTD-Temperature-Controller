@@ -14,8 +14,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     [ApiController]
     public class ConnectionController : ControllerBase
     {
-        private readonly SerialPort _serialPort;
-        private IDataService _dataService;
+        private readonly ISerialPortService _serialPortService;
+        private readonly IDataService _dataService;
 
         public ConnectionController(ISerialPortService serialPortService, IDataService dataService)
         {
