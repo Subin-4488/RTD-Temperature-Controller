@@ -1,9 +1,9 @@
 <div id="main-div">
-  <h3>Set up connection</h3>
+  <h3>SET UP CONNECTION</h3>
   <form
-    id="con-form"
-    [formGroup]="connectionForm"
-    (ngSubmit)="onSubmit(connectionForm.value)"
+    id="connection-form"
+    [formGroup]="ConnectionForm"
+    (ngSubmit)="onSubmit(ConnectionForm.value)"
   >
     <div class="mb-3">
       <label for="portname" class="form-label">Port name</label>
@@ -13,7 +13,7 @@
         id="portname"
         formControlName="portname"
       >
-        <option *ngFor="let p of portNames" value="{{ p }}">{{ p }}</option>
+        <option *ngFor="let p of PortNames" value="{{ p }}">{{ p }}</option>
       </select>
     </div>
     <div class="mb-3">
@@ -64,10 +64,14 @@
       <input type="text" class="form-control" id="exampleInputPassword1" />
     </div> -->
     <div class="button-container">
-      <button type="button" class="btn btn-primary m-1" (click)="resetValues()">
+      <button
+        type="button"
+        class="btn btn-secondary m-1"
+        (click)="resetValues()"
+      >
         Reset
       </button>
-      <button type="submit" class="btn btn-secondary m-1">Submit</button>
+      <button type="submit" class="btn btn-primary m-1" [disabled]="ConnectionForm.invalid">Submit</button>
     </div>
   </form>
 </div>

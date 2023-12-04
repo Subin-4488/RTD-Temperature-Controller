@@ -1,0 +1,37 @@
+#main-div {
+  min-height: 89vh;
+  margin: 0;
+}
+
+#danger {
+  color: red;
+  animation: dangerAnimation .2s infinite;
+  font-size: 28px;
+}
+
+.sensor_btn {
+  padding: 1%;
+}
+
+.graph {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 3%;
+  border-radius: 30px;
+  margin: 1%;
+  background-color: aliceblue;
+}
+
+h4 {
+  font-weight: bold;
+  text-align: center;
+}
+
+@keyframes dangerAnimation {
+  from {
+    background-color: red;
+  }
+
+  to {
+    background-color: yellow;
+  }
+}

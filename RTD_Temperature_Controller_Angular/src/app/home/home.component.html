@@ -1,16 +1,45 @@
-<div style=" width: 100%;   padding: 3%;" class="row">
-    <div class="col-sm-12 col-md-10 ">
-        <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height: '460px'}" (chartInstance)="getChartInstance($event)"></canvasjs-chart>    
-    </div>   
-
-    <div class="col-sm-12 col-md-2" >
-        <h4 style="font-weight: bold; text-align: center;">Threshold: 
-            <span>23°C</span>
-        </h4>
-        <h4 style="font-weight: bold; text-align: center;">Indication:
-            <span style="color: green;">SAFE</span>
-        </h4>
-    </div>
+<div id="main-div">
+  <!-- <div class="sensor_btn d-flex w-100 justify-content-end">
     <div>
+      <button
+        *ngIf="!SensorStatus"
+        class="btn btn-primary"
+        (click)="graphInitializer()"
+        data-toggle="tooltip" title="Start plotting"
+      >
+        Start
+      </button>
+      <button
+        *ngIf="SensorStatus"
+        class="btn btn-danger"
+        (click)="graphInitializer()"
+        data-toggle="tooltip" title="Stop plotting"
+      >
+        Stop
+      </button>
     </div>
+  </div> -->
+  <div class="graph">
+    <div style="width: 100%" class="row">
+      <div class="col-sm-12 col-md-10">
+        <canvasjs-chart
+          [options]="ChartOptions"
+          [styles]="{ width: '100%', height: '460px' }"
+          (chartInstance)="getChartInstance($event)"
+        ></canvasjs-chart>
+      </div>
+
+      <div class="col-sm-12 col-md-2">
+        <h4>
+          Threshold:
+          <span>{{ Settings.threshold }}</span>
+        </h4>
+        <h4>
+          Indication:
+          <span *ngIf="!DangerAlarm" style="color: green">SAFE</span>
+          <span id="danger" *ngIf="DangerAlarm">DANGER!!</span>
+        </h4>
+      </div>
+    </div>
+  </div>
 </div>

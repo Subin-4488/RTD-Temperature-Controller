@@ -7,7 +7,7 @@
         Bpe_3 = 4800,
         Bps_4 = 9600,
         Bps_5 = 14400,
-        Bps_6 = 38400 
+        Bps_6 = 38400
     }
 
     public enum DataBits
@@ -30,9 +30,15 @@
     public struct StopBits
     {
         public const int StopBits_1 = 1;
-        public const double StopBits_2 = 1.5; 
+        public const double StopBits_2 = 1.5;
         public const int StopBits_3 = 2;
     }
+
+    //////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Represents a connection configuration for communication settings.
+    /// </summary>
+    //////////////////////////////////////////////////////////////////////////
 
     public class Connection
     {

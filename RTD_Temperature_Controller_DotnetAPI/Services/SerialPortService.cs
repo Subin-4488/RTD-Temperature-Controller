@@ -3,11 +3,18 @@ using System.IO.Ports;
 
 namespace Services
 {
+    /// <summary>
+    /// Service for managing a serial port connection
+    /// It involves reseting, opening new serial port
+    /// </summary>
     public class SerialPortService : ISerialPortService
     {
         private SerialPort _serialPort;
         //public SerialPort SerialPort { get => _serialPort; }
 
+        /// <summary>
+        /// Creates a new serial port instance
+        /// </summary>
         public SerialPortService()
         {
             _serialPort = new SerialPort();

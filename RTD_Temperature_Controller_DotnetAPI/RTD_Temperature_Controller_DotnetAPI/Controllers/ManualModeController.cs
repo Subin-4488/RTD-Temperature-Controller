@@ -1,41 +1,67 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using RTD_Temperature_Controller_DotnetAPI.Hubs;
+using Serilog;
 using System.IO.Ports;
 using System.Text;
 using System.Text.Json.Nodes;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 {
+    /// <summary>
+    /// Controller for handling manual mode operations. 
+    /// </summary>
+
     [Route("manualmode")]
     [ApiController]
     public class ManualModeController : ControllerBase
     {
         private readonly SerialPort _serialPort;
-        public ManualModeController(ISerialPortService serialPortService)
+        private readonly IHubContext<TemperatureHub> _hubContext;
+
+        /// <summary>
+        /// Constructor for ManualModeController.
+        /// </summary>
+        /// <param name="serialPortService">The service providing the SerialPort instance</param>
+        /// <param name="hubContext">The SignalR hub context for TemperatureHub</param>
+
+        public ManualModeController(ISerialPortService serialPortService, IHubContext<TemperatureHub> hubContext)
         {
             _serialPort = serialPortService.SerialPort;
+            _hubContext = hubContext;
         }
 
-        // POST api/<ManualModeController>
+        /// <summary>
+        /// Handles HTTP POST requests for manual mode control.
+        /// </summary>
+        /// <param name="value"></param>
+
         [HttpPost]
-        public bool Post([FromBody] JsonObject value)
+        public async Task<bool> Post([FromBody] JsonObject value)
         {
             Console.WriteLine(value);
             byte[] bytes = Encoding.UTF8.GetBytes(value["Value"].ToString());
-            Console.WriteLine(bytes);
-            string hexString = Convert.ToHexString(bytes);
-            Console.WriteLine(hexString);
             try
             {
                 _serialPort.Write(bytes, 0, bytes.Length);
+                return true;
             }
-            catch(Exception ex)
+            catch (OperationCanceledException ex)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
+                await _hubContext.Clients.All.SendAsync("DeviceError", new { Error = "Device disconnected" });
+                Log.Information($"Operation canceled: {ex.Message}");
             }
-            return true;
+            catch (InvalidOperationException ex)
+            {
+                await _hubContext.Clients.All.SendAsync("DeviceError", new { Error = "Device disconnected" });
+                Log.Information($"Invalid operation: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Log.Information($"{ex.Message}");
+            }
+            return false;
         }
     }
 }

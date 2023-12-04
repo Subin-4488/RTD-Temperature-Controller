@@ -1,6 +1,13 @@
 <div id="main-div" class="row justify-content-center align-items-center">
-  <form id="settings-form" [formGroup]="settingsForm"
-  (ngSubmit)="onSubmit(settingsForm.value)">
+  <form
+    class="crd"
+    id="settings-form"
+    [formGroup]="settingsForm"
+    (ngSubmit)="onSubmit(settingsForm.value)"
+  >
+    <div class="row justify-content-center mt-1 mb-2 main-heading">
+      SETTINGS
+    </div>
     <div class="field">
       <label for="threshold" class="form-label">Threshold</label>
       <input
@@ -8,7 +15,18 @@
         type="text"
         id="threshold"
         formControlName="threshold"
+        placeholder="45 &deg;C"
       />
+      <div
+        *ngIf="
+          !getsettingsFormControls['threshold'].valid &&
+          getsettingsFormControls['threshold'].touched
+        "
+        style="color: red"
+        class="form_error"
+      >
+        Enter a numeric value
+      </div>
     </div>
     <div class="field">
       <label for="dar" class="form-label">Data acquisition rate</label>
@@ -25,7 +43,7 @@
         <option value="10">10</option>
       </select>
     </div>
-    <div class="row justify-content-center mt-3 mb-2">
+    <div class="row justify-content-center mt-3 mb-2 sub-heading">
       Current Control
     </div>
     <div class="row controls">
@@ -36,8 +54,18 @@
           type="text"
           id="current4"
           formControlName="current4"
+          placeholder="15 &deg;C"
         />
-        
+        <div
+          *ngIf="
+            getsettingsFormControls['current4'].errors &&
+            getsettingsFormControls['current4'].touched
+          "
+          style="color: red"
+          class="form_error"
+        >
+          Enter a numeric value
+        </div>
       </div>
       <div class="field col">
         <label for="current20" class="form-label">20 mA</label>
@@ -46,17 +74,39 @@
           type="text"
           id="current20"
           formControlName="current20"
+          placeholder="30 &deg;C"
         />
+        <div
+          *ngIf="
+            getsettingsFormControls['current20'].errors &&
+            getsettingsFormControls['current20'].touched &&
+            !getsettingsFormControls['current20'].hasError('temperatureGreater')
+          "
+          style="color: red"
+          class="form_error"
+        >
+          Enter a numeric value
+        </div>
       </div>
     </div>
-    <div class="row justify-content-center mt-3 mb-2">
+    <div
+      *ngIf="
+        getsettingsFormControls['current20'].hasError('temperatureGreater') &&
+        getsettingsFormControls['current20'].touched
+      "
+      style="color: red"
+      class="row form_error"
+    >
+      Temperature for 20mA should be greater than temperature for 4mA
+    </div>
+    <div class="row justify-content-center mt-3 mb-2 sub-heading">
       Color Control
     </div>
     <div class="row controls">
       <div class="col">
         <label for="c1" class="form-label">0-15 &deg;C</label>
         <select
-          class="form-select  mb-2"
+          class="form-select mb-2"
           aria-label="Default select example"
           id="c1"
           formControlName="c1"
@@ -65,6 +115,16 @@
           <option value="green">Green</option>
           <option value="blue">Blue</option>
         </select>
+        <div
+          *ngIf="
+            getsettingsFormControls['c1'].hasError('sameColor') &&
+            getsettingsFormControls['c1'].touched
+          "
+          style="color: red"
+          class="form_error"
+        >
+          Enter different colors
+        </div>
       </div>
       <div class="col">
         <label for="c2" class="form-label">16-30 &deg;C</label>
@@ -78,6 +138,16 @@
           <option value="green">Green</option>
           <option value="blue">Blue</option>
         </select>
+        <div
+          *ngIf="
+            getsettingsFormControls['c2'].hasError('sameColor') &&
+            getsettingsFormControls['c2'].touched
+          "
+          style="color: red"
+          class="form_error"
+        >
+          Enter different colors
+        </div>
       </div>
       <div class="col">
         <label for="c3" class="form-label">31-45 &deg;C</label>
@@ -91,11 +161,33 @@
           <option value="green">Green</option>
           <option value="blue">Blue</option>
         </select>
+        <div
+          *ngIf="
+            getsettingsFormControls['c3'].hasError('sameColor') &&
+            getsettingsFormControls['c3'].touched
+          "
+          style="color: red"
+          class="form_error"
+        >
+          Enter different color
+        </div>
       </div>
     </div>
     <div class="button-container">
-      <button type="button" class="btn btn-primary m-1" (click)="resetSettings()">Reset</button>
-      <button type="submit" [disabled]="settingsForm.invalid" class="btn btn-secondary m-1">Submit</button>
+      <button
+        type="button"
+        class="btn btn-secondary m-1"
+        (click)="resetSettings()"
+      >
+        Reset
+      </button>
+      <button
+        type="submit"
+        [disabled]="settingsForm.invalid"
+        class="btn btn-primary m-1"
+      >
+        Submit
+      </button>
     </div>
   </form>
 </div>

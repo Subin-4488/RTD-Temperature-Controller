@@ -1,15 +1,22 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.Mvc;
-using RTD_Temperature_Controller_DotnetAPI.Models;
+using Serilog;
 using System.IO.Ports;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Nodes;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 {
+
+    //////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Controller for managing the connection to the RTD temperature sensor.
+    /// </summary>
+    /// <remarks>
+    /// Manages the serial port connection, configuration, and disconnection,
+    /// </remarks>
+    //////////////////////////////////////////////////////////////////////////
+
     [Route("connection")]
     [ApiController]
     public class ConnectionController : ControllerBase
@@ -17,23 +24,46 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         private readonly ISerialPortService _serialPortService;
         private readonly IDataService _dataService;
 
-        public ConnectionController(ISerialPortService serialPortService, IDataService dataService)
+        /// <summary>
+        /// Constructor for the ConnectionController class.
+        /// </summary>
+        /// <param name="serialPortService">The serial port service for managing the connection</param>
+        /// <param name="dataService">The data service for handling data from the RTD temperature controller</param>
+
+        public ConnectionController(
+            ISerialPortService serialPortService,
+            IDataService dataService
+        )
         {
+            serialPortService.ResetPort();
             this._serialPort = serialPortService.SerialPort;
             this._dataService = dataService;
-            
+
             if (this._serialPort.IsOpen) this._serialPort.Close();
 
         }
 
-        //GET: api/<ConnectionController>
+        /// <summary>
+        /// Gets the available serial ports.
+        /// </summary>
+        /// <returns>
+        /// A list of available serial port names.
+        /// </returns>
+
         [HttpGet("ports")]
         public IEnumerable<string> Get()
         {
             return SerialPort.GetPortNames();
         }
 
-        // POST api/<ConnectionController>
+        /// <summary>
+        /// Connects to the RTD temperature controller using the specified configuration.
+        /// </summary>
+        /// <param name="value">The configuration parameters for the serial port connection</param>
+        /// <returns>True if the connection is successful; otherwise, false.</returns>
+        /// <exception cref="Exception">Thrown when parity format is bad</exception>
+        /// <exception cref="FormatException">Thrown when stopbits format is bad</exception>
+
         [HttpPost]
         public bool Post([FromBody] JsonObject value)
         {
@@ -41,13 +71,13 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             {
                 this._serialPort.PortName = Convert.ToString(value["PortName"]);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
                 return false;
             }
-            this._serialPort.BaudRate = int.Parse(value["BitsPerSecond"]!.ToString());
-            
+            this._serialPort.BaudRate = int.Parse(value["BitsPerSecond"].ToString());
+
             switch (value["Parity"]!.ToString())
             {
                 case "Even":
@@ -66,12 +96,9 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                     this._serialPort.Parity = System.IO.Ports.Parity.None;
                     break;
                 default:
-                    throw new Exception("BAD Parity format");
+                    throw new FormatException("Bad Parity format");
             }
-
             this._serialPort.DataBits = int.Parse(value["DataBits"]!.ToString());
-
-
             switch (value["StopBits"]!.ToString())
             {
                 case "1":
@@ -84,21 +111,66 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                     this._serialPort.StopBits = System.IO.Ports.StopBits.Two;
                     break;
                 default:
-                    throw new Exception("BAD Parity format");
+                    throw new Exception("Bad Stopbits format");
             }
-
-            _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
 
             try
             {
-                _serialPort.Open();
+                if (!_serialPort.IsOpen)
+                    _serialPort.Open();
+
+                _serialPort.WriteTimeout = 3000;
+                _serialPort.ReadTimeout = 3000;
+                string[] temp;
+                byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
+                try
+                {
+                    _serialPort.Write(bytes, 0, bytes.Length);
+                    string version = _serialPort.ReadTo("\r");
+                    Console.WriteLine(version);
+                    temp = version.Split(" ");
+
+                    if (temp.Length < 2 || temp[0] != "OK" || temp[1] != "VER")
+                        return false;
+
+                    bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
+
+                    _serialPort.Write(bytes, 0, bytes.Length);
+                    string mod = _serialPort.ReadTo("\r");
+                    Console.WriteLine(mod);
+                    temp = mod.Split(" ");
+
+                    if (temp.Length < 2 || temp[0] != "OK" || temp[1] != "MOD")
+                        return false;
+
+                    
+                    _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
+                    bytes = Encoding.UTF8.GetBytes("GET CON\r");
+                    _serialPort.Write(bytes, 0, bytes.Length);
+                }
+                catch (TimeoutException ex)
+                {
+                    Log.Information("Connection Failed because of ReadTimeOut.");
+                    return false;
+                }
+                finally
+                {
+                    _serialPort.WriteTimeout = Timeout.Infinite;
+                    _serialPort.ReadTimeout = Timeout.Infinite;
+                }
                 return true;
             }
-            catch(Exception ex) {
-                Console.WriteLine(ex);
+            catch (Exception ex)
+            {
+                Log.Information("Connection Failed " + ex.ToString());
                 return false;
             }
         }
+
+        /// <summary>
+        /// Disconnects from the RTD temperature controller.
+        /// </summary>
+        /// <returns>True if disconnection is successful; otherwise, false.</returns>
 
         [HttpPost("disconnect")]
         public bool Post()
@@ -109,9 +181,9 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 _serialPort.Close();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Log.Information("Disconnect Failed " + ex.ToString());
                 return false;
             }
         }
