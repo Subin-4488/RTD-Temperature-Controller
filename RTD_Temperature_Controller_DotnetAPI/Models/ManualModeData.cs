@@ -10,6 +10,6 @@
     public class ManualModeData
     {
         public string Response { get; set; }
-        public string value { get; set; }
+        public string Value { get; set; }
     }
 }

@@ -108,22 +108,22 @@ namespace Services
         {
             if (resultArr[0] == "OK" && (resultArr[1] == "TMPM" || resultArr[1] == "RES"))
             {
-                var data = new ManualModeData { Response = $"OK {resultArr[1]}", value = resultArr[2] };
+                var data = new ManualModeData { Response = $"OK {resultArr[1]}", Value = resultArr[2] };
                 await sendManualModeData(data);
             }
             else if (resultArr[0] == "OK" && (resultArr[1] == "EPR" || resultArr[1] == "MOD"))
             {
-                var data = new ManualModeData { Response = $"OK {resultArr[1]}", value = $"OK {resultArr[1]}" };
+                var data = new ManualModeData { Response = $"OK {resultArr[1]}", Value = $"OK {resultArr[1]}" };
                 await sendManualModeData(data);
             }
             else if (resultArr[0] == "OK" && resultArr[1] == "BTN")
             {
-                var data = new ManualModeData { Response = "OK BTN", value = $"{resultArr[0]} {resultArr[1]} {resultArr[2]} {resultArr[3]}" };
+                var data = new ManualModeData { Response = "OK BTN", Value = $"{resultArr[0]} {resultArr[1]} {resultArr[2]} {resultArr[3]}" };
                 await sendManualModeData(data);
             }
             else if (resultArr[0] == "OK" && resultArr[1] == "DTY")
             {
-                var data = new ManualModeData { Response = "OK DTY", value = $"{resultArr[0]} {resultArr[1]}" };
+                var data = new ManualModeData { Response = "OK DTY", Value = $"{resultArr[0]} {resultArr[1]}" };
                 await sendManualModeData(data);
             }
         }

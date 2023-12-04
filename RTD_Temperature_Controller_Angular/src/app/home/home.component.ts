@@ -60,13 +60,13 @@ export class HomeComponent implements OnDestroy {
     private settingsService: SettingsService,
     private homeService: HomeService
   ) {
-    if (this.Settings.threshold == 0)
-      this.settingsService.resetSettings().subscribe((data) => {
-        this.Settings = data;
-        this.Settings.color_0_15 = Colors[Number(data.color_0_15)];
-        this.Settings.color_16_30 = Colors[Number(data.color_16_30)];
-        this.Settings.color_31_45 = Colors[Number(data.color_31_45)];
-      });
+    // if (this.Settings.threshold == 0)
+    //   this.settingsService.resetSettings().subscribe((data) => {
+    //     this.Settings = data;
+    //     this.Settings.color_0_15 = Colors[Number(data.color_0_15)];
+    //     this.Settings.color_16_30 = Colors[Number(data.color_16_30)];
+    //     this.Settings.color_31_45 = Colors[Number(data.color_31_45)];
+    //   });
   }
 
   /**
