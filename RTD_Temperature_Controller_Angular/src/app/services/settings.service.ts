@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Settings } from '../models/Settings';
 import { environment } from 'src/environments/environment';
+import { API_ENDPOINTS } from 'src/config/apiConfig';
 
 /**
  * This service handles all the requests from the settingsComponent.
@@ -52,7 +53,7 @@ export class SettingsService {
   updateSettings(s: Settings): Observable<any> {
     return this.httpClient
       .post<Settings>(
-        this.baseUrl + '/settings',
+        this.baseUrl + API_ENDPOINTS.settings,
         JSON.stringify(s),
         this.httpHeader
       ).pipe(catchError(this.handleHttpError));
@@ -64,7 +65,7 @@ export class SettingsService {
    */
   resetSettings(): Observable<Settings> {
     return this.httpClient
-      .get<Settings>(this.baseUrl + '/settings')
+      .get<Settings>(this.baseUrl + API_ENDPOINTS.settings)
       .pipe(catchError(this.handleHttpError));
   }
 }

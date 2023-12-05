@@ -5,6 +5,7 @@ import { Command } from '../models/Command';
 import { HubService } from '../services/hub.service';
 import { ConnectionService } from '../services/connection.service';
 import { Router } from '@angular/router';
+import { DEVICE_COMMANDS } from 'src/commands/commands';
 
 /**
  * Component for manual mode functionality.
@@ -43,7 +44,7 @@ export class ManualmodeComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.hub_service.closeManualMode()
     this.NewCommand.Command="Set"
-    this.NewCommand.Value = "SET MOD ATM\r"
+    this.NewCommand.Value = DEVICE_COMMANDS.SET_AUTOMATIC_MODE
     this.manualmodeService.sendCommand(this.NewCommand).subscribe(data=>{
     })
   }
@@ -63,13 +64,12 @@ export class ManualmodeComponent implements OnDestroy {
   setLed1(){
     const ele = document.getElementById('led1') as HTMLInputElement
     if(ele.checked){
-      this.NewCommand.Value="SET LED ON R\r"
+      this.NewCommand.Value=DEVICE_COMMANDS.SET_RLED_ON
     }
     else{
-      this.NewCommand.Value="SET LED OFF R\r"
+      this.NewCommand.Value=DEVICE_COMMANDS.SET_RLED_OFF
     }
     this.NewCommand.Command="Set"
-    //this.newCommand.Value="SET LED ON 1\r"
     this.manualmodeService.sendCommand(this.NewCommand).subscribe(data=>{
     })
   }
@@ -81,13 +81,12 @@ export class ManualmodeComponent implements OnDestroy {
   setLed2(){
     const ele = document.getElementById('led2') as HTMLInputElement
     if(ele.checked){
-      this.NewCommand.Value="SET LED ON G\r"
+      this.NewCommand.Value=DEVICE_COMMANDS.SET_GLED_ON
     }
     else{
-      this.NewCommand.Value="SET LED OFF G\r"
+      this.NewCommand.Value=DEVICE_COMMANDS.SET_GLED_OFF
     }
     this.NewCommand.Command="Set"
-    //this.newCommand.Value="SET LED ON 2\r"
     this.manualmodeService.sendCommand(this.NewCommand).subscribe(data=>{
     })
   }
@@ -99,13 +98,12 @@ export class ManualmodeComponent implements OnDestroy {
   setLed3(){
     const ele = document.getElementById('led3') as HTMLInputElement
     if(ele.checked){
-      this.NewCommand.Value="SET LED ON B\r"
+      this.NewCommand.Value=DEVICE_COMMANDS.SET_BLED_ON
     }
     else{
-      this.NewCommand.Value="SET LED OFF B\r"
+      this.NewCommand.Value=DEVICE_COMMANDS.SET_BLED_OFF
     }
     this.NewCommand.Command="Set"
-    //this.newCommand.Value="SET LED ON 3\r"
     this.manualmodeService.sendCommand(this.NewCommand).subscribe(data=>{
     })
   }
@@ -118,7 +116,7 @@ export class ManualmodeComponent implements OnDestroy {
     this.Submitted = true;
     if (this.PwmFormGroup.invalid) return;
 
-    this.manualmodeService.sendCommand(new Command("SET", "SET DTY "+this.PwmFormGroup.value.pwmCycleControl+"\r")).subscribe(d =>{})
+    this.manualmodeService.sendCommand(new Command("SET", DEVICE_COMMANDS.SET_PWM + this.PwmFormGroup.value.pwmCycleControl+"\r")).subscribe(d =>{})
   }
 
   /**
@@ -126,7 +124,7 @@ export class ManualmodeComponent implements OnDestroy {
    */
 
   getTemperature(){
-    this.manualmodeService.sendCommand(new Command("GET", "GET TMPM\r")).subscribe(d =>{})
+    this.manualmodeService.sendCommand(new Command("GET", DEVICE_COMMANDS.GET_TEMPERATURE)).subscribe(d =>{})
   }
 
   /**
@@ -134,7 +132,7 @@ export class ManualmodeComponent implements OnDestroy {
    */
 
   getResistance(){
-    this.manualmodeService.sendCommand(new Command("GET", "GET RES\r")).subscribe(d =>{})
+    this.manualmodeService.sendCommand(new Command("GET", DEVICE_COMMANDS.GET_RESISTANCE)).subscribe(d =>{})
   }
 
   /**
@@ -142,7 +140,7 @@ export class ManualmodeComponent implements OnDestroy {
    */
 
   getEEPROM(){
-    this.manualmodeService.sendCommand(new Command("GET", "GET EPR\r")).subscribe(d =>{})
+    this.manualmodeService.sendCommand(new Command("GET", DEVICE_COMMANDS.GET_EEPROM)).subscribe(d =>{})
   }
 
   /**
@@ -150,7 +148,7 @@ export class ManualmodeComponent implements OnDestroy {
    */
 
   getStartButtonStatus(){
-    this.manualmodeService.sendCommand(new Command("GET", "GET BTN START\r")).subscribe(d =>{})
+    this.manualmodeService.sendCommand(new Command("GET", DEVICE_COMMANDS.GET_START_BUTTON)).subscribe(d =>{})
   }
 
   /**
@@ -158,6 +156,6 @@ export class ManualmodeComponent implements OnDestroy {
    */
 
   getStopButtonStatus(){
-    this.manualmodeService.sendCommand(new Command("GET", "GET BTN STOP\r")).subscribe(d =>{})
+    this.manualmodeService.sendCommand(new Command("GET", DEVICE_COMMANDS.GET_STOP_BUTTON)).subscribe(d =>{})
   }
 }

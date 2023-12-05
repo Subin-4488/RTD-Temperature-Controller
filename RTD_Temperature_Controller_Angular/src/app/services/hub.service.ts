@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
+import { environment } from 'src/environments/environment';
 
 
 /**
@@ -21,7 +22,7 @@ export class HubService {
   hubConnection: signalR.HubConnection;
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:3000/temperatureHub',{ withCredentials: false })
+      .withUrl(environment.hubURL,{ withCredentials: false })
       .build();
     this.hubConnection.start()
   }

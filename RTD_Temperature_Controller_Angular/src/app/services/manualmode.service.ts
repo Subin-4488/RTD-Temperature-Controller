@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Command } from '../models/Command';
 import { environment } from 'src/environments/environment';
+import { API_ENDPOINTS } from 'src/config/apiConfig';
 
 /**
  * This service handles all the requests from the the ManualMode Component
@@ -53,7 +54,7 @@ export class ManualmodeService {
     console.log(val.Value);
     return this.httpClient
       .post<boolean>(
-        this.baseUrl + '/manualmode',
+        this.baseUrl + API_ENDPOINTS.manualMode,
         JSON.stringify(val),
         this.httpHeader
       )

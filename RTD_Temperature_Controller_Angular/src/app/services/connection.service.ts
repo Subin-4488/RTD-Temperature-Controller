@@ -8,6 +8,7 @@ import { Connection } from '../models/Connection';
 import { Observable, catchError, throwError } from 'rxjs';
 import { HubService } from './hub.service';
 import { environment } from 'src/environments/environment';
+import { API_ENDPOINTS } from 'src/config/apiConfig';
 
 /**
  * Service for managing connections
@@ -53,7 +54,7 @@ export class ConnectionService {
   createConnection(connection: Connection): Observable<boolean> {
     return this.httpClient
       .post<boolean>(
-        this.baseurl + '/connection',
+        this.baseurl + API_ENDPOINTS.createConnection,
         JSON.stringify(connection),
         this.httpHeader
       )
@@ -69,7 +70,7 @@ export class ConnectionService {
     this.hubService.end();
     return this.httpClient
       .post<boolean>(
-        this.baseurl + '/connection/disconnect/',
+        this.baseurl + API_ENDPOINTS.disconnectConnection,
         '',
         this.httpHeader
       )
@@ -83,7 +84,7 @@ export class ConnectionService {
 
   setMode(): Observable<boolean> {
     return this.httpClient
-      .post<boolean>(this.baseurl + '/connection/setatm/', '', this.httpHeader)
+      .post<boolean>(this.baseurl + API_ENDPOINTS.setMode, '', this.httpHeader)
       .pipe(catchError(this.httpError));
   }
   
@@ -94,7 +95,7 @@ export class ConnectionService {
 
   getportNames(): Observable<string[]> {
     return this.httpClient
-      .get<string[]>(this.baseurl + '/connection/ports/')
+      .get<string[]>(this.baseurl + API_ENDPOINTS.getportNames)
       .pipe(catchError(this.httpError));
   }
 }
