@@ -19,7 +19,6 @@ namespace Services
     {
         private readonly IHubContext<TemperatureHub> _hubContext;
         private readonly IConfiguration _configuration;
-        //private readonly SerialPort _serialPort;
         private readonly ISerialPortService _serialPortService;
 
         /// <summary>
@@ -33,7 +32,6 @@ namespace Services
             _hubContext = hubContext;
             _configuration = configuration;
             _serialPortService = serialPortService;
-            //_serialPort = serialPortService.SerialPort;
         }
 
         /// <summary>
@@ -89,7 +87,7 @@ namespace Services
             if (resultArr.Length>2 && resultArr[0] == "OK" && resultArr[1] == "RTD" && resultArr[2] == "RDY")
             {
                 byte[] bytes = Encoding.UTF8.GetBytes("GET TMPA\r");
-                _serialPortService.SerialPort.Write(bytes, 0, bytes.Length);
+                _serialPortService.WriteToPort(bytes);
             }
         }
 
@@ -242,7 +240,7 @@ namespace Services
         public async Task<(bool, string)> WriteToDatabase(Data data)
         {
             var dbContextOptions = new DbContextOptionsBuilder<RTDSensorDBContext>()
-                                        .UseSqlServer(_configuration["ConnectionStrings:LocalConnection"])
+                                        .UseSqlServer(_configuration["ConnectionStrings:DefaultConnection"])
                                         .Options;
             using (var _dbContext = new RTDSensorDBContext(dbContextOptions))
             {
