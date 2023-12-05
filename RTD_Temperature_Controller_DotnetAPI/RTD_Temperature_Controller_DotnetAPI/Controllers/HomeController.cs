@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using Serilog;
+using Services;
 using System.IO.Ports;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -19,7 +20,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        private readonly SerialPort _serialPort;
+        private readonly ISerialPortService _serialPortService;
         private readonly IHubContext<TemperatureHub> _hubContext;
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 
         public HomeController(ISerialPortService serialPortService, IHubContext<TemperatureHub> hubcontext)
         {
-            _serialPort = serialPortService.SerialPort;
+            _serialPortService = serialPortService;
             _hubContext = hubcontext;
         }
 
@@ -47,7 +48,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             Console.WriteLine(hexString);
             try
             {
-                _serialPort.Write(bytes, 0, bytes.Length);
+                _serialPortService.WriteToPort(bytes);
                 return true;
             }
             catch (OperationCanceledException ex)

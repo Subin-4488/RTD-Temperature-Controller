@@ -1,4 +1,6 @@
-﻿using System.IO.Ports;
+﻿using RTD_Temperature_Controller_DotnetAPI.Models;
+using System.IO.Ports;
+using System.Reflection;
 
 namespace Contracts
 {
@@ -10,14 +12,20 @@ namespace Contracts
 
     public interface ISerialPortService
     {
-        //public SerialPort SerialPort { get; }
 
         public void OpenPort(); 
         public void ClosePort();
 
+        public void SetReadTimeout(int millis);
+        public void SetWriteTimeout(int millis);
+
+        public string ReadFromPort(string delim);
         public void WriteToPort(byte[] bytes);
         public void ResetPort();
 
-        public void ConfigurePortSettings(string portname, int baudrate, Parity parity,  int databits, StopBits stopBits);
+        public void SetListener(Action<object, SerialDataReceivedEventArgs> action);
+        public void RemoveListener(SerialDataReceivedEventHandler action);
+
+        public void ConfigurePortSettings(Connection connection);
     }
 }

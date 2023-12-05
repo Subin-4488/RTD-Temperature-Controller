@@ -1,5 +1,7 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using RTD_Temperature_Controller_DotnetAPI.Models;
 using Serilog;
 using System.IO.Ports;
 using System.Text;
@@ -32,15 +34,14 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 
         public ConnectionController(
             ISerialPortService serialPortService,
-            IDataService dataService
-        )
+            IDataService dataService)
         {
-            serialPortService.ResetPort();
-            this._serialPort = serialPortService.SerialPort;
+
+            _serialPortService = serialPortService;
             this._dataService = dataService;
-
-            if (this._serialPort.IsOpen) this._serialPort.Close();
-
+            
+            serialPortService.ResetPort();
+            _serialPortService.ClosePort();
         }
 
         /// <summary>
@@ -69,64 +70,19 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         {
             try
             {
-                this._serialPort.PortName = Convert.ToString(value["PortName"]);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
-            this._serialPort.BaudRate = int.Parse(value["BitsPerSecond"].ToString());
+                Connection connection = JsonConvert.DeserializeObject<Connection>(value.ToString());
+                 
+                _serialPortService.ConfigurePortSettings(connection);
+                _serialPortService.OpenPort();
 
-            switch (value["Parity"]!.ToString())
-            {
-                case "Even":
-                    this._serialPort.Parity = System.IO.Ports.Parity.Even;
-                    break;
-                case "Odd":
-                    this._serialPort.Parity = System.IO.Ports.Parity.Odd;
-                    break;
-                case "Mark":
-                    this._serialPort.Parity = System.IO.Ports.Parity.Mark;
-                    break;
-                case "Space":
-                    this._serialPort.Parity = System.IO.Ports.Parity.Space;
-                    break;
-                case "None":
-                    this._serialPort.Parity = System.IO.Ports.Parity.None;
-                    break;
-                default:
-                    throw new FormatException("Bad Parity format");
-            }
-            this._serialPort.DataBits = int.Parse(value["DataBits"]!.ToString());
-            switch (value["StopBits"]!.ToString())
-            {
-                case "1":
-                    this._serialPort.StopBits = System.IO.Ports.StopBits.One;
-                    break;
-                case "1.5":
-                    this._serialPort.StopBits = System.IO.Ports.StopBits.OnePointFive;
-                    break;
-                case "2":
-                    this._serialPort.StopBits = System.IO.Ports.StopBits.Two;
-                    break;
-                default:
-                    throw new Exception("Bad Stopbits format");
-            }
-
-            try
-            {
-                if (!_serialPort.IsOpen)
-                    _serialPort.Open();
-
-                _serialPort.WriteTimeout = 3000;
-                _serialPort.ReadTimeout = 3000;
+                _serialPortService.SetWriteTimeout(3000);
+                _serialPortService.SetReadTimeout(3000);
                 string[] temp;
                 byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
                 try
                 {
-                    _serialPort.Write(bytes, 0, bytes.Length);
-                    string version = _serialPort.ReadTo("\r");
+                    _serialPortService.WriteToPort(bytes);
+                    string version = _serialPortService.ReadFromPort("\r");
                     Console.WriteLine(version);
                     temp = version.Split(" ");
 
@@ -135,18 +91,17 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 
                     bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
 
-                    _serialPort.Write(bytes, 0, bytes.Length);
-                    string mod = _serialPort.ReadTo("\r");
+                    _serialPortService.WriteToPort(bytes);
+                    string mod = _serialPortService.ReadFromPort("\r");
                     Console.WriteLine(mod);
                     temp = mod.Split(" ");
 
                     if (temp.Length < 2 || temp[0] != "OK" || temp[1] != "MOD")
                         return false;
 
-                    
-                    _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
+                    _serialPortService.SetListener(_dataService.ReadDataFromHardware);
                     bytes = Encoding.UTF8.GetBytes("GET CON\r");
-                    _serialPort.Write(bytes, 0, bytes.Length);
+                    _serialPortService.WriteToPort(bytes);
                 }
                 catch (TimeoutException ex)
                 {
@@ -155,8 +110,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 }
                 finally
                 {
-                    _serialPort.WriteTimeout = Timeout.Infinite;
-                    _serialPort.ReadTimeout = Timeout.Infinite;
+                    _serialPortService.SetWriteTimeout(Timeout.Infinite);
+                    _serialPortService.SetReadTimeout(Timeout.Infinite);
                 }
                 return true;
             }
@@ -177,8 +132,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         {
             try
             {
-                _serialPort.DataReceived -= _dataService.ReadDataFromHardware;
-                _serialPort.Close();
+                _serialPortService.RemoveListener(_dataService.ReadDataFromHardware);
+                _serialPortService.ClosePort();
                 return true;
             }
             catch (Exception ex)

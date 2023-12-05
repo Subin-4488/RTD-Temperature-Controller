@@ -44,7 +44,7 @@ export class HomeComponent implements OnDestroy {
     axisY: {
       title: 'Temperature (°C)',
       minimum:0,
-      maximum:30,
+      maximum:50,
       interval:3
     },
     data: [

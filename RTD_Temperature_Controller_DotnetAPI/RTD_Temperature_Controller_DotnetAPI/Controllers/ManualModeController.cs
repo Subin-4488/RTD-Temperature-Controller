@@ -17,7 +17,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     [ApiController]
     public class ManualModeController : ControllerBase
     {
-        private readonly SerialPort _serialPort;
+        private readonly ISerialPortService _serialPortService;
         private readonly IHubContext<TemperatureHub> _hubContext;
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 
         public ManualModeController(ISerialPortService serialPortService, IHubContext<TemperatureHub> hubContext)
         {
-            _serialPort = serialPortService.SerialPort;
+            _serialPortService = serialPortService;
             _hubContext = hubContext;
         }
 
@@ -44,7 +44,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             byte[] bytes = Encoding.UTF8.GetBytes(value["Value"].ToString());
             try
             {
-                _serialPort.Write(bytes, 0, bytes.Length);
+                _serialPortService.WriteToPort(bytes);
                 return true;
             }
             catch (OperationCanceledException ex)

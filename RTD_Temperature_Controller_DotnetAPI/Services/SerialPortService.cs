@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using RTD_Temperature_Controller_DotnetAPI.Models;
 using System.IO.Ports;
 
 namespace Services
@@ -31,12 +32,18 @@ namespace Services
 
         public void OpenPort()
         {
-            _serialPort.Open();
+            if (!_serialPort.IsOpen)
+            {
+                _serialPort.Open();
+            }
         }
 
         public void ClosePort()
         {
-            _serialPort.Close();
+            if (_serialPort.IsOpen)
+            {
+                _serialPort.Close();
+            }
         }
 
         public void WriteToPort(byte[] bytes)
@@ -44,13 +51,38 @@ namespace Services
             _serialPort.Write(bytes, 0, bytes.Length);
         }
 
-        public void ConfigurePortSettings(string portname, int baudrate, Parity parity, int databits, StopBits stopBits)
+        public void ConfigurePortSettings(Connection connection)
         {
-            this._serialPort.PortName = portname;
-            this._serialPort.BaudRate = baudrate;
-            this._serialPort.Parity = parity;
-            this._serialPort.DataBits = databits;
-            this._serialPort.StopBits = stopBits;
+            _serialPort.PortName = connection.PortName;
+            _serialPort.BaudRate = connection.BitsPerSecond;
+            _serialPort.Parity = connection.Parity;
+            _serialPort.DataBits = connection.DataBits;
+            _serialPort.StopBits = connection.StopBits;
+        }
+
+        public void SetReadTimeout(int millis)
+        {
+            _serialPort.ReadTimeout = millis;
+        }
+
+        public void SetWriteTimeout(int millis)
+        {
+            _serialPort.WriteTimeout = millis;
+        }
+
+        public string ReadFromPort(string delim)
+        { 
+            return _serialPort.ReadTo(delim);
+        }
+
+        public void SetListener(Action<object, SerialDataReceivedEventArgs> action)
+        {
+            _serialPort.DataReceived += new SerialDataReceivedEventHandler(action);
+        }
+
+        public void RemoveListener(SerialDataReceivedEventHandler action)
+        {
+            _serialPort.DataReceived -= action;
         }
     }
 }

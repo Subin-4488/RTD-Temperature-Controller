@@ -20,7 +20,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     public class SettingsController : ControllerBase
     {
         private readonly IHubContext<TemperatureHub> _hubContext;
-        private readonly SerialPort _serialPort;
+        private readonly ISerialPortService _serialPortService;
 
         /// <summary>
         /// Initializes a new instance of the SettingsController class.
@@ -29,8 +29,8 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         /// <param name="serialPortService">The service providing access to the serial port.</param>
         public SettingsController(IHubContext<TemperatureHub> hubContext, ISerialPortService serialPortService)
         {
-            this._serialPort = serialPortService.SerialPort;
-            this._hubContext = hubContext;
+            _serialPortService = serialPortService;
+            _hubContext = hubContext;
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             try
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(sendString.ToString());
-                _serialPort.Write(bytes, 0, bytes.Length);
+                _serialPortService.WriteToPort(bytes);
                 return Ok(new { message = "Settings updated successfully" });
             }
             catch (OperationCanceledException ex)
