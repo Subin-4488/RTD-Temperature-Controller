@@ -19,7 +19,7 @@ namespace Services
     {
         private readonly IHubContext<TemperatureHub> _hubContext;
         private readonly IConfiguration _configuration;
-        private readonly ISerialPortService _serialPortService;
+        //private readonly ISerialPortService _serialPortService;
 
         /// <summary>
         /// Initializes a new instance of the DataService class.
@@ -27,11 +27,11 @@ namespace Services
         /// <param name="hubContext">The SignalR hub context for temperature updates.</param>
         /// <param name="configuration">The configuration for the application.</param>
 
-        public DataService(IHubContext<TemperatureHub> hubContext, IConfiguration configuration, ISerialPortService serialPortService)
+        public DataService(IHubContext<TemperatureHub> hubContext, IConfiguration configuration)
         {
             _hubContext = hubContext;
             _configuration = configuration;
-            _serialPortService = serialPortService;
+            //_serialPortService = serialPortService;
         }
 
         /// <summary>
@@ -40,20 +40,20 @@ namespace Services
         /// <param name="sender">The object that raised the event.</param>
         /// <param name="e">The event arguments containing information about the serial data received.</param>
 
-        public async void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e)
+        public async Task ReadDataFromHardware(string result)
         {
-            SerialPort spL = (SerialPort)sender;
-            if (!spL.IsOpen)
-            {
-                return;
-            }
+            //SerialPort spL = (SerialPort)sender;
+            //if (!spL.IsOpen)
+            //{
+            //    return;
+            //}
             try
             {
                 string[] resultArr = new string[6];
                 try
                 {
-                    string result = spL.ReadTo("\r");
-                    Console.WriteLine(result);
+                    //string result = spL.ReadTo("\r");
+                    //Console.WriteLine(result);
                     resultArr = result.Split(' ');
                 }
                 catch (OperationCanceledException ex)
@@ -67,7 +67,7 @@ namespace Services
                     Log.Information($"Invalid operation: {ex.Message}");
                 }
 
-                processInitialState(resultArr);
+                //processInitialState(resultArr);
                 processTemperatureData(resultArr);
                 processSettingsData(resultArr);
                 processManualModeData(resultArr);
@@ -81,15 +81,15 @@ namespace Services
         }
 
 
-        private void processInitialState(string[] resultArr)
-        {
+        //private void processInitialState(string[] resultArr)
+        //{
 
-            if (resultArr.Length>2 && resultArr[0] == "OK" && resultArr[1] == "RTD" && resultArr[2] == "RDY")
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes("GET TMPA\r");
-                _serialPortService.WriteToPort(bytes);
-            }
-        }
+        //    if (resultArr.Length>2 && resultArr[0] == "OK" && resultArr[1] == "RTD" && resultArr[2] == "RDY")
+        //    {
+        //        byte[] bytes = Encoding.UTF8.GetBytes("GET TMPA\r");
+        //        _serialPortService.WriteToPort(bytes);
+        //    }
+        //}
 
 
         /// <summary>

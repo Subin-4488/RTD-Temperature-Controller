@@ -38,8 +38,8 @@ namespace RTD_Temperature_Controller_DotnetAPI
             });
 
             //dependency injection (IOC Service) for Serial port
-            builder.Services.AddSingleton<ISerialPortService, SerialPortService>();
-            builder.Services.AddSingleton<IDataService, DataService>();
+            builder.Services.AddScoped<ISerialPortService, SerialPortService>();
+            builder.Services.AddScoped<IDataService, DataService>();
 
             var app = builder.Build();
             // Configure the HTTP request pipeline.

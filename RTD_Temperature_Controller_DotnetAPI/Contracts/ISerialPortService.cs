@@ -15,17 +15,15 @@ namespace Contracts
 
         public void OpenPort(); 
         public void ClosePort();
-
+        public bool IsOpen();
         public void SetReadTimeout(int millis);
         public void SetWriteTimeout(int millis);
 
-        public string ReadFromPort(string delim);
+        public void ReadFromPort(object sender, SerialDataReceivedEventArgs e);
+        public string ReadInitial(string delim);
         public void WriteToPort(byte[] bytes);
         public void ResetPort();
-
-        public void SetListener(Action<object, SerialDataReceivedEventArgs> action);
-        public void RemoveListener(SerialDataReceivedEventHandler action);
-
         public void ConfigurePortSettings(Connection connection);
+        public void SetListener();
     }
 }

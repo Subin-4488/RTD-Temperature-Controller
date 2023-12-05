@@ -1,24 +1,29 @@
 ﻿using Contracts;
 using RTD_Temperature_Controller_DotnetAPI.Models;
+using System;
+using System.Text;
 using System.IO.Ports;
 
 namespace Services
 {
+    public delegate Task DataReceived(string message);
     /// <summary>
     /// Service for managing a serial port connection
     /// It involves reseting, opening new serial port
     /// </summary>
     public class SerialPortService : ISerialPortService
     {
-        private SerialPort _serialPort;
+        private static SerialPort _serialPort = new SerialPort();
+        private IDataService _dataservice;
         //public SerialPort SerialPort { get => _serialPort; }
-
+        public event DataReceived _dataReceived; 
         /// <summary>
         /// Creates a new serial port instance
         /// </summary>
-        public SerialPortService()
+        public SerialPortService(IDataService dataService)
         {
-            _serialPort = new SerialPort();
+            //_serialPort = new SerialPort();
+            _dataservice = dataService;
         }
         /// <summary>
         ///  Resets the SerialPort instance by closing the existing one (if open) and creating a new instance.
@@ -42,10 +47,16 @@ namespace Services
         {
             if (_serialPort.IsOpen)
             {
+                _dataReceived -= _dataservice.ReadDataFromHardware;
+                _serialPort.DataReceived -= ReadFromPort;
                 _serialPort.Close();
             }
         }
 
+        public bool IsOpen()
+        {
+            return _serialPort.IsOpen;
+        }
         public void WriteToPort(byte[] bytes)
         {
             _serialPort.Write(bytes, 0, bytes.Length);
@@ -70,19 +81,37 @@ namespace Services
             _serialPort.WriteTimeout = millis;
         }
 
-        public string ReadFromPort(string delim)
-        { 
+        public void ReadFromPort(object sender, SerialDataReceivedEventArgs e)
+        {
+            try
+            {
+                string result = _serialPort.ReadTo("\r");
+                Console.WriteLine(result);
+                string[] resultArr = result.Split(' ');
+                if (resultArr.Length > 2 && resultArr[0] == "OK" && resultArr[1] == "RTD" && resultArr[2] == "RDY")
+                {
+                    byte[] bytes = Encoding.UTF8.GetBytes("GET TMPA\r");
+                    WriteToPort(bytes);
+                }
+                else
+                    _dataReceived?.Invoke(result);
+                //invoke
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public string ReadInitial(string delim)
+        {
             return _serialPort.ReadTo(delim);
         }
 
-        public void SetListener(Action<object, SerialDataReceivedEventArgs> action)
+        public void SetListener()
         {
-            _serialPort.DataReceived += new SerialDataReceivedEventHandler(action);
+            _serialPort.DataReceived += new SerialDataReceivedEventHandler(ReadFromPort);
+            _dataReceived += _dataservice.ReadDataFromHardware;
         }
 
-        public void RemoveListener(SerialDataReceivedEventHandler action)
-        {
-            _serialPort.DataReceived -= action;
-        }
     }
 }

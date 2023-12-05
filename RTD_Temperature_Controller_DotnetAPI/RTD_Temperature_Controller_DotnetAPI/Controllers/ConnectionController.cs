@@ -24,7 +24,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
     public class ConnectionController : ControllerBase
     {
         private readonly ISerialPortService _serialPortService;
-        private readonly IDataService _dataService;
+        //private readonly IDataService _dataService;
 
         /// <summary>
         /// Constructor for the ConnectionController class.
@@ -33,15 +33,14 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         /// <param name="dataService">The data service for handling data from the RTD temperature controller</param>
 
         public ConnectionController(
-            ISerialPortService serialPortService,
-            IDataService dataService)
+            ISerialPortService serialPortService)
         {
 
             _serialPortService = serialPortService;
-            this._dataService = dataService;
+            //this._dataService = dataService;
             
-            serialPortService.ResetPort();
-            _serialPortService.ClosePort();
+            //serialPortService.ResetPort();
+            //_serialPortService.ClosePort();
         }
 
         /// <summary>
@@ -71,7 +70,10 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             try
             {
                 Connection connection = JsonConvert.DeserializeObject<Connection>(value.ToString());
-                 
+                Console.WriteLine(_serialPortService.IsOpen());
+                if (_serialPortService.IsOpen())
+                    return true;
+                
                 _serialPortService.ConfigurePortSettings(connection);
                 _serialPortService.OpenPort();
 
@@ -82,7 +84,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 try
                 {
                     _serialPortService.WriteToPort(bytes);
-                    string version = _serialPortService.ReadFromPort("\r");
+                    string version = _serialPortService.ReadInitial("\r");
                     Console.WriteLine(version);
                     temp = version.Split(" ");
 
@@ -92,14 +94,14 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                     bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
 
                     _serialPortService.WriteToPort(bytes);
-                    string mod = _serialPortService.ReadFromPort("\r");
+                    string mod = _serialPortService.ReadInitial("\r");
                     Console.WriteLine(mod);
                     temp = mod.Split(" ");
 
                     if (temp.Length < 2 || temp[0] != "OK" || temp[1] != "MOD")
                         return false;
 
-                    _serialPortService.SetListener(_dataService.ReadDataFromHardware);
+                    _serialPortService.SetListener();
                     bytes = Encoding.UTF8.GetBytes("GET CON\r");
                     _serialPortService.WriteToPort(bytes);
                 }
@@ -132,7 +134,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
         {
             try
             {
-                _serialPortService.RemoveListener(_dataService.ReadDataFromHardware);
+                //_serialPortService.RemoveListener(_dataService.ReadDataFromHardware);
                 _serialPortService.ClosePort();
                 return true;
             }

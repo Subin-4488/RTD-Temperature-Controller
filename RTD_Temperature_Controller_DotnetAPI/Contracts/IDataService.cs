@@ -10,7 +10,7 @@ namespace Contracts
 
     public interface IDataService
     {
-        public void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e);
+        public Task ReadDataFromHardware(string result);
         public Task<(bool, string)> WriteToDatabase(Data data);
     }
 }
