@@ -1,6 +1,7 @@
 
 using Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Extensions;
 using RTD_Temperature_Controller_DotnetAPI.DBContext;
 using RTD_Temperature_Controller_DotnetAPI.Hubs;
 using Serilog;

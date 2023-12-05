@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RTD_Temperature_Controller_DotnetAPI.Models;
+using RTD_Temperature_Controller_DotnetAPI.Utilities;
 using Serilog;
 using System.IO.Ports;
 using System.Text;
@@ -80,7 +81,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                 _serialPortService.SetWriteTimeout(3000);
                 _serialPortService.SetReadTimeout(3000);
                 string[] temp;
-                byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
+                byte[] bytes = Encoding.UTF8.GetBytes(Command.GetVersion);
                 try
                 {
                     _serialPortService.WriteToPort(bytes);
@@ -91,7 +92,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                     if (temp.Length < 2 || temp[0] != "OK" || temp[1] != "VER")
                         return false;
 
-                    bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
+                    bytes = Encoding.UTF8.GetBytes(Command.SetAutomaticMode);
 
                     _serialPortService.WriteToPort(bytes);
                     string mod = _serialPortService.ReadInitial("\r");
@@ -102,7 +103,7 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
                         return false;
 
                     _serialPortService.SetListener();
-                    bytes = Encoding.UTF8.GetBytes("GET CON\r");
+                    bytes = Encoding.UTF8.GetBytes(Command.GetConfiguration);
                     _serialPortService.WriteToPort(bytes);
                 }
                 catch (TimeoutException ex)

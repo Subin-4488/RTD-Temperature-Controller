@@ -19,9 +19,9 @@
         public double Temperature_4mA { get; set; }
         public double Temperature_20mA { get; set; }
 
-        public Colors Color_0_15 { get; set; }
-        public Colors Color_16_30 { get; set; }
-        public Colors Color_31_45 { get; set; }
+        public Colors Color_Range_1 { get; set; }
+        public Colors Color_Range_2 { get; set; }
+        public Colors Color_Range_3 { get; set; }
 
     }
 }

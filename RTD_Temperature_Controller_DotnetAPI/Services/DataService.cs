@@ -207,9 +207,9 @@ namespace Services
                 if (d[0] == "LED")
                 {
                     string s = d[1];
-                    newSettings.Color_0_15 = (Colors)Enum.Parse(typeof(Colors), getColorCode(s[0]));
-                    newSettings.Color_16_30 = (Colors)Enum.Parse(typeof(Colors), getColorCode(s[1]));
-                    newSettings.Color_31_45 = (Colors)Enum.Parse(typeof(Colors), getColorCode(s[2]));
+                    newSettings.Color_Range_1 = (Colors)Enum.Parse(typeof(Colors), getColorCode(s[0]));
+                    newSettings.Color_Range_2 = (Colors)Enum.Parse(typeof(Colors), getColorCode(s[1]));
+                    newSettings.Color_Range_3 = (Colors)Enum.Parse(typeof(Colors), getColorCode(s[2]));
                 }
                 else if (d[0] == "OL")
                 {

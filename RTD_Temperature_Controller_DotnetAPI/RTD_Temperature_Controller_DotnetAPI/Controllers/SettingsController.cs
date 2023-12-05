@@ -62,11 +62,11 @@ namespace RTD_Temperature_Controller_DotnetAPI.Controllers
             newSettings.DataAcquisitionRate = Convert.ToInt32(s["DataAcquisitionRate"]?.ToString());
             newSettings.Temperature_4mA = Convert.ToDouble(s["Temperature_4mA"]?.ToString());
             newSettings.Temperature_20mA = Convert.ToDouble(s["Temperature_20mA"]?.ToString());
-            newSettings.Color_0_15 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_0_15"]));
-            newSettings.Color_16_30 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_16_30"]));
-            newSettings.Color_31_45 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_31_45"]));
+            newSettings.Color_Range_1 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_0_15"]));
+            newSettings.Color_Range_2 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_16_30"]));
+            newSettings.Color_Range_3 = (Colors)Enum.Parse(typeof(Colors), Convert.ToString(s["Color_31_45"]));
             StringBuilder sendString = new StringBuilder("SET CON LED:");
-            sendString.Append($"{(char)newSettings.Color_0_15}{(char)newSettings.Color_16_30}{(char)newSettings.Color_31_45}");
+            sendString.Append($"{(char)newSettings.Color_Range_1}{(char)newSettings.Color_Range_2}{(char)newSettings.Color_Range_3}");
             sendString.Append($",OL:{s["Temperature_4mA"]},OH:{s["Temperature_20mA"]}\r");
 
             string jsonString = JsonSerializer.Serialize<Settings>(newSettings);
