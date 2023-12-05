@@ -2,9 +2,14 @@
 {
     public enum Colors
     {
-        red = 'R', green = 'G', blue = 'B' 
+        red = 'R', green = 'G', blue = 'B'
     }
 
+    //////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Settings model containing various configuration properties.
+    /// </summary>
+    //////////////////////////////////////////////////////////////////////////
 
     public class Settings
     {
@@ -17,8 +22,6 @@
         public Colors Color_0_15 { get; set; }
         public Colors Color_16_30 { get; set; }
         public Colors Color_31_45 { get; set; }
-
-
 
     }
 }

@@ -1,233 +1,148 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
-using RTD_Temperature_Controller_DotnetAPI.DBContext;
-using RTD_Temperature_Controller_DotnetAPI.Hubs;
+using Newtonsoft.Json;
 using RTD_Temperature_Controller_DotnetAPI.Models;
+using Serilog;
 using System.IO.Ports;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Nodes;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace RTD_Temperature_Controller_DotnetAPI.Controllers
 {
+
+    //////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Controller for managing the connection to the RTD temperature sensor.
+    /// </summary>
+    /// <remarks>
+    /// Manages the serial port connection, configuration, and disconnection,
+    /// </remarks>
+    //////////////////////////////////////////////////////////////////////////
+
     [Route("connection")]
     [ApiController]
     public class ConnectionController : ControllerBase
     {
-        private readonly SerialPort _serialPort;
-        private IDataService _dataService;
-        private readonly IHubContext<TemperatureHub> _hubContext;
+        private readonly ISerialPortService _serialPortService;
+        //private readonly IDataService _dataService;
 
-        //delete this line
-        //private readonly RTDSensorDBContext _dbContext;
+        /// <summary>
+        /// Constructor for the ConnectionController class.
+        /// </summary>
+        /// <param name="serialPortService">The serial port service for managing the connection</param>
+        /// <param name="dataService">The data service for handling data from the RTD temperature controller</param>
 
-        Thread _thread;
-        private static Boolean _status = false;
-
-        public ConnectionController(IHubContext<TemperatureHub> hubContext, 
-            ISerialPortService serialPortService, 
-            IDataService dataService
-            //RTDSensorDBContext dbContext
-            )
+        public ConnectionController(
+            ISerialPortService serialPortService)
         {
-            serialPortService.deleteMethod();
-            this._serialPort = serialPortService.SerialPort;
-            this._dataService = dataService;
-            _hubContext = hubContext;
 
-            //delete this line
-            //_dbContext = dbContext;
-
-            if (this._serialPort.IsOpen) this._serialPort.Close();
-
+            _serialPortService = serialPortService;
+            //this._dataService = dataService;
+            
+            //serialPortService.ResetPort();
+            //_serialPortService.ClosePort();
         }
 
-        //GET: api/<ConnectionController>
+        /// <summary>
+        /// Gets the available serial ports.
+        /// </summary>
+        /// <returns>
+        /// A list of available serial port names.
+        /// </returns>
+
         [HttpGet("ports")]
         public IEnumerable<string> Get()
         {
             return SerialPort.GetPortNames();
         }
 
-        // POST api/<ConnectionController>
+        /// <summary>
+        /// Connects to the RTD temperature controller using the specified configuration.
+        /// </summary>
+        /// <param name="value">The configuration parameters for the serial port connection</param>
+        /// <returns>True if the connection is successful; otherwise, false.</returns>
+        /// <exception cref="Exception">Thrown when parity format is bad</exception>
+        /// <exception cref="FormatException">Thrown when stopbits format is bad</exception>
+
         [HttpPost]
         public bool Post([FromBody] JsonObject value)
         {
             try
             {
-                this._serialPort.PortName = Convert.ToString(value["PortName"]);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
-            this._serialPort.BaudRate = int.Parse(value["BitsPerSecond"]!.ToString());
-
-            switch (value["Parity"]!.ToString())
-            {
-                case "Even":
-                    this._serialPort.Parity = System.IO.Ports.Parity.Even;
-                    break;
-                case "Odd":
-                    this._serialPort.Parity = System.IO.Ports.Parity.Odd;
-                    break;
-                case "Mark":
-                    this._serialPort.Parity = System.IO.Ports.Parity.Mark;
-                    break;
-                case "Space":
-                    this._serialPort.Parity = System.IO.Ports.Parity.Space;
-                    break;
-                case "None":
-                    this._serialPort.Parity = System.IO.Ports.Parity.None;
-                    break;
-                default:
-                    throw new Exception("BAD Parity format");
-            }
-
-            this._serialPort.DataBits = int.Parse(value["DataBits"]!.ToString());
-
-
-            switch (value["StopBits"]!.ToString())
-            {
-                case "1":
-                    this._serialPort.StopBits = System.IO.Ports.StopBits.One;
-                    break;
-                case "1.5":
-                    this._serialPort.StopBits = System.IO.Ports.StopBits.OnePointFive;
-                    break;
-                case "2":
-                    this._serialPort.StopBits = System.IO.Ports.StopBits.Two;
-                    break;
-                default:
-                    throw new Exception("BAD Parity format");
-            }
-            
-            //_serialPort.ReadTimeout=500;
-            //_serialPort.DataReceived += _dataService.ReadDataFromHardware;
-
-            try
-            {
-
-                if (!_serialPort.IsOpen)
-                _serialPort.Open();
-
-                //_serialPort.DiscardInBuffer();
-
-                //byte[] bytes = Encoding.UTF8.GetBytes("SET MOD MAN\r");
-                //_serialPort.Write(bytes, 0, bytes.Length);
-
-                //string manMod = _serialPort.ReadTo("\r");
-
-                //Console.WriteLine(manMod);
-                //_serialPort.DiscardInBuffer();
-
-                byte[]  bytes = Encoding.UTF8.GetBytes("GET VER\r");
-                _serialPort.Write(bytes, 0, bytes.Length);
-                string version = _serialPort.ReadTo("\r");
-                Console.WriteLine(version);
-                string[] temp = version.Split(" ");
-                if (temp.Length < 2 || temp[0] != "OK" || temp[1] != "VER")
-                    return false;
-
-
-
-                bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
-                _serialPort.Write(bytes, 0, bytes.Length);
-                string mod = _serialPort.ReadTo("\r");
-                Console.WriteLine(mod);
-                temp = mod.Split(" ");
-                if (mod.Length < 2 || temp[0] != "OK" || temp[1] != "MOD")
-                    return false;
-
-                _serialPort.DataReceived += new SerialDataReceivedEventHandler(_dataService.ReadDataFromHardware);
-                bytes = Encoding.UTF8.GetBytes("GET CON\r");
-                _serialPort.Write(bytes, 0, bytes.Length);
-
-
+                Connection connection = JsonConvert.DeserializeObject<Connection>(value.ToString());
+                Console.WriteLine(_serialPortService.IsOpen());
+                if (_serialPortService.IsOpen())
+                    return true;
                 
+                _serialPortService.ConfigurePortSettings(connection);
+                _serialPortService.OpenPort();
 
-                _status = true;
-                //_thread = new Thread(sendRandom);
-                //_thread.Start();
+                _serialPortService.SetWriteTimeout(3000);
+                _serialPortService.SetReadTimeout(3000);
+                string[] temp;
+                byte[] bytes = Encoding.UTF8.GetBytes("GET VER\r");
+                try
+                {
+                    _serialPortService.WriteToPort(bytes);
+                    string version = _serialPortService.ReadInitial("\r");
+                    Console.WriteLine(version);
+                    temp = version.Split(" ");
+
+                    if (temp.Length < 2 || temp[0] != "OK" || temp[1] != "VER")
+                        return false;
+
+                    bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
+
+                    _serialPortService.WriteToPort(bytes);
+                    string mod = _serialPortService.ReadInitial("\r");
+                    Console.WriteLine(mod);
+                    temp = mod.Split(" ");
+
+                    if (temp.Length < 2 || temp[0] != "OK" || temp[1] != "MOD")
+                        return false;
+
+                    _serialPortService.SetListener();
+                    bytes = Encoding.UTF8.GetBytes("GET CON\r");
+                    _serialPortService.WriteToPort(bytes);
+                }
+                catch (TimeoutException ex)
+                {
+                    Log.Information("Connection Failed because of ReadTimeOut.");
+                    return false;
+                }
+                finally
+                {
+                    _serialPortService.SetWriteTimeout(Timeout.Infinite);
+                    _serialPortService.SetReadTimeout(Timeout.Infinite);
+                }
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Log.Information("Connection Failed " + ex.ToString());
                 return false;
             }
         }
 
-        private async Task sendRandom()
-        {
-            Console.WriteLine("In thread");
-            Random rnd = new Random();
-
-            while (_status == true)
-            {
-                try
-                {
-                    int num = rnd.Next(1, 45);
-                    var data = new Data();
-                    data.Time = DateTime.Now;
-                    data.Temperature = num;
-
-                    //delete following 2 lines
-                    //await _dbContext.TemperatureTable.AddAsync(data);
-                    //await _dbContext.SaveChangesAsync();
-
-                    await _hubContext.Clients.All.SendAsync("UpdateTemperature", data);
-                    Console.WriteLine(data.Time + " : " + data.Temperature);
-                    Thread.Sleep(1000);
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
-            }
-        }
+        /// <summary>
+        /// Disconnects from the RTD temperature controller.
+        /// </summary>
+        /// <returns>True if disconnection is successful; otherwise, false.</returns>
 
         [HttpPost("disconnect")]
         public bool Post()
         {
             try
             {
-                
-                //byte[] bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
-                //_serialPort.Write(bytes, 0, bytes.Length);
-                _serialPort.DataReceived -= _dataService.ReadDataFromHardware;
-                //Thread.Sleep(1500);
-                _serialPort.Close();
-                _status = false;
-                //_thread.Abort();
+                //_serialPortService.RemoveListener(_dataService.ReadDataFromHardware);
+                _serialPortService.ClosePort();
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("disconnect"+ex);
+                Log.Information("Disconnect Failed " + ex.ToString());
                 return false;
             }
         }
-        //[HttpPost("setatm")]
-        //public bool SetMode()
-        //{
-        //    try
-        //    {
-
-        //        byte[] bytes = Encoding.UTF8.GetBytes("SET MOD ATM\r");
-        //        _serialPort.Write(bytes, 0, bytes.Length);
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("disconnect" + ex);
-        //        return false;
-        //    }
-        //}
     }
 }

@@ -2,9 +2,15 @@
 using System.IO.Ports;
 namespace Contracts
 {
+    //////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// This interface defines the contract for interacting with data services.
+    /// </summary>
+    //////////////////////////////////////////////////////////////////////////
+
     public interface IDataService
     {
-        public void ReadDataFromHardware(object sender, SerialDataReceivedEventArgs e);
+        public Task ReadDataFromHardware(string result);
         public Task<(bool, string)> WriteToDatabase(Data data);
     }
 }

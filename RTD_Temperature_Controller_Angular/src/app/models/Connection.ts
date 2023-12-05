@@ -1,4 +1,7 @@
-import { PACKAGE_ROOT_URL } from "@angular/core"
+
+/**
+ * "Connection" represents a model for communication connection
+ */
 
 export class Connection{
     PortName:string

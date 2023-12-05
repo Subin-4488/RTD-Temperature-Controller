@@ -1,8 +1,11 @@
-export enum Colors {
-    'red'=82,
-    'green'=71,
-    'blue'=66
-  }
+
+/**
+ * Settings representing the configuration of the system.
+ * 
+ * 1. color_x_y : Represents the color value for temperature range x to y, where x and y are numerals.
+ * 2. temperature_TmA: Represents the temperature value for TmA current, where T is either 4 or 20
+ */
+
 export class Settings{
     threshold:number
     dataAcquisitionRate:number
@@ -21,6 +24,10 @@ export class Settings{
         this.color_16_30 = color_16_30
         this.color_31_45 = color_31_45
     }
+}
 
-
+export enum Colors {
+    'red'=82,
+    'green'=71,
+    'blue'=66
 }
